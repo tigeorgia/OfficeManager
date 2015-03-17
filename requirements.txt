@@ -1,0 +1,4 @@
+django
+django-auth-ldap
+# django-bootstrap3
+# django-jquery-ui
