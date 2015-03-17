@@ -1,0 +1,76 @@
+{% extends "managerbase.html" %}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+<div class="form-container">
+	<form action="assignsalary" method="post">
+		{% csrf_token %}
+		<label>Salary sources for {{ period }}</label> 
+
+		<select name ="employee" >
+			{% for empl in employee_list %}	
+				{% if currentemployee.employee.user.last_name ==  empl.user.last_name  and currentemployee.employee.user.first_name == empl.user.first_name %}
+					<option value="{{ empl.id}}" selected> {{ empl.user.last_name }}, {{ empl.user.first_name }}</option>
+				{% else %}
+	
+	
+					<option value="{{ empl.id}}"> {{ empl.user.last_name }}, {{ empl.user.first_name }}</option>
+				{% endif %}		
+			{% endfor %}
+		</select>
+		<input type="submit" name="button" value="Update Table"></input>
+		
+		<table class="time-sheet-table report-table-small form-table">
+			<thead>
+				<td>Salary<br>Code</td>
+				<td>Salary<br>&#37;</td>
+			</thead>
+			<tbody>
+				{% for s_input in salary_sources %}
+				<tr>
+					<td>
+						{{ s_input.code }}
+					</td>
+					<td>
+						<select name="amount-{{ s_input.code }}">
+					
+					
+						{% for p_choice in percentage_choice %}
+							{% if currentemployee %}
+								
+								
+								{% for key, value in currentemployee.assign.items %}
+									{% if key == s_input.code and value == p_choice %}
+										<option value="{{ p_choice }}" selected>{{ p_choice }}</option>
+									{% endif %}
+								{% endfor %}
+								
+								<option  value="{{ p_choice }}" >{{ p_choice }}</option>
+								
+								
+								
+							{% else %}
+								<option  value="{{ p_choice }}">{{ p_choice }}</option>
+							{% endif %}
+						{% endfor %}
+						</select>
+					</td>
+				</tr>
+				{% endfor %}
+			</tbody>
+		</table>
+		
+		<input type="submit" name="button" value="Submit"></input>
+	</form>
+</div>
+
+{% include "report_salary_assignments.html" %}
+
+
+
+{% endblock content %}

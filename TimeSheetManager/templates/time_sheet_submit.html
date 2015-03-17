@@ -1,0 +1,20 @@
+{% extends "managerbase.html"%}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+<form class="submit-button" action="submittimesheet" method="POST">
+{% csrf_token %}
+<input type="submit" value="Submit"></input>
+</form>
+
+{% include "time_sheet_render.html" %}
+
+
+
+{% endblock content %}
+

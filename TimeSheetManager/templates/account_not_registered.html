@@ -1,0 +1,19 @@
+{% extends "managerbase.html"%}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+
+
+{% block content %}
+
+<div class="page-info">
+<p>
+{% blocktrans %}
+You have successully athenticated but your time sheet account has not been created by the Office Manager.
+Please, request the account creation and log in again. Thank you.
+{% endblocktrans %}
+</p>
+</div>
+
+{% endblock content %}

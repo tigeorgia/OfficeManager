@@ -1,0 +1,43 @@
+{% extends "managerbase.html"%}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+
+{% block content %}
+<div class="report-form-container">
+	<form method="post" action=''>
+	{% csrf_token %}
+
+		<label>Period</label>
+		<select name="data-period">
+			<option>All</option>
+			{% for period in viewdata.periods %}
+				{% if forloop.counter0 == 0 %}
+				<option selected>{{ period.period }}</option>
+				{% else %}
+				<option>{{ period.period }}</option>
+				{% endif %}
+			{% endfor %}
+		</select>
+
+		<label>Employee</label>
+		<select name="data-period">
+			<option>All</option>
+			{% for employee in viewdata.employees %}
+			<option>{{ employee.user.username }}</option>
+			{% endfor %}
+		</select>
+
+		<label>Document</label>
+		<select name="data-period">
+			<option vlaue="ALL">All</option>
+			<option vlaue="TIMESHEET">Time sheet</option>
+			<option vlaue="KLEAVE">Leave request</option>
+			<option vlaue="KLEAVE">Salary assignments</option>
+		</select>
+
+	<input type="submit" name="button" value="Update View"></input>
+	</form>
+</div>
+{% endblock content %}

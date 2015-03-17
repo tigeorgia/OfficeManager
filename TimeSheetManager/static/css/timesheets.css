@@ -1,0 +1,157 @@
+@charset "utf-8";
+
+.time-sheets-button {
+	/* 	width: 300px; */
+	
+}
+
+.timesheet-actions {
+	margin: 40pt 1em 0 5em;
+	float: left;
+}
+
+#employee-actions {
+	
+}
+
+#finman-actions {
+	
+}
+
+#offman-actions {
+	
+}
+
+/*************************/
+/* Sumbit a time sheet */
+.time-sheet-table {
+	background-color: white;
+	padding: 1em;
+	border-radius: 1em;
+	/* 	border-collapse: collapse; */
+	border-spacing: 0;
+	position: absolute;
+	left: 1em;
+	top: 25em;
+}
+
+.time-sheet-table td {
+	border: 1px solid black;
+	padding: .1em 1em;
+	text-align: center;
+}
+
+.time-sheet-table tfoot td {
+	padding-top: 1em;
+	background-color: #ccc;
+}
+
+.time-sheet-table thead td {
+	padding-bottom: 1em;
+	background-color: #ccc;
+}
+
+.time-sheet-table .gray-row td, .time-sheet-table .gray-cell {
+	background-color: #eee;
+}
+
+#time-sheet-employee-info {
+	margin-bottom: 1em;
+	position: absolute;
+	top: 15em;
+	left: 1em;
+}
+
+#time-sheet-employee-info td {
+	text-align: left;
+	padding-right: 5em;
+}
+
+#time-sheet-title {
+	text-align: center;
+	font-size: 20pt;
+	margin-bottom: 2em;
+	padding-top: 1em;
+}
+
+#leave-balance-table {
+	position: absolute;
+	left: 52em;
+	top: 50em;
+}
+
+#leave-balance-table td {
+	padding: .3em 1em;
+}
+
+#salary-assignment-table {
+	position: absolute;
+	left: 52em;
+	top: 25em;
+}
+
+.hidden {
+	display: none;
+}
+
+/* documents to approve list and reports*/
+.approve-table, .report-table, .report-table-small {
+	position: relative;
+	top: 0;
+	left: 0;
+	margin: auto;
+	margin-bottom: 1em;
+}
+
+.report-table-small {
+	float:left;
+
+}
+
+.report-table-small#employee-info {
+	float:none;	
+}
+.report-table-small#employee-info td {
+	text-align: left;
+	padding: 0 2em;
+}
+
+.report-table td {
+	padding: 1em ;
+	width: 20em;
+	text-align: left;
+}
+
+.report-table-small td {
+	text-align: centre;
+	max-width: 10em;
+	width: auto;
+	font-size: 8pt;
+	padding: .1em .5em;
+}
+
+.document-view {
+	width: 210mm;
+	min-height: 297mm;
+	background: white;
+	margin: auto;
+}
+
+/* salary assignment table */
+
+#report-salary-assignment td {
+	width: 5em;
+}
+
+.balance-information, .side-information {
+	border-radius: .5em;
+	border: 2px gray ridge;
+	width: 12em;
+	padding: 1em;
+	margin-right: 1em;
+	float: right;
+}
+
+.balance-information td {
+	padding: .3em 1em 0em 0;
+}

@@ -1,0 +1,32 @@
+{% extends "managerbase.html" %}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link href={% static "css/frontpage.css" %} rel="stylesheet" type="text/css"/>
+{% endblock stylesheets %}
+
+
+{% block content %}
+
+
+<div class="page-title">
+<p> 
+{% trans "Office Manager" %}
+</p>
+</div>
+
+<div class="front-page-buttons">
+	<a href='/timesheet'>
+ 	<div type="button" class="front-page-button" id="timesheets-button">{% trans "Work Time Reporting" %}</div> 
+	</a>
+
+
+</div>
+
+
+
+{% endblock content %} 
+
+
