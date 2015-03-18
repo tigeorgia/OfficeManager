@@ -4,6 +4,15 @@
 {% load staticfiles %}
 
 
+{% block scripts %}
+<!-- minimal jquery ui to fold the generated documents -->
+<script>
+$(function() {
+$( ".manager-reports" ).accordion({collapsible: true, active: false});
+});
+</script>
+{% endblock scripts %}
+
 {% block content %}
 <div class="report-form-container">
 	<form method="post" action=''>
@@ -39,10 +48,12 @@
 <div class="manager-reports">
 
 {% for viewdata in reportdata.documents.timesheets %}
+
 	
 	{% with timesheetemployee=viewdata.timesheet.employee %}
 	{% with viewdata=viewdata.viewdata %}
 	
+	<h3>Time Sheet - {{ timesheetemployee.user.username }}</h3>	
 	{% include "report_time_sheet.html" %}
 	
 	{% endwith %}
@@ -54,7 +65,8 @@
 {% for leave in reportdata.documents.leaverequests %}
 	
 	{% with viewdocument=leave %}
-
+	
+	<h3>Leave Request - {{ leave.data.employee.user.username }}</h3>
 	{% include "report_leave_request.html" %}
 
 	{% endwith %}
@@ -68,7 +80,7 @@
 	{% with salary_sources=reportdata.documents.salarysources %}
 	{% with assignments=reportdata.documents.salaryassignments %}
 	{% with employee_list=reportdata.documents.employeelist %}
-	
+	<h3>Salary Assignments - {{ period }}</h3>
 	{% include "report_salary_assignments.html" %}
 	
 	{% endwith %}
