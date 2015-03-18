@@ -56,7 +56,10 @@ def employee_login( request, callback_view ):
     if login_status == 0:
         return  callback_view( request )
     elif login_status == 1:
-        return render( request, "account_not_registered.html" )
+        return render( request, "frontpage.html",{"message": "You have successfully authenticated but " +
+                                                  "your time sheet account has not been created by " +
+                                                  "the Office Manager. Please, request the account " +
+                                                  "creation and log in again. Thank you."})
 
     # this, if login_status == 2
     if request.method == "POST":
