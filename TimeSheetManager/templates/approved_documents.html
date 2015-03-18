@@ -13,31 +13,31 @@
 		<select name="data-period">
 			<option>All</option>
 			{% for period in viewdata.periods %}
-				{% if forloop.counter0 == 0 %}
-				<option selected>{{ period.period }}</option>
-				{% else %}
-				<option>{{ period.period }}</option>
-				{% endif %}
+			<option {% if period.period == reportdata.report_period %} selected {% endif %}>{{ period.period }}</option>
 			{% endfor %}
 		</select>
 
 		<label>Employee</label>
-		<select name="data-period">
+		<select name="employee">
 			<option>All</option>
 			{% for employee in viewdata.employees %}
-			<option>{{ employee.user.username }}</option>
+			<option {% if employee.user.username == reportdata.report_employee %} selected {% endif %}>{{ employee.user.username }}</option>
 			{% endfor %}
 		</select>
 
 		<label>Document</label>
-		<select name="data-period">
-			<option vlaue="ALL">All</option>
-			<option vlaue="TIMESHEET">Time sheet</option>
-			<option vlaue="KLEAVE">Leave request</option>
-			<option vlaue="KLEAVE">Salary assignments</option>
+		<select name="document-type">
+			{% for key, value in viewdata.documenttypes.items %}
+			<option value="{{ key }}" {% if key == reportdata.report_document %} selected {%endif %}>{{ value }}</option>
+			{% endfor %}
 		</select>
 
 	<input type="submit" name="button" value="Update View"></input>
 	</form>
+</div>
+
+<div>
+
+
 </div>
 {% endblock content %}

@@ -504,14 +504,108 @@ def approved_documents( request ):
     message = None
     # dropdown with periods
     periods = TimeSheet.objects.raw( 'select id, period from TimeSheetManager_timesheet group by period order by period desc' )
+    period_list = []
+    for period in periods:
+        period_list.append( period.period )
 
-    # dropdown with types of documents
+    # dropdown with types of document types is defined in the template
 
     # dropdown with employees
     employees = Employee.objects.all()
 
+    document_types = {"ALL": "All",
+                      "TIMESHEET": "Time sheet",
+                      "LEAVEREQUEST": "Leave request",
+                      "SALARYASSIGNMENT": "Salary assignment"}
+
+
     viewdata = {"periods": periods,
-                "employees": employees}
+                "employees": employees,
+                "documenttypes" : document_types,
+                }
+
+    reportdata = {"report_period": periods[0].period,
+                  "report_employee": "All",
+                  "report_document": "ALL"}
+
+    documents = {}
+
+    if request.method == "POST":
+        reportdata["report_period"] = report_period = request.POST['data-period']
+        reportdata["report_document"] = report_document = request.POST['document-type']
+        reportdata["report_employee"] = report_employee = request.POST['employee']
+
+
+        # pylint: disable=no-member
+        if report_employee == "All":
+            report_employee = Employee.objects.all()
+        else:
+            report_user = User.objects.get( username = report_employee )
+            report_employee = [Employee.objects.get( user = report_user )]
+
+        if report_period == "All":
+            report_period = period_list
+ 
+            # report dates
+            month, year = period_list[0].split( ' ' )
+            month_number = timesheet.months.index( month ) + 1
+            start_date = datetime.date( int( year ), month_number, 1 )
+ 
+            month, year = period_list[-1].split( ' ' )
+            month_number = timesheet.months.index( month ) + 1
+            end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
+ 
+        else:
+            report_period = [report_period]
+            # report dates
+            month, year = period_list[0].split( ' ' )
+            month_number = timesheet.months.index( month ) + 1
+            start_date = datetime.date( int( year ), month_number, 1 )
+ 
+            end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
+ 
+ 
+        if report_document == "ALL" or report_document == "TIMESHEET":
+            time_sheets = TimeSheet.objects.filter( employee__in = report_employee,
+                                                    period__in = report_period )
+        else:
+            time_sheets = None
+ 
+        
+
+ 
+        documents['timesheets'] = time_sheets      
+         
+
+        if report_document == "ALL" or report_document == "LEAVEREQUEST":
+            leave_requests = []
+            for each_employee in report_employee:
+                l_requests = timesheet.find_leave_requests( each_employee, ( start_date, end_date ) )
+                leave_requests.append( l_requests['requests'])
+        else:
+            leave_requests = None
+  
+        documents['leaverequests'] = leave_requests
+
+
+    
+        if report_document == "ALL" or report_document == "SALARYASSIGNMENT":
+            if reportdata["report_period"] == 'All':
+                salary_assigments = SalaryAssignment.objects.all()
+            else:
+                salary_assigments = SalaryAssignment.objects.filter( period = reportdata["report_period"])
+        else:
+            salary_assigments = None
+              
+        documents['salaryassignments'] = salary_assigments
+ 
+ 
+        reportdata['documents'] = documents
+         
+        
+        message = documents
+        
     return render( request, "approved_documents.html", {"employee" : employee,
                                                         "message": message,
-                                                        "viewdata": viewdata} )
+                                                        "viewdata": viewdata,
+                                                        "reportdata": reportdata} )
