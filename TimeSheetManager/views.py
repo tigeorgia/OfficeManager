@@ -249,6 +249,11 @@ def list_requests_to_approve( request ):
 
 
     documents = timesheet.documents_to_approve( request )
+    
+    if documents['time_sheets'].count() == 0 and documents['leave_requests'].count() == 0:
+        return render( request, "time_sheet_front.html", {"employee": employee, 
+                                                          "message": "You don't have any documents to approve"})
+    
     return render( request, "documents_to_approve.html", {"employee" : employee,
                                                           "documents" : documents,
                                                           "viewdocument" : view_document,
@@ -286,11 +291,13 @@ def manage_salary_sources( request ):
             if request.POST['edited_id'] == "":
                 salary_source = SalarySource()
                 salary_source.code = request.POST['code']
-                salary_source.save()
+                if salary_source.code.strip() != '':
+                    salary_source.save()
             else:
                 salary_source = SalarySource.objects.get( id = request.POST['edited_id'] )
                 salary_source.code = request.POST['code']
-                salary_source.save()
+                if salary_source.code.strip() != '':
+                    salary_source.save()
 
 
     salary_sources = SalarySource.objects.all()
@@ -324,33 +331,41 @@ def assign_salary_sources( request ):
     time_sheet_data = timesheet.generate_timesheet_data( employee )
 
     curr_employee = None
-
+    message = None
+    
     if request.method == "POST":
         if request.POST['button'] == "Submit":
+            assignment_sum = 0
             for s_source in salary_sources:
-                current_assignment = SalaryAssignment.objects.filter( 
-                                         source = SalarySource.objects.get( code = s_source.code ),
-                                         employee = Employee.objects.get( id = request.POST["employee"] ),
-                                         period = time_sheet_data['period']
-                                        )
-                if current_assignment.count() == 1:
-                    current_assignment = SalaryAssignment.objects.get( 
-                                         source = SalarySource.objects.get( code = s_source.code ),
-                                         employee = Employee.objects.get( id = request.POST["employee"] ),
-                                         period = time_sheet_data['period']
-                                        )
-                    current_assignment.percentage = request.POST["amount-" + s_source.code]
-                    current_assignment.save()
-                else:
+                assignment_sum += int( request.POST["amount-" + s_source.code]) 
+            
+            if assignment_sum == 100:
 
-                    new_source = SalaryAssignment( 
-                                                 source = SalarySource.objects.get( code = s_source.code ),
-                                                 employee = Employee.objects.get( id = request.POST["employee"] ),
-                                                 period = time_sheet_data['period'],
-                                                 percentage = request.POST["amount-" + s_source.code] )
-
-                    new_source.save()
-
+                for s_source in salary_sources:
+                    current_assignment = SalaryAssignment.objects.filter( 
+                                             source = SalarySource.objects.get( code = s_source.code ),
+                                             employee = Employee.objects.get( id = request.POST["employee"] ),
+                                             period = time_sheet_data['period']
+                                            )
+                    if current_assignment.count() == 1:
+                        current_assignment = SalaryAssignment.objects.get( 
+                                             source = SalarySource.objects.get( code = s_source.code ),
+                                             employee = Employee.objects.get( id = request.POST["employee"] ),
+                                             period = time_sheet_data['period']
+                                            )
+                        current_assignment.percentage = request.POST["amount-" + s_source.code]
+                        current_assignment.save()
+                    else:
+    
+                        new_source = SalaryAssignment( 
+                                                     source = SalarySource.objects.get( code = s_source.code ),
+                                                     employee = Employee.objects.get( id = request.POST["employee"] ),
+                                                     period = time_sheet_data['period'],
+                                                     percentage = request.POST["amount-" + s_source.code] )
+    
+                        new_source.save()
+            else:
+                message = "The assignments must amount to 100%"
 
         # retrieve data to present correct value in the table
 
@@ -381,7 +396,8 @@ def assign_salary_sources( request ):
                                                    "percentage_choice": range( 101 ),
                                                    "period": time_sheet_data['period'],
                                                    "assignments": salary_assignments,
-                                                   "currentemployee": curr_employee} )
+                                                   "currentemployee": curr_employee,
+                                                   "message": message} )
 
 
 
