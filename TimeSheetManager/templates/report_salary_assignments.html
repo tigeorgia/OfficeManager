@@ -1,10 +1,19 @@
 <!-- Listing all defined salary sources for quickreview -->
 {% if assignments.count > 0 %}
 <div class="document-view">
+	
+	<div id="time-sheet-title" class="page-title">
+
+	Salary Assignments - {{ period }}
+	
+	</div>
+
+
+
 	<table class="time-sheet-table report-table-small" id="report-salary-assignment">
 		<thead>
-			<td>Period</td>
 			<td>Employee</td>
+			<td>Period</td>
 			{% for s_source in salary_sources %}
 				<td>{{ s_source.code }}</td>
 			{% endfor %}
@@ -17,7 +26,7 @@
 			<td>{{ period }}</td>
 			{% for s_source in salary_sources %}
 				{% for s_assign in assignments %}
-					{% if s_assign.employee.id = empl.id and s_assign.source.code = s_source.code %}
+					{% if s_assign.employee.id = empl.id and s_assign.source.code = s_source.code and s_assign.period == period %}
 						<td>{{ s_assign.percentage }} &#37;</td>
 					{% endif %}
 				{% endfor %}

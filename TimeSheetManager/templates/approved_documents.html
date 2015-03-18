@@ -36,7 +36,46 @@
 	</form>
 </div>
 
-<div>
+<div class="manager-reports">
+
+{% for viewdata in reportdata.documents.timesheets %}
+	
+	{% with timesheetemployee=viewdata.timesheet.employee %}
+	{% with viewdata=viewdata.viewdata %}
+	
+	{% include "report_time_sheet.html" %}
+	
+	{% endwith %}
+	{% endwith %}
+
+{% endfor %}
+
+
+{% for leave in reportdata.documents.leaverequests %}
+	
+	{% with viewdocument=leave %}
+
+	{% include "report_leave_request.html" %}
+
+	{% endwith %}
+	
+{% endfor %}
+
+
+
+{% for period in reportdata.documents.periodlist %}
+
+	{% with salary_sources=reportdata.documents.salarysources %}
+	{% with assignments=reportdata.documents.salaryassignments %}
+	{% with employee_list=reportdata.documents.employeelist %}
+	
+	{% include "report_salary_assignments.html" %}
+	
+	{% endwith %}
+	{% endwith %}
+	{% endwith %}
+	
+{% endfor %}
 
 
 </div>

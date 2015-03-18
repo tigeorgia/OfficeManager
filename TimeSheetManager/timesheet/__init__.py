@@ -62,7 +62,7 @@ def timesheet_salary_sources( employee, period ):
 
 
 
-def generate_timesheet_data( employee, time_sheet = None ):
+def generate_timesheet_data( employee, time_sheet = None, recalc_balances = False ):
 
     start_hour, start_minute = employee.workday_start.hour, employee.workday_start.minute
     end_hour, end_minute = employee.workday_end.hour, employee.workday_end.minute
@@ -141,9 +141,19 @@ def generate_timesheet_data( employee, time_sheet = None ):
     earn_HOLS = employee.leave_earn_HOLS
     earn_SICK = employee.leave_earn_SICK
 
+    if recalc_balances:
+        balance_HOLS = time_sheet.leave_balance_HOLS - time_sheet.leave_earn_HOLS + time_sheet.leave_used_HOLS
+        balance_SICK = time_sheet.leave_balance_SICK - time_sheet.leave_earn_SICK + time_sheet.leave_used_SICK
+
+        earn_HOLS = time_sheet.leave_earn_HOLS
+        earn_SICK = time_sheet.leave_earn_SICK
+        leave_used['HOLS'] = time_sheet.leave_used_HOLS
+        leave_used['SICK'] = time_sheet.leave_used_SICK
+        
 
     end_HOLS = balance_HOLS + earn_HOLS - leave_used['HOLS']
     end_SICK = balance_SICK + earn_SICK - leave_used['SICK']
+
 
     leave_data = ( balance_HOLS, balance_SICK, earn_HOLS, earn_SICK, leave_used['HOLS'], leave_used['SICK'], end_HOLS, end_SICK )
     leave_data_str = ( 

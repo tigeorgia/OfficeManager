@@ -81,6 +81,16 @@ class TimeSheet( models.Model ):
     start_date = models.DateField()
     end_date = models.DateField()
     approved_by = models.CharField( max_length = 64)
+    
+    # need to add the copy of these from employee to be able to report correctly
+    # these here are final,after time sheet approval
+    leave_balance_HOLS = models.IntegerField( default = 0)
+    leave_balance_SICK = models.IntegerField( default = 0)
+    leave_earn_HOLS = models.IntegerField( default = 0)
+    leave_earn_SICK = models.IntegerField( default = 0)
+    leave_used_HOLS = models.IntegerField( default = 0)
+    leave_used_SICK = models.IntegerField( default = 0)
+    
 
 # salary Source
 class SalarySource( models.Model ):

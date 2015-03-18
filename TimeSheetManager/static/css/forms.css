@@ -58,3 +58,8 @@ form.submit-button {
 	margin: auto;	
 	padding: 1em 0 1em 1em;
 }
+
+.manager-reports {
+	float: right;
+	margin-right: 3em;
+}

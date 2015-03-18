@@ -1,135 +1,138 @@
 {% load i18n %} 
 
-<div id="time-sheet-title" class="page-title">
+<div class="document-view">
 
-Time Sheet Effort Reporting<br>
-Transparency International Georgia<br>
-LOCATION - {{ timesheetemployee.location }}
+	<div id="time-sheet-title" class="page-title">
+	
+	Time Sheet Effort Reporting<br>
+	Transparency International Georgia<br>
+	LOCATION - {{ timesheetemployee.location }}
+	
+	</div>
+	
+	<!-- employee information -->
+	
+	
+	<table  class="time-sheet-table report-table-small" id="employee-info">
+		<tr>
+			<td>Report period:</td><td>{{ viewdata.period }}</td>
+		</tr>
+		<tr>
+			<td>Name:</td><td>{{ timesheetemployee.user.first_name }} {{ timesheetemployee.user.last_name }}</td>
+		</tr>
+		<tr>
+			<td>Position:</td><td>{{ timesheetemployee.position }}</td>
+		</tr>
+		<tr>
+			<td>Approving<br>Supervisor</td><td>
+			{% if viewdata.supervisor %}
+			{{ viewdata.supervisor }}
+			{% else %}
+			{{ employee.supervisor.first_name }} {{ employee.supervisor.last_name }}
+			{% endif %}
+			</td>	
+		</tr>
+		<tr>
+			<td>Approve<br>Date</td><td>
+			{% if viewdata.approve_date %}
+			{{ viewdata.approve_date }}
+			{% else %}
+			Pending
+			{% endif %}
+			</td>	
+		</tr>
+	</table>
+	</table>
+	
+	
+	
+	<!-- time sheet -->
+	<table class="time-sheet-table report-table-small">
+		<thead class="table-header">
+			<td>Pay Period:<br>Day</td>
+			<td>Date/Day</td>
+			<td>Start<br>Time</td>
+			<td>Finish<br>Time</td>
+			<td>Break<br>Hours</td>
+			<td>Hours<br>Worked</td>
+		</thead>
+		<tbody>
+		{% for day in viewdata.calendar %}
+			
+			<tr {% if day.6 == 5 or day.6 == 6 %} class="gray-row" {% endif %}>
+				<td>{{ day.0 }}</td>
+				<td>{{ day.1 }}</td>
+				{% if day.2 == day.3 %}
+					<td colspan="2">{{ day.2 }}</td>
+				{% else %}
+					<td>{{ day.2 }}</td>
+					<td>{{ day.3 }}</td>
+				{% endif %}
+				<td>{{ day.4 }}</td>
+				<td>{{ day.5 }}</td>
+			</tr>
+		{% endfor %}
+		</tbody>
+		<tfoot class="table-footer">
+			<td colspan="5"></td>
+			<td>{{ viewdata.working_time }}</td>
+		</tfoot>
+	</table>
+	
+	
+	<!-- slary assignment -->
+	<table class="time-sheet-table report-table-small">
+	
+		<thead>
+			<td>{% trans "Grant code" %}</td><td>% {% trans "to charge" %}</td>
+		</thead>
+		
+		
+		<tbody>
+			{% for key,value in viewdata.salary_sources.items %}
+			<tr><td>{{ key }}</td><td>{{ value }} &#37;</td></tr>
+			{% endfor %}
+		</tbody>
+	
+	</table>
+	
+	
+	<!-- leave balance -->
+	<table class="time-sheet-table report-table-small">
+		<thead>
+			<td></td><td>Vacation</td><td>Sick</td><td></td>
+		</thead>
+		<tbody>
+			<tr>
+				<td>Beginning<br>balance</td>
+				<td class="gray-cell">{{ viewdata.leave.0 }}</td>
+				<td class="gray-cell">{{ viewdata.leave.1 }}</td>
+				<td></td>
+			</tr>
+	
+			<tr>
+				<td>Earn<br>(+)</td>
+				<td class="gray-cell">{{ viewdata.leave.2 }}</td>
+				<td class="gray-cell">{{ viewdata.leave.3 }}</td>
+				<td></td>
+			</tr>
+	
+			<tr>
+				<td>Used<br>(-)</td>
+				<td class="gray-cell">{{ viewdata.leave.4 }}</td>
+				<td class="gray-cell">{{ viewdata.leave.5 }}</td>
+				<td></td>
+			</tr>
+	
+			<tr>
+				<td>End<br>balance<br>(=)</td>
+				<td class="gray-cell">{{ viewdata.leave.6 }}</td>
+				<td class="gray-cell">{{ viewdata.leave.7 }}</td>
+				<td></td>
+			</tr>
+	
+		</tbody>
+	</table>
 
 </div>
-
-<!-- employee information -->
-
-
-<table  class="time-sheet-table report-table-small" id="employee-info">
-	<tr>
-		<td>Report period:</td><td>{{ viewdata.period }}</td>
-	</tr>
-	<tr>
-		<td>Name:</td><td>{{ timesheetemployee.user.first_name }} {{ timesheetemployee.user.last_name }}</td>
-	</tr>
-	<tr>
-		<td>Position:</td><td>{{ timesheetemployee.position }}</td>
-	</tr>
-	<tr>
-		<td>Approving<br>Supervisor</td><td>
-		{% if viewdata.supervisor %}
-		{{ viewdata.supervisor }}
-		{% else %}
-		{{ employee.supervisor.first_name }} {{ employee.supervisor.last_name }}
-		{% endif %}
-		</td>	
-	</tr>
-	<tr>
-		<td>Approve<br>Date</td><td>
-		{% if viewdata.approve_date %}
-		{{ viewdata.approve_date }}
-		{% else %}
-		Pending
-		{% endif %}
-		</td>	
-	</tr>
-</table>
-</table>
-
-
-
-<!-- time sheet -->
-<table class="time-sheet-table report-table-small">
-	<thead class="table-header">
-		<td>Pay Period:<br>Day</td>
-		<td>Date/Day</td>
-		<td>Start<br>Time</td>
-		<td>Finish<br>Time</td>
-		<td>Break<br>Hours</td>
-		<td>Hours<br>Worked</td>
-	</thead>
-	<tbody>
-	{% for day in viewdata.calendar %}
-		
-		<tr {% if day.6 == 5 or day.6 == 6 %} class="gray-row" {% endif %}>
-			<td>{{ day.0 }}</td>
-			<td>{{ day.1 }}</td>
-			{% if day.2 == day.3 %}
-				<td colspan="2">{{ day.2 }}</td>
-			{% else %}
-				<td>{{ day.2 }}</td>
-				<td>{{ day.3 }}</td>
-			{% endif %}
-			<td>{{ day.4 }}</td>
-			<td>{{ day.5 }}</td>
-		</tr>
-	{% endfor %}
-	</tbody>
-	<tfoot class="table-footer">
-		<td colspan="5"></td>
-		<td>{{ viewdata.working_time }}</td>
-	</tfoot>
-</table>
-
-
-<!-- slary assignment -->
-<table class="time-sheet-table report-table-small">
-
-	<thead>
-		<td>{% trans "Grant code" %}</td><td>% {% trans "to charge" %}</td>
-	</thead>
 	
-	
-	<tbody>
-		{% for key,value in viewdata.salary_sources.items %}
-		<tr><td>{{ key }}</td><td>{{ value }} &#37;</td></tr>
-		{% endfor %}
-	</tbody>
-
-</table>
-
-
-<!-- leave balance -->
-<table class="time-sheet-table report-table-small">
-	<thead>
-		<td></td><td>Vacation</td><td>Sick</td><td></td>
-	</thead>
-	<tbody>
-		<tr>
-			<td>Beginning<br>balance</td>
-			<td class="gray-cell">{{ viewdata.leave.0 }}</td>
-			<td class="gray-cell">{{ viewdata.leave.1 }}</td>
-			<td></td>
-		</tr>
-
-		<tr>
-			<td>Earn<br>(+)</td>
-			<td class="gray-cell">{{ viewdata.leave.2 }}</td>
-			<td class="gray-cell">{{ viewdata.leave.3 }}</td>
-			<td></td>
-		</tr>
-
-		<tr>
-			<td>Used<br>(-)</td>
-			<td class="gray-cell">{{ viewdata.leave.4 }}</td>
-			<td class="gray-cell">{{ viewdata.leave.5 }}</td>
-			<td></td>
-		</tr>
-
-		<tr>
-			<td>End<br>balance<br>(=)</td>
-			<td class="gray-cell">{{ viewdata.leave.6 }}</td>
-			<td class="gray-cell">{{ viewdata.leave.7 }}</td>
-			<td></td>
-		</tr>
-
-	</tbody>
-</table>
-
-

@@ -203,6 +203,15 @@ def list_requests_to_approve( request ):
             # save the time sheet
             time_sheet.approve_date = datetime.date.today()
             time_sheet.approved_by = request.user.first_name + ' ' + request.user.last_name
+            
+            # save current SICK and HOLS balances to the timesheet 
+            time_sheet.leave_earn_HOLS = time_sheet_data['leave_data'][2]
+            time_sheet.leave_earn_SICK = time_sheet_data['leave_data'][3]
+            time_sheet.leave_used_HOLS = time_sheet_data['leave_data'][4]
+            time_sheet.leave_used_SICK = time_sheet_data['leave_data'][5]
+            time_sheet.leave_balance_HOLS = time_sheet_data['leave_data'][6]
+            time_sheet.leave_balance_SICK = time_sheet_data['leave_data'][7]
+            
             time_sheet.save()
 
 
@@ -545,66 +554,89 @@ def approved_documents( request ):
 
         if report_period == "All":
             report_period = period_list
- 
+
             # report dates
             month, year = period_list[0].split( ' ' )
             month_number = timesheet.months.index( month ) + 1
             start_date = datetime.date( int( year ), month_number, 1 )
- 
+
             month, year = period_list[-1].split( ' ' )
             month_number = timesheet.months.index( month ) + 1
             end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
- 
+
         else:
             report_period = [report_period]
             # report dates
             month, year = period_list[0].split( ' ' )
             month_number = timesheet.months.index( month ) + 1
             start_date = datetime.date( int( year ), month_number, 1 )
- 
+
             end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
- 
- 
+
+
         if report_document == "ALL" or report_document == "TIMESHEET":
             time_sheets = TimeSheet.objects.filter( employee__in = report_employee,
-                                                    period__in = report_period )
+                                                    period__in = report_period,
+                                                    approve_date__isnull = False )
+
+            documents['timesheets'] = []
+            for time_sheet in time_sheets:
+                document = {}
+                document['timesheet'] = time_sheet
+                document['viewdata'] = timesheet.generate_timesheet_data( time_sheet.employee, time_sheet, True)
+                
+                
+                documents['timesheets'].append( document)
         else:
-            time_sheets = None
- 
+            documents['timesheets'] = None
+
+            
+
+        
         
 
- 
-        documents['timesheets'] = time_sheets      
-         
 
         if report_document == "ALL" or report_document == "LEAVEREQUEST":
             leave_requests = []
             for each_employee in report_employee:
                 l_requests = timesheet.find_leave_requests( each_employee, ( start_date, end_date ) )
-                leave_requests.append( l_requests['requests'])
+                leave_requests.append( l_requests['requests'] )
+
+            documents['leaverequests'] = []
+            for req_list in leave_requests:
+                for l_req in req_list:
+                    l_req.type = dict( l_req.TYPES)[ l_req.type]
+                    documents['leaverequests'].append( {"data": l_req})
+
         else:
-            leave_requests = None
-  
-        documents['leaverequests'] = leave_requests
+            documents['leaverequests'] = None
+
+        
 
 
-    
+
         if report_document == "ALL" or report_document == "SALARYASSIGNMENT":
             if reportdata["report_period"] == 'All':
                 salary_assigments = SalaryAssignment.objects.all()
             else:
-                salary_assigments = SalaryAssignment.objects.filter( period = reportdata["report_period"])
+                salary_assigments = SalaryAssignment.objects.filter( period = reportdata["report_period"] )
+
+            documents['employeelist'] = report_employee
+            documents['periodlist'] = period_list
+            documents['salarysources'] = SalarySource.objects.all()
+
         else:
             salary_assigments = None
-              
+
         documents['salaryassignments'] = salary_assigments
- 
- 
+
+
+
         reportdata['documents'] = documents
-         
-        
-        message = documents
-        
+
+
+#         message = documents['leaverequests']
+
     return render( request, "approved_documents.html", {"employee" : employee,
                                                         "message": message,
                                                         "viewdata": viewdata,
