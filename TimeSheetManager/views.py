@@ -17,7 +17,7 @@ from django_auth_ldap.backend import LDAPBackend
 
 
 
-# a little ldap helper, need tpo change it so it gives me login names instead of display names
+# a little ldap helper, need to change it so it gives me login names instead of display names
 def available_user_list():
     ldap_client = ldap.initialize( settings.AUTH_LDAP_SERVER_URI )
     ldap_client.bind( settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD )
@@ -35,6 +35,8 @@ def available_user_list():
 
     return results
 
+def not_allowed( request):
+    return render( request, "managerbase.html", {"message": "You are not allowed here"})
 
 def check_employee_login( request ):
 
@@ -91,6 +93,9 @@ def front_page( request ):
 
 def submit_time_sheet( request ):
 
+    if not request.user.is_authenticated():
+        return not_allowed(request)
+    
     employee = Employee.objects.get( user = request.user )
     timesheet_data = timesheet.generate_timesheet_data( employee )
 
@@ -128,6 +133,9 @@ def submit_time_sheet( request ):
 
 
 def request_leave( request ):
+
+    if not request.user.is_authenticated():
+        return not_allowed(request)
 
     employee = Employee.objects.get( user = request.user )
     time_sheet_data = timesheet.generate_timesheet_data( employee )
@@ -185,6 +193,10 @@ def request_leave( request ):
 
 
 def list_requests_to_approve( request ):
+
+    if not request.user.is_authenticated():
+        return not_allowed(request)    
+    
     employee = Employee.objects.get( user = request.user )
     time_sheet_employee = None
 
@@ -248,8 +260,15 @@ def list_requests_to_approve( request ):
 
 
 def manage_salary_sources( request ):
-
+    
+    if not request.user.is_authenticated():
+        return not_allowed(request)
+        
     employee = Employee.objects.get( user = request.user )
+
+    if employee.role != 'OMAN' and employee.role != 'FMAN':
+        return not_allowed(request)
+            
     edited_id = ""
     form = SalarySourceForm()
 
@@ -287,8 +306,15 @@ def manage_salary_sources( request ):
 
 
 def assign_salary_sources( request ):
+    
+    if not request.user.is_authenticated():
+        return not_allowed(request)
+        
     employee = Employee.objects.get( user = request.user )
 
+    if employee.role != 'OMAN' and employee.role != 'FMAN':
+        return not_allowed(request)
+    
     # pylint: disable=no-member
     users = User.objects.all().order_by( 'last_name', 'first_name' )
 
@@ -361,6 +387,15 @@ def assign_salary_sources( request ):
 
 
 def manage_users( request ):
+    
+    if not request.user.is_authenticated():
+        return not_allowed(request) 
+    
+    employee = Employee.objects.get( user = request.user )
+
+    if employee.role != 'OMAN':
+        return not_allowed(request)    
+    
     employee = Employee( user = request.user )
     available_accounts = available_user_list()
     available_roles = employee.ROLES
@@ -512,7 +547,14 @@ def manage_users( request ):
 
 
 def approved_documents( request ):
+    if not request.user.is_authenticated():
+        return not_allowed(request)
+        
     employee = Employee.objects.get( user = request.user )
+
+    if employee.role != 'OMAN':
+        return not_allowed(request)
+    
     message = None
     # dropdown with periods
     periods = TimeSheet.objects.raw( 'select id, period from TimeSheetManager_timesheet group by period order by period desc' )
