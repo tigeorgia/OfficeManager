@@ -1,4 +1,4 @@
-django
-django-auth-ldap
+django==1.7.6
+django-auth-ldap==1.2.5
 # django-bootstrap3
 # django-jquery-ui
