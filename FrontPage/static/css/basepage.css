@@ -60,3 +60,11 @@ body {
 	padding-top: 60pt;
 }
 
+.navigation-menu {
+	width: 10em;
+	font-size: 3pt;
+}
+
+.navigation-menu .ui-menu-item {
+	width: 100%;
+}

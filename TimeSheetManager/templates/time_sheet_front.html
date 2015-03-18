@@ -4,6 +4,8 @@
 {% load staticfiles %}
 
 
+
+
 {% block content %}
 
 <!-- 
@@ -25,16 +27,17 @@ For O Manager:
 -->
 
 
+
 <!-- This will always be true but it's here for clarity -->
 {% if employee.role == 'EMPL' or employee.role == 'FMAN' or employee.role == 'OMAN'%}
 
 <div class="front-page-buttons timesheet-actions" id="employee-actions">
 	<a href="submittimesheet">
- 	<div type="button" class="front-page-button time-sheets-button">{% trans "Submit a Time Sheet" %}</div> 
+ 	<div type="button" class="front-page-button time-sheets-button">{% trans "Submit Time Sheet" %}</div> 
 	</a>
 
 	<a href='requestleave'>
- 	<div type="button" class="front-page-button time-sheets-button">{% trans "Request a Leave" %}</div> 
+ 	<div type="button" class="front-page-button time-sheets-button">{% trans "Request Leave" %}</div> 
 	</a>
 	<!--
 		<a href=''>
