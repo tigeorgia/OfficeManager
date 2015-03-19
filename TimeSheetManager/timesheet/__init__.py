@@ -198,7 +198,7 @@ def send_notification( request, notify_type, email_data ):
 
     if notify_type == "SUBMITTED":
         # notify supervisor about documents to approve
-        recipient = email_data.employee.supervisor.email
+        recipient = [email_data.employee.supervisor.email]
         subject = "New document to approve"
 
 
@@ -218,14 +218,13 @@ def send_notification( request, notify_type, email_data ):
 
             info_content = "Employee: %s has submitted a leave request\n\n" % ( employee_name, )
 
-
-        send_mail( subject, info_content + goto_content, employee_name, [recipient] )
+        content = info_content + goto_content
 
 
     if notify_type == "APPROVED":
 
         # notify employee about approval
-        recipient = email_data.employee.user.email
+        recipient = [email_data.employee.user.email]
         sender = "%s %s" % ( request.user.first_name, request.user.last_name )
 
         if type( email_data ) == TimeSheetManager.models.Leave:
@@ -240,7 +239,6 @@ def send_notification( request, notify_type, email_data ):
             content = "Your time sheet for %s has been approved" % ( email_data.period )
             document = "time sheet"
 
-        send_mail( subject, content, sender, [recipient] )
 
         # notify managers about complete document
 
@@ -256,29 +254,32 @@ def send_notification( request, notify_type, email_data ):
         site_address[-1] = 'approveddocuments'
         site_address = '/'.join( site_address )
 
-        document_employee = "%s %s" % (email_data.employee.user.first_name, email_data.employee.user.last_name)
+        document_employee = "%s %s" % ( email_data.employee.user.first_name, email_data.employee.user.last_name )
 
         content = "%s has approved a %s for %s \n\n" % ( sender, document, document_employee )
         content += "Please go to:\n\n%s\n\nto view approved documents." % site_address
 
-        send_mail( subject, content, sender, email_list )
+        recipient = email_list
+        send_mail( subject, content, sender, email_list, fail_silently = True )
 
 
 
     if notify_type == "SALARY_ASSIGNED":
-        recipient = email_data.employee.user.email
-        
-        sender = request.user.email
+        recipient = [email_data.employee.user.email]
+
+        sender = employee_name
 
         site_address = request.build_absolute_uri().split( '/' )
         site_address[-1] = 'submittimesheet'
         site_address = '/'.join( site_address )
-        
+
         content = "Your salary assignment for %s is complete.\n\n" % email_data.period
-        content += "Please go to \n\n%s\n\n to submit your time sheet for %s" % (site_address, email_data.period)
-        
+        content += "Please go to \n\n%s\n\n to submit your time sheet for %s" % ( site_address, email_data.period )
+
         subject = "Submit your time sheet"
-        send_mail(subject, content, sender, [recipient])
-        
-        
+
+
+    send_mail( subject, content, sender, recipient, fail_silently = True )
+
+
 
