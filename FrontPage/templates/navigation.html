@@ -1,19 +1,16 @@
-{% block scripts %}
-<script>
-$(function() {
-	$( "#nav-menu" ).menu();
-});
-</script>
-{% endblock scripts %}
+<!-- 
+	{% block scripts %}
+	<script>
+	$(function() {
+		$( "#nav-menu" ).menu();
+	});
+	</script>
+	{% endblock scripts %}
+-->
 
-
-
-<div class="navigation-menu">
+<div id="navigation-menu">
 
 	<ul id="nav-menu">
-		<li>
-		Work Time Reporting	
-		<ul>
 		<li><a href="submittimesheet">Submit Time Sheet</a></li>	
 		<li><a href="requestleave">Request Leave</a></li>	
 		<li><a href="docstoapprove">Approve Documents</a></li>
@@ -27,8 +24,6 @@ $(function() {
 		<li><a href="manageaccounts">Employees</a></li>	
 		<li><a href="approveddocuments">Approved Documents</a></li>
 		{% endif %}
-		</ul>
-		</li>
 	</ul>
 
 

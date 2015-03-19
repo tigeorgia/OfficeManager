@@ -11,6 +11,7 @@
 html {
 	width: 100%;
 	height: 300%;
+	padding-top: 4em;
 }
 
 body {
@@ -40,18 +41,26 @@ body {
 	right: 0; top: 0;
 }
 
-#site-header #user-info a {
-	border-radius: 6pt;
+#site-header #user-info a,
+#navigation-menu * a {
+	border-radius: 4pt;
 	border: 2px gray ridge;
 	padding: .3em;
 	margin-left: 2em;
 }
 
-#site-header #user-info a:HOVER {
+#navigation-menu * a {
+	margin-left: 1em;
+	border: 1px gray ridge;
+}
+
+#site-header #user-info a:HOVER,
+#navigation-menu * li a:HOVER {
 	box-shadow: 2px 2px 2px #29578c;
 }
 
-#site-header #user-info a:ACTIVE {
+#site-header #user-info a:ACTIVE,
+#navigation-menu li a:ACTIVE {
 	box-shadow: none;
 }
 
@@ -60,11 +69,18 @@ body {
 	padding-top: 60pt;
 }
 
-.navigation-menu {
-	width: 10em;
-	font-size: 3pt;
+
+#navigation-menu {
+	position: absolute;
+	right: 0;
+	left:0;
+	top: 0;
+	background-color: black;
 }
 
-.navigation-menu .ui-menu-item {
-	width: 100%;
+#navigation-menu * li {
+	display: inline-block;
+/* 	margin-right: 2em; */
 }
+
+

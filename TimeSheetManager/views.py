@@ -35,8 +35,8 @@ def available_user_list():
 
     return results
 
-def not_allowed( request):
-    return render( request, "managerbase.html", {"message": "You are not allowed here"})
+def not_allowed( request ):
+    return render( request, "managerbase.html", {"message": "You are not allowed here"} )
 
 def check_employee_login( request ):
 
@@ -58,10 +58,10 @@ def employee_login( request, callback_view ):
     if login_status == 0:
         return  callback_view( request )
     elif login_status == 1:
-        return render( request, "frontpage.html",{"message": "You have successfully authenticated but " +
+        return render( request, "frontpage.html", {"message": "You have successfully authenticated but " +
                                                   "your time sheet account has not been created by " +
                                                   "the Office Manager. Please, request the account " +
-                                                  "creation and log in again. Thank you."})
+                                                  "creation and log in again. Thank you."} )
 
     # this, if login_status == 2
     if request.method == "POST":
@@ -94,15 +94,21 @@ def front_page( request ):
 def submit_time_sheet( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed(request)
-    
+        return not_allowed( request )
+
     employee = Employee.objects.get( user = request.user )
+
     timesheet_data = timesheet.generate_timesheet_data( employee )
+    timesheet_db = TimeSheet.objects.filter( employee = employee, period = timesheet_data['period'] )
+    # it the time sheet has already been submitted, correct information needs to be presented
+    # with respect to balances
+    if timesheet_db.count() > 0:
+        timesheet_data = timesheet.generate_timesheet_data( employee, timesheet_db[0], True )
+
 
     if request.method == "POST":
         # check if already sumbitted
 
-        timesheet_db = TimeSheet.objects.filter( employee = employee, period = timesheet_data['period'] )
         if timesheet_db.count() > 0:
             return render( request, "time_sheet_front.html",
                            {'employee': employee, 'message' : 'This timesheet has already been submitted'} )
@@ -135,7 +141,7 @@ def submit_time_sheet( request ):
 def request_leave( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed(request)
+        return not_allowed( request )
 
     employee = Employee.objects.get( user = request.user )
     time_sheet_data = timesheet.generate_timesheet_data( employee )
@@ -195,8 +201,8 @@ def request_leave( request ):
 def list_requests_to_approve( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed(request)    
-    
+        return not_allowed( request )
+
     employee = Employee.objects.get( user = request.user )
     time_sheet_employee = None
 
@@ -218,15 +224,15 @@ def list_requests_to_approve( request ):
             # save the time sheet
             time_sheet.approve_date = datetime.date.today()
             time_sheet.approved_by = request.user.first_name + ' ' + request.user.last_name
-            
-            # save current SICK and HOLS balances to the timesheet 
+
+            # save current SICK and HOLS balances to the timesheet
             time_sheet.leave_earn_HOLS = time_sheet_data['leave_data'][2]
             time_sheet.leave_earn_SICK = time_sheet_data['leave_data'][3]
             time_sheet.leave_used_HOLS = time_sheet_data['leave_data'][4]
             time_sheet.leave_used_SICK = time_sheet_data['leave_data'][5]
             time_sheet.leave_balance_HOLS = time_sheet_data['leave_data'][6]
             time_sheet.leave_balance_SICK = time_sheet_data['leave_data'][7]
-            
+
             time_sheet.save()
 
 
@@ -249,11 +255,11 @@ def list_requests_to_approve( request ):
 
 
     documents = timesheet.documents_to_approve( request )
-    
+
     if documents['time_sheets'].count() == 0 and documents['leave_requests'].count() == 0:
-        return render( request, "time_sheet_front.html", {"employee": employee, 
-                                                          "message": "You don't have any documents to approve"})
-    
+        return render( request, "time_sheet_front.html", {"employee": employee,
+                                                          "message": "You don't have any documents to approve"} )
+
     return render( request, "documents_to_approve.html", {"employee" : employee,
                                                           "documents" : documents,
                                                           "viewdocument" : view_document,
@@ -265,15 +271,15 @@ def list_requests_to_approve( request ):
 
 
 def manage_salary_sources( request ):
-    
+
     if not request.user.is_authenticated():
-        return not_allowed(request)
-        
+        return not_allowed( request )
+
     employee = Employee.objects.get( user = request.user )
 
     if employee.role != 'OMAN' and employee.role != 'FMAN':
-        return not_allowed(request)
-            
+        return not_allowed( request )
+
     edited_id = ""
     form = SalarySourceForm()
 
@@ -313,15 +319,15 @@ def manage_salary_sources( request ):
 
 
 def assign_salary_sources( request ):
-    
+
     if not request.user.is_authenticated():
-        return not_allowed(request)
-        
+        return not_allowed( request )
+
     employee = Employee.objects.get( user = request.user )
 
     if employee.role != 'OMAN' and employee.role != 'FMAN':
-        return not_allowed(request)
-    
+        return not_allowed( request )
+
     # pylint: disable=no-member
     users = User.objects.all().order_by( 'last_name', 'first_name' )
 
@@ -332,13 +338,13 @@ def assign_salary_sources( request ):
 
     curr_employee = None
     message = None
-    
+
     if request.method == "POST":
         if request.POST['button'] == "Submit":
             assignment_sum = 0
             for s_source in salary_sources:
-                assignment_sum += int( request.POST["amount-" + s_source.code]) 
-            
+                assignment_sum += int( request.POST["amount-" + s_source.code] )
+
             if assignment_sum == 100:
 
                 for s_source in salary_sources:
@@ -356,13 +362,13 @@ def assign_salary_sources( request ):
                         current_assignment.percentage = request.POST["amount-" + s_source.code]
                         current_assignment.save()
                     else:
-    
+
                         new_source = SalaryAssignment( 
                                                      source = SalarySource.objects.get( code = s_source.code ),
                                                      employee = Employee.objects.get( id = request.POST["employee"] ),
                                                      period = time_sheet_data['period'],
                                                      percentage = request.POST["amount-" + s_source.code] )
-    
+
                         new_source.save()
             else:
                 message = "The assignments must amount to 100%"
@@ -403,23 +409,19 @@ def assign_salary_sources( request ):
 
 
 def manage_users( request ):
-    
+
     if not request.user.is_authenticated():
-        return not_allowed(request) 
-    
+        return not_allowed( request )
+
     employee = Employee.objects.get( user = request.user )
 
     if employee.role != 'OMAN':
-        return not_allowed(request)    
-    
-    employee = Employee( user = request.user )
+        return not_allowed( request )
+
+
     available_accounts = available_user_list()
     available_roles = employee.ROLES
-    existing_accounts = []
 
-    existing_employees = Employee.objects.all()
-    for empl in existing_employees:
-        existing_accounts.append( empl.user.username )
 
     defaults = {"role":"EMPL",
                 "start_time":"10:00",
@@ -432,6 +434,13 @@ def manage_users( request ):
 
     message = None
     userdata = None
+    
+    existing_accounts = []
+
+    existing_employees = Employee.objects.all()
+    for empl in existing_employees:
+        existing_accounts.append( empl.user.username )
+
 
     # a few cases here, create, update, defaults for not existing
     if request.method == "POST":
@@ -549,8 +558,6 @@ def manage_users( request ):
             message = "Employee %s saved." % u_employee.user.username
 
 
-
-
     viewdata = {"accounts": available_accounts,
                 "roles": available_roles,
                 "employees": existing_accounts,
@@ -564,13 +571,13 @@ def manage_users( request ):
 
 def approved_documents( request ):
     if not request.user.is_authenticated():
-        return not_allowed(request)
-        
+        return not_allowed( request )
+
     employee = Employee.objects.get( user = request.user )
 
     if employee.role != 'OMAN':
-        return not_allowed(request)
-    
+        return not_allowed( request )
+
     message = None
     # dropdown with periods
     periods = TimeSheet.objects.raw( 'select id, period from TimeSheetManager_timesheet group by period order by period desc' )
@@ -644,17 +651,17 @@ def approved_documents( request ):
             for time_sheet in time_sheets:
                 document = {}
                 document['timesheet'] = time_sheet
-                document['viewdata'] = timesheet.generate_timesheet_data( time_sheet.employee, time_sheet, True)
-                
-                
-                documents['timesheets'].append( document)
+                document['viewdata'] = timesheet.generate_timesheet_data( time_sheet.employee, time_sheet, True )
+
+
+                documents['timesheets'].append( document )
         else:
             documents['timesheets'] = None
 
-            
 
-        
-        
+
+
+
 
 
         if report_document == "ALL" or report_document == "LEAVEREQUEST":
@@ -666,13 +673,13 @@ def approved_documents( request ):
             documents['leaverequests'] = []
             for req_list in leave_requests:
                 for l_req in req_list:
-                    l_req.type = dict( l_req.TYPES)[ l_req.type]
-                    documents['leaverequests'].append( {"data": l_req})
+                    l_req.type = dict( l_req.TYPES )[ l_req.type]
+                    documents['leaverequests'].append( {"data": l_req} )
 
         else:
             documents['leaverequests'] = None
 
-        
+
 
 
 
