@@ -267,14 +267,14 @@ def send_notification( request, notify_type, email_data ):
     if notify_type == "SALARY_ASSIGNED":
         recipient = [email_data.employee.user.email]
 
-        sender = employee_name
+        sender = "%s %s" % ( request.user.first_name, request.user.last_name )
 
         site_address = request.build_absolute_uri().split( '/' )
         site_address[-1] = 'submittimesheet'
         site_address = '/'.join( site_address )
 
         content = "Your salary assignment for %s is complete.\n\n" % email_data.period
-        content += "Please go to \n\n%s\n\n to submit your time sheet for %s" % ( site_address, email_data.period )
+        content += "Please go to \n\n%s\n\nto submit your time sheet for %s" % ( site_address, email_data.period )
 
         subject = "Submit your time sheet"
 

@@ -107,30 +107,32 @@ def submit_time_sheet( request ):
     if timesheet_db.count() > 0:
         timesheet_data = timesheet.generate_timesheet_data( employee, timesheet_db[0], False )
 
+    if timesheet_data['salary_sources'] == {}:
+        message = "Time sheet can't be submitted.\nSalary assignment is missing."
 
     if request.method == "POST":
         # check if already sumbitted
-
-        if timesheet_db.count() == 0:
-
-            timesheet_obj = TimeSheet( 
-                                  employee = employee,
-                                  period = timesheet_data['period'],
-                                  submit_date = datetime.date.today(),
-                                  approve_date = None,
-                                  start_date = timesheet_data['dates'][0],
-                                  end_date = timesheet_data['dates'][1]
-                                )
+        if timesheet_data['salary_sources'] != {}:
+            if timesheet_db.count() == 0:
     
-            timesheet_obj.save()
+                timesheet_obj = TimeSheet( 
+                                      employee = employee,
+                                      period = timesheet_data['period'],
+                                      submit_date = datetime.date.today(),
+                                      approve_date = None,
+                                      start_date = timesheet_data['dates'][0],
+                                      end_date = timesheet_data['dates'][1]
+                                    )
+        
+                timesheet_obj.save()
+        
+                timesheet.send_notification(request, "SUBMITTED", timesheet_obj)
+        
+                message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
     
-            timesheet.send_notification(request, "SUBMITTED", timesheet_obj)
     
-            message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
-
-
-        else:
-            message = 'This time sheet has already been submitted'
+            else:
+                message = 'This time sheet has already been submitted'
              
 
     return render( request, "time_sheet_submit.html", {'employee': employee,
@@ -381,7 +383,7 @@ def assign_salary_sources( request ):
 
                         current_assignment.save()
                         
-                    send_notification(request, "SALARY_ASSIGNED", current_assignment)
+                send_notification(request, "SALARY_ASSIGNED", current_assignment)
                     
             else:
                 message = "The assignments must amount to 100%"
