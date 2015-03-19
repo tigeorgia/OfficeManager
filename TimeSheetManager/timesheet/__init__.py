@@ -6,6 +6,7 @@ from django.http.response import HttpResponse
 from sqlalchemy.sql.functions import current_date
 import TimeSheetManager
 from django.core.mail import send_mail
+import thread
 
 
 weekdays = ( _( 'Monday' ), _( 'Tuesday' ), _( 'Wednesday' ), _( 'Thursday' ), _( 'Friday' ), _( 'Saturday' ), _( 'Sunday' ) )
@@ -204,7 +205,7 @@ def send_notification( request, notify_type, email_data ):
         subject = "New document to approve"
 
 
-        employee_name = "%s %s" % ( email_data.employee.user.first_name, email_data.employee.user.last_name )
+        sender = employee_name = "%s %s" % ( email_data.employee.user.first_name, email_data.employee.user.last_name )
 
         site_address = request.build_absolute_uri().split( '/' )
         site_address[-1] = 'docstoapprove'
@@ -250,7 +251,7 @@ def send_notification( request, notify_type, email_data ):
         for manager in managers:
             email_list.append( manager.user.email )
 
-        subject = "New approved document"
+        manager_subject = "New approved document"
 
         site_address = request.build_absolute_uri().split( '/' )
         site_address[-1] = 'approveddocuments'
@@ -258,11 +259,13 @@ def send_notification( request, notify_type, email_data ):
 
         document_employee = "%s %s" % ( email_data.employee.user.first_name, email_data.employee.user.last_name )
 
-        content = "%s has approved a %s for %s \n\n" % ( sender, document, document_employee )
-        content += "Please go to:\n\n%s\n\nto view approved documents." % site_address
+        manager_content = "%s has approved a %s for %s \n\n" % ( sender, document, document_employee )
+        manager_content += "Please go to:\n\n%s\n\nto view approved documents." % site_address
 
         recipient = email_list
-        send_mail( subject, content, sender, email_list, fail_silently = True )
+        
+        thread.start_new( send_mail, (manager_subject, manager_content, sender, email_list, True))
+        # send_mail( subject, content, sender, email_list, fail_silently = True )
 
 
 
@@ -280,8 +283,9 @@ def send_notification( request, notify_type, email_data ):
 
         subject = "Submit your time sheet"
 
+    thread.start_new( send_mail, (subject, content, sender, recipient, True))
 
-    send_mail( subject, content, sender, recipient, fail_silently = True )
+    # send_mail( subject, content, sender, recipient, fail_silently = True )
 
 
 

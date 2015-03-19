@@ -106,6 +106,8 @@ def submit_time_sheet( request ):
     # with respect to balances
     if timesheet_db.count() > 0:
         timesheet_data = timesheet.generate_timesheet_data( employee, timesheet_db[0], False )
+        message = 'This time sheet has already been submitted'
+        
 
     if timesheet_data['salary_sources'] == {}:
         message = "Time sheet can't be submitted.\nSalary assignment is missing."
@@ -130,9 +132,7 @@ def submit_time_sheet( request ):
         
                 message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
     
-    
-            else:
-                message = 'This time sheet has already been submitted'
+
              
 
     return render( request, "time_sheet_submit.html", {'employee': employee,
