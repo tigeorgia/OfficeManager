@@ -189,6 +189,8 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
     return result
 
 
+
+
 def send_notification( request, notify_type, email_data ):
 
     # recipient - SUPERVISOR, MANAGER(s), EMPLOYEE

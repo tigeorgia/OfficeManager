@@ -43,8 +43,10 @@
 		{% endblock header %}
 		
 		<div id="site-content">
-			{% if employee.user.is_authenticated %}
-			{% include "navigation.html" %}
+			{% if not hidemenu %}
+				{% if employee.user.is_authenticated %}
+				{% include "navigation.html" %}
+				{% endif %}
 			{% endif %}
 			
 			{% block content %} {% endblock content %}
