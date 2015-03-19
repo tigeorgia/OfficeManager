@@ -11,6 +11,7 @@ from TimeSheetManager import timesheet
 from django.contrib.auth.models import User
 import datetime
 from django_auth_ldap.backend import LDAPBackend
+from TimeSheetManager.timesheet import send_notification
 
 
 
@@ -104,7 +105,7 @@ def submit_time_sheet( request ):
     # it the time sheet has already been submitted, correct information needs to be presented
     # with respect to balances
     if timesheet_db.count() > 0:
-        timesheet_data = timesheet.generate_timesheet_data( employee, timesheet_db[0], True )
+        timesheet_data = timesheet.generate_timesheet_data( employee, timesheet_db[0], False )
 
 
     if request.method == "POST":
@@ -119,19 +120,20 @@ def submit_time_sheet( request ):
                                   approve_date = None,
                                   start_date = timesheet_data['dates'][0],
                                   end_date = timesheet_data['dates'][1]
-                                   )
+                                )
     
             timesheet_obj.save()
     
+            timesheet.send_notification(request, "SUBMITTED", timesheet_obj)
     
             message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
+
 
         else:
             message = 'This time sheet has already been submitted'
              
 
-    return render( request, "time_sheet_submit.html", {
-                                                       'employee': employee,
+    return render( request, "time_sheet_submit.html", {'employee': employee,
                                                        "viewdata": timesheet_data,
                                                        "message": message} )
 
@@ -188,6 +190,9 @@ def request_leave( request ):
                                          submit_date = datetime.date.today(),
                                          employee = employee )
             leave_request.save()
+            
+            timesheet.send_notification(request, "SUBMITTED", leave_request)
+            
             return render( request, "time_sheet_front.html", {'employee': employee,
                                                               'message' : 'Your leave request has been submitted for approval',
                                                               "timesheet": time_sheet_data} )
@@ -234,12 +239,16 @@ def list_requests_to_approve( request ):
 
             time_sheet.save()
 
+            send_notification( request, 'APPROVED', time_sheet)
+
 
         if request.POST['button'] == "Approve Leave Request":
             leave = Leave.objects.get( id = request.POST['id'] )
             leave.approve_date = datetime.date.today()
             leave.approved_by = request.user.first_name + ' ' + request.user.last_name
             leave.save()
+            
+            send_notification( request, 'APPROVED', leave)
 
         if request.POST['button'] == "View Leave Request":
             leave_request = Leave.objects.get( id = request.POST['id'] )
@@ -255,15 +264,17 @@ def list_requests_to_approve( request ):
 
     documents = timesheet.documents_to_approve( request )
 
+    message = None
+    
     if documents['time_sheets'].count() == 0 and documents['leave_requests'].count() == 0:
-        return render( request, "time_sheet_front.html", {"employee": employee,
-                                                          "message": "You don't have any documents to approve"} )
+        message = "You don't have any documents to approve"
 
     return render( request, "documents_to_approve.html", {"employee" : employee,
                                                           "documents" : documents,
                                                           "viewdocument" : view_document,
                                                           "viewdata" : view_data,
-                                                          "timesheetemployee" : time_sheet_employee} )
+                                                          "timesheetemployee" : time_sheet_employee,
+                                                          "message": message} )
 
 
 
@@ -362,13 +373,16 @@ def assign_salary_sources( request ):
                         current_assignment.save()
                     else:
 
-                        new_source = SalaryAssignment( 
+                        current_assignment = SalaryAssignment( 
                                                      source = SalarySource.objects.get( code = s_source.code ),
                                                      employee = Employee.objects.get( id = request.POST["employee"] ),
                                                      period = time_sheet_data['period'],
                                                      percentage = request.POST["amount-" + s_source.code] )
 
-                        new_source.save()
+                        current_assignment.save()
+                        
+                    send_notification(request, "SALARY_ASSIGNED", current_assignment)
+                    
             else:
                 message = "The assignments must amount to 100%"
 
