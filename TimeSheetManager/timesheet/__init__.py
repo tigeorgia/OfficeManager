@@ -36,7 +36,6 @@ def find_leave_requests( employee, dates ):
     return {'requests':leave_requests, 'days': leave_days}
 
 
-
 def documents_to_approve( request ):
     supervised_employees = Employee.objects.filter( supervisor = request.user )
 
@@ -44,6 +43,7 @@ def documents_to_approve( request ):
     leave_requets = Leave.objects.filter( employee = supervised_employees, approve_date = None )
 
     return { 'time_sheets': time_sheets, 'leave_requests' : leave_requets }
+
 
 def timesheet_salary_sources( employee, period ):
 
@@ -58,8 +58,6 @@ def timesheet_salary_sources( employee, period ):
         output[ s_assign.source.code] = s_assign.percentage
 
     return output
-
-
 
 
 def generate_timesheet_data( employee, time_sheet = None, recalc_balances = False ):
@@ -189,7 +187,13 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
     return result
 
 
-
-
+def send_notification( request, recipient, notify_type, email_data):
+    
+    # recipient - SUPERVISOR, MANAGER(s)
+    # notify_type - SUBMITTED, APPROVED
+    # email_data - whatever it was that is the subject of message (time sheet, leave request, salary assignment)
+    #    system will take information from it and compose a reasonable, informative email
+    
+    pass
 
 

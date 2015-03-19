@@ -10,6 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -17,7 +18,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-a5c(yew@x7jb$3-td&68g@7@^#7ir#(&8hx4g60alockq656q'
+SECRET_KEY = ''
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -38,18 +39,18 @@ AUTHENTICATION_BACKENDS = (
 )
 
 
-AUTH_LDAP_SERVER_URI = "ldap://ad-server:3268" 
+AUTH_LDAP_SERVER_URI = "ldap://ad.example.com:389" 
 AUTH_LDAP_BIND_DN = ""
 AUTH_LDAP_BIND_PASSWORD = ""
-# using TLS seems to fail with Samba 4
 AUTH_LDAP_START_TLS = False
 
+
 # Allowing only users who are in group Employees
-TIG_LDAP_GROUP="CN=Employees,CN=Users,DC=ad,DC=tig,DC=ge"
-TIG_LDAP_SCOPE = "(&(objectClass=user)(memberof=CN=Groups,CN=Users,DC=example,DC=com)"
+TIG_LDAP_GROUP="CN=Employees,CN=Users,DC=ad,DC=example,DC=com"
+TIG_LDAP_SCOPE = "(&(objectClass=user)(memberof=CN=Employees,CN=Users,DC=ad,DC=example,DC=com)"
 
 
-AUTH_LDAP_USER_SEARCH = LDAPSearch("cn=Users,dc=example,dc=com",
+AUTH_LDAP_USER_SEARCH = LDAPSearch("cn=Users,DC=ad,DC=example,DC=com",
     ldap.SCOPE_SUBTREE, TIG_LDAP_SCOPE + "(sAMAccountName=%(user)s))")
 
 
@@ -62,8 +63,18 @@ AUTH_LDAP_USER_ATTR_MAP = {
 
 AUTH_LDAP_ALWAYS_UPDATE_USER = True
 
-# Application definition
 
+
+# email settings
+EMAIL_HOST = "" 
+EMAIL_PORT = None
+EMAIL_HOST_USER = "" 
+EMAIL_HOST_PASSWORD = ""
+EMAIL_USE_TLS = True 
+EMAIL_USE_SSL = False
+
+
+# Application definition
 INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.auth',
@@ -73,8 +84,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     
     # not decided what to use, for later, jquery-ui for date pickers for sure
-    #'bootstrap3',
-    #'jquery_ui',
+    'bootstrap3',
+    'jquery_ui',
     
     'FrontPage',
     'TimeSheetManager',
@@ -110,7 +121,7 @@ DATABASES = {
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tbilisi'
 
 USE_I18N = True
 
@@ -122,7 +133,11 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
+# this should go along with the prefix that isconfigured in the web server for the application
+STATIC_URL = '/officemanager/static/'
 
-# this is only needed when deploying to apache(I think)
+# this is needed when deploying 
+# to actually activate it one needs to run manage.py collectstatic to copy all files to where they should be server from
 STATIC_ROOT = BASE_DIR + '/OfficeManager/static'
+
+

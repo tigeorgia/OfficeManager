@@ -94,12 +94,13 @@ def front_page( request ):
 def submit_time_sheet( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed( request )
+        return employee_login( request, submit_time_sheet )
 
     employee = Employee.objects.get( user = request.user )
 
     timesheet_data = timesheet.generate_timesheet_data( employee )
     timesheet_db = TimeSheet.objects.filter( employee = employee, period = timesheet_data['period'] )
+    message = None
     # it the time sheet has already been submitted, correct information needs to be presented
     # with respect to balances
     if timesheet_db.count() > 0:
@@ -109,40 +110,38 @@ def submit_time_sheet( request ):
     if request.method == "POST":
         # check if already sumbitted
 
-        if timesheet_db.count() > 0:
-            return render( request, "time_sheet_front.html",
-                           {'employee': employee, 'message' : 'This timesheet has already been submitted'} )
+        if timesheet_db.count() == 0:
 
+            timesheet_obj = TimeSheet( 
+                                  employee = employee,
+                                  period = timesheet_data['period'],
+                                  submit_date = datetime.date.today(),
+                                  approve_date = None,
+                                  start_date = timesheet_data['dates'][0],
+                                  end_date = timesheet_data['dates'][1]
+                                   )
+    
+            timesheet_obj.save()
+    
+    
+            message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
 
-        timesheet_obj = TimeSheet( 
-                              employee = employee,
-                              period = timesheet_data['period'],
-                              submit_date = datetime.date.today(),
-                              approve_date = None,
-                              start_date = timesheet_data['dates'][0],
-                              end_date = timesheet_data['dates'][1]
-                               )
-
-        timesheet_obj.save()
-
-
-
-        return render( request, "time_sheet_front.html",
-                       {'employee': employee,
-                        'message' : 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']} )
-
+        else:
+            message = 'This time sheet has already been submitted'
+             
 
     return render( request, "time_sheet_submit.html", {
                                                        'employee': employee,
-
-                                                       "viewdata": timesheet_data} )
+                                                       "viewdata": timesheet_data,
+                                                       "message": message} )
 
 
 def request_leave( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed( request )
-
+        return employee_login( request, request_leave )
+    
+    
     employee = Employee.objects.get( user = request.user )
     time_sheet_data = timesheet.generate_timesheet_data( employee )
 
@@ -201,7 +200,7 @@ def request_leave( request ):
 def list_requests_to_approve( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed( request )
+        return employee_login( request, list_requests_to_approve )
 
     employee = Employee.objects.get( user = request.user )
     time_sheet_employee = None
@@ -273,7 +272,7 @@ def list_requests_to_approve( request ):
 def manage_salary_sources( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed( request )
+        return employee_login( request, manage_salary_sources )
 
     employee = Employee.objects.get( user = request.user )
 
@@ -321,7 +320,7 @@ def manage_salary_sources( request ):
 def assign_salary_sources( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed( request )
+        return employee_login( request, assign_salary_sources)
 
     employee = Employee.objects.get( user = request.user )
 
@@ -411,7 +410,7 @@ def assign_salary_sources( request ):
 def manage_users( request ):
 
     if not request.user.is_authenticated():
-        return not_allowed( request )
+        return employee_login( request, manage_users )
 
     employee = Employee.objects.get( user = request.user )
 
@@ -571,7 +570,7 @@ def manage_users( request ):
 
 def approved_documents( request ):
     if not request.user.is_authenticated():
-        return not_allowed( request )
+        return employee_login( request, approved_documents )
 
     employee = Employee.objects.get( user = request.user )
 
