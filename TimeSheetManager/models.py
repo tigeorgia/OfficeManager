@@ -71,8 +71,6 @@ class TimeSheet( models.Model ):
 
     # will use this to make sure time sheets are not repeated
     period = models.CharField( max_length = 64)
-    # set to true by a financial manager
-    salary_assigned = models.BooleanField( default = False )
     # set automatically
     submit_date = models.DateField()
     # set automatically, the data presence indicates it has been approved
