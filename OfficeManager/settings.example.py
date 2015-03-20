@@ -90,8 +90,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     
     # not decided what to use, for later, jquery-ui for date pickers for sure
-    'bootstrap3',
-    'jquery_ui',
+    #'bootstrap3',
+    #'jquery_ui',
     
     'FrontPage',
     'TimeSheetManager',
