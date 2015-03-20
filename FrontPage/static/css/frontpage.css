@@ -30,8 +30,11 @@
 	border: 2px gray ridge;
 	margin: auto;
 	margin-bottom: .5em;
-	text-shadow: 1pt 1pt 1pt #dddddd;
+	text-shadow: 1pt 1pt 1pt #000000;
 	padding-top: .7em;
+	
+	background-color: #29578c;
+	color:white;
 }
 
 

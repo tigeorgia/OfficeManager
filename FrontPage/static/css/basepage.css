@@ -18,9 +18,10 @@ body {
 	margin: 0; padding: 0;
 	width: 100%;
 	height: 100%;
-	background-image: url('../images/office_background.png');
-	background-size: 100% 100%;
-	background-repeat: no-repeat;
+/* 	background-image: url('../images/office_background.png'); */
+/* 	background-size: 100% 100%; */
+/* 	background-repeat: no-repeat; */
+	background-color: #fefefe;
 }
 
 #site-header {
@@ -47,11 +48,14 @@ body {
 	border: 2px gray ridge;
 	padding: .3em;
 	margin-left: 2em;
+	background-color: #29578c;
+		color: white;
 }
 
 #navigation-menu * a {
 	margin-left: 1em;
 	border: 1px gray ridge;
+
 }
 
 #site-header #user-info a:HOVER,
