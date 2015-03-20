@@ -12,7 +12,7 @@
 	<strong>Employee Accounts</strong><br><br>
 	<table>
 	{% for empl in viewdata.employees %}
-	<tr><td>{{ empl }}</td></tr>
+	<tr><td>{{ empl.0 }}, </td><td>{{ empl.1}}</td></tr>
 	{% endfor %}
 	</table>
 </div>
@@ -22,11 +22,11 @@
 {% csrf_token %}
 
 <select name="account-name">
-	{% for empl_name in viewdata.accounts %}
-		{% if viewdata.userdata.username and viewdata.userdata.username == empl_name %}
-		<option selected>{{ empl_name }}</option>
+	{% for employeeaccount in viewdata.accounts %}
+		{% if viewdata.userdata.username and viewdata.userdata.username == employeeaccount.1.sAMAccountName.0 %}
+		<option value="{{ employeeaccount.1.sAMAccountName.0 }}" selected>{{ employeeaccount.1.sn.0 }}, {{ employeeaccount.1.givenName.0  }}</option>
 		{% else %}
-		<option >{{ empl_name }}</option>
+		<option value="{{ employeeaccount.1.sAMAccountName.0 }}">{{ employeeaccount.1.sn.0 }}, {{ employeeaccount.1.givenName.0  }}</option>
 		{% endif %}
 	{% endfor %}
 <select>
@@ -52,11 +52,11 @@
 
 <label>Supervisor</label>
 <select name="super-name">
-	{% for empl_name in viewdata.accounts %}
-		{% if viewdata.userdata.supervisor and viewdata.userdata.supervisor == empl_name %}
-		<option selected>{{ empl_name }}</option>
+	{% for employeeaccount in viewdata.accounts %}
+		{% if viewdata.userdata.username and viewdata.userdata.username == employeeaccount.1.sAMAccountName.0 %}
+		<option value="{{ employeeaccount.1.sAMAccountName.0 }}" selected>{{ employeeaccount.1.sn.0 }}, {{ employeeaccount.1.givenName.0  }}</option>
 		{% else %}
-		<option >{{ empl_name }}</option>
+		<option value="{{ employeeaccount.1.sAMAccountName.0 }}">{{ employeeaccount.1.sn.0 }}, {{ employeeaccount.1.givenName.0  }}</option>
 		{% endif %}
 	{% endfor %}
 <select>

@@ -44,14 +44,20 @@ AUTH_LDAP_BIND_DN = ""
 AUTH_LDAP_BIND_PASSWORD = ""
 AUTH_LDAP_START_TLS = False
 
-
 # Allowing only users who are in group Employees
-TIG_LDAP_GROUP="CN=Employees,CN=Users,DC=ad,DC=example,DC=com"
-TIG_LDAP_SCOPE = "(&(objectClass=user)(memberof=CN=Employees,CN=Users,DC=ad,DC=example,DC=com)"
+ORG_LDAP_BASE_DN = "CN=Users,DC=ad,DC=example,DC=com"
+
+ORG_LDAP_GROUP="CN=Employees,%s" % ORG_LDAP_BASE_DN
+
+ORG_LDAP_FILTER = "(&(objectClass=user)(memberof=%s))" % ORG_LDAP_GROUP
+
+ORG_LDAP_SCOPE = "(&(objectClass=user)(memberof=%s)(sAMAccountName=%%(user)s))" % ORG_LDAP_GROUP
 
 
-AUTH_LDAP_USER_SEARCH = LDAPSearch("cn=Users,DC=ad,DC=example,DC=com",
-    ldap.SCOPE_SUBTREE, TIG_LDAP_SCOPE + "(sAMAccountName=%(user)s))")
+AUTH_LDAP_USER_SEARCH = LDAPSearch(ORG_LDAP_BASE_DN,
+    ldap.SCOPE_SUBTREE, ORG_LDAP_SCOPE)
+
+
 
 
 # Populate the Django user from the LDAP directory.

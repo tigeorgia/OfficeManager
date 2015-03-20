@@ -3,7 +3,7 @@ from django.contrib.auth import logout, login, authenticate
 from TimeSheetManager import models
 from TimeSheetManager.models import Employee, TimeSheet, Leave, SalarySourceForm, SalarySource, \
     SalaryAssignment
-import ldap, re
+import ldap
 from OfficeManager import settings
 from django.views.decorators.csrf import csrf_exempt
 
@@ -21,20 +21,26 @@ from TimeSheetManager.timesheet import send_notification
 # a little ldap helper, need to change it so it gives me login names instead of display names
 def available_user_list():
     ldap_client = ldap.initialize( settings.AUTH_LDAP_SERVER_URI )
-    ldap_client.bind( settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD )
-    ldap_users = ldap_client.search_s( settings.TIG_LDAP_GROUP, ldap.SCOPE_BASE, attrlist = ['member'] )
+    ldap_client.simple_bind_s( settings.AUTH_LDAP_BIND_DN, settings.AUTH_LDAP_BIND_PASSWORD )
+
+    ldap_attrs = ['givenName', 'sn', 'sAMAccountName', 'mail']
+
+    ldap_users = ldap_client.search_s( settings.ORG_LDAP_BASE_DN,
+                                       ldap.SCOPE_SUBTREE,
+                                       settings.ORG_LDAP_FILTER,
+                                       ldap_attrs )
 
     ldap_client.unbind_s()
-    ldap_users = ldap_users[0][1]['member']
 
-    regex = re.compile( 'CN=(.*?),', re.UNICODE )
-    results = []
-    for user in ldap_users:
-        user_name = regex.findall( user )[0]
-        user_name = user_name.replace( ' ', '.' ).lower()
-        results.append( user_name )
 
-    return results
+    # i need to sort the list
+
+    def sort_key( entry ):
+        return entry[1]['sn']
+
+    ldap_users.sort( key = sort_key )
+
+    return ldap_users
 
 def not_allowed( request ):
     return render( request, "managerbase.html", {"message": "You are not allowed here"} )
@@ -107,7 +113,7 @@ def submit_time_sheet( request ):
     if timesheet_db.count() > 0:
         timesheet_data = timesheet.generate_timesheet_data( employee, timesheet_db[0], False )
         message = 'This time sheet has already been submitted'
-        
+
 
     if timesheet_data['salary_sources'] == {}:
         message = "Time sheet can't be submitted.\nSalary assignment is missing."
@@ -116,7 +122,7 @@ def submit_time_sheet( request ):
         # check if already sumbitted
         if timesheet_data['salary_sources'] != {}:
             if timesheet_db.count() == 0:
-    
+
                 timesheet_obj = TimeSheet( 
                                       employee = employee,
                                       period = timesheet_data['period'],
@@ -125,15 +131,15 @@ def submit_time_sheet( request ):
                                       start_date = timesheet_data['dates'][0],
                                       end_date = timesheet_data['dates'][1]
                                     )
-        
-                timesheet_obj.save()
-        
-                timesheet.send_notification(request, "SUBMITTED", timesheet_obj)
-        
-                message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
-    
 
-             
+                timesheet_obj.save()
+
+                timesheet.send_notification( request, "SUBMITTED", timesheet_obj )
+
+                message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
+
+
+
 
     return render( request, "time_sheet_submit.html", {'employee': employee,
                                                        "viewdata": timesheet_data,
@@ -144,8 +150,8 @@ def request_leave( request ):
 
     if not request.user.is_authenticated():
         return employee_login( request, request_leave )
-    
-    
+
+
     employee = Employee.objects.get( user = request.user )
     time_sheet_data = timesheet.generate_timesheet_data( employee )
 
@@ -192,9 +198,9 @@ def request_leave( request ):
                                          submit_date = datetime.date.today(),
                                          employee = employee )
             leave_request.save()
-            
-            timesheet.send_notification(request, "SUBMITTED", leave_request)
-            
+
+            timesheet.send_notification( request, "SUBMITTED", leave_request )
+
             return render( request, "time_sheet_front.html", {'employee': employee,
                                                               'message' : 'Your leave request has been submitted for approval',
                                                               "timesheet": time_sheet_data} )
@@ -241,7 +247,7 @@ def list_requests_to_approve( request ):
 
             time_sheet.save()
 
-            send_notification( request, 'APPROVED', time_sheet)
+            send_notification( request, 'APPROVED', time_sheet )
 
 
         if request.POST['button'] == "Approve Leave Request":
@@ -249,8 +255,8 @@ def list_requests_to_approve( request ):
             leave.approve_date = datetime.date.today()
             leave.approved_by = request.user.first_name + ' ' + request.user.last_name
             leave.save()
-            
-            send_notification( request, 'APPROVED', leave)
+
+            send_notification( request, 'APPROVED', leave )
 
         if request.POST['button'] == "View Leave Request":
             leave_request = Leave.objects.get( id = request.POST['id'] )
@@ -267,7 +273,7 @@ def list_requests_to_approve( request ):
     documents = timesheet.documents_to_approve( request )
 
     message = None
-    
+
     if documents['time_sheets'].count() == 0 and documents['leave_requests'].count() == 0:
         message = "You don't have any documents to approve"
 
@@ -333,7 +339,7 @@ def manage_salary_sources( request ):
 def assign_salary_sources( request ):
 
     if not request.user.is_authenticated():
-        return employee_login( request, assign_salary_sources)
+        return employee_login( request, assign_salary_sources )
 
     employee = Employee.objects.get( user = request.user )
 
@@ -382,9 +388,9 @@ def assign_salary_sources( request ):
                                                      percentage = request.POST["amount-" + s_source.code] )
 
                         current_assignment.save()
-                        
-                send_notification(request, "SALARY_ASSIGNED", current_assignment)
-                    
+
+                send_notification( request, "SALARY_ASSIGNED", current_assignment )
+
             else:
                 message = "The assignments must amount to 100%"
 
@@ -449,13 +455,14 @@ def manage_users( request ):
 
     message = None
     userdata = None
-    
+
     existing_accounts = []
 
     existing_employees = Employee.objects.all()
     for empl in existing_employees:
-        existing_accounts.append( empl.user.username )
-
+        existing_accounts.append(( empl.user.last_name, empl.user.first_name ) )
+    existing_accounts.sort()
+    
 
     # a few cases here, create, update, defaults for not existing
     if request.method == "POST":
