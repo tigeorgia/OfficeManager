@@ -42,8 +42,12 @@ LOCATION - {{ employee.location }}
 		<tr {% if day.6 == 5 or day.6 == 6 %} class="gray-row" {% endif %}>
 			<td>{{ day.0 }}</td>
 			<td>{{ day.1 }}</td>
-			<td>{{ day.2 }}</td>
-			<td>{{ day.3 }}</td>
+			{% if day.2 == day.3 %}
+				<td colspan="2">{{ day.2 }}</td>
+			{% else %}
+				<td>{{ day.2 }}</td>
+				<td>{{ day.3 }}</td>
+			{% endif %}
 			<td>{{ day.4 }}</td>
 			<td>{{ day.5 }}</td>
 		</tr>
