@@ -30,7 +30,9 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 		<select name="employee">
 			<option>All</option>
 			{% for employee in viewdata.employees %}
-			<option {% if employee.user.username == reportdata.report_employee %} selected {% endif %}>{{ employee.user.username }}</option>
+			<option {% if employee.user.username == reportdata.report_employee %} selected {% endif %}, value="{{ employee.user.username }}">
+				{{ employee.user.last_name }}&nbsp{{ employee.user.first_name }}
+			</option>
 			{% endfor %}
 		</select>
 
@@ -53,7 +55,7 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 	{% with timesheetemployee=viewdata.timesheet.employee %}
 	{% with viewdata=viewdata.viewdata %}
 	
-	<h3>Time Sheet - {{ timesheetemployee.user.username }} - {{ viewdata.period }}</h3>	
+	<h3>Time Sheet - {{ timesheetemployee.user.first_name }} {{ timesheetemployee.user.last_name }} - {{ viewdata.period }}</h3>	
 	{% include "report_time_sheet.html" %}
 	
 	{% endwith %}

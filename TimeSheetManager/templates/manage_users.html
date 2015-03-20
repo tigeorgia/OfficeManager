@@ -12,7 +12,7 @@
 	<strong>Employee Accounts</strong><br><br>
 	<table>
 	{% for empl in viewdata.employees %}
-	<tr><td>{{ empl.0 }}, </td><td>{{ empl.1}}</td></tr>
+	<tr><td>{{ empl.user.last_name }},&nbsp;&nbsp;</td><td>{{ empl.user.first_name}}</td></tr>
 	{% endfor %}
 	</table>
 </div>

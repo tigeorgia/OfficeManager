@@ -33,10 +33,9 @@ def available_user_list():
     ldap_client.unbind_s()
 
 
-    # i need to sort the list
-
+    # i need to sort the list by last name so the presentation is more readable
     def sort_key( entry ):
-        return entry[1]['sn']
+        return ( entry[1]['sn'], entry[1]['givenName'] )
 
     ldap_users.sort( key = sort_key )
 
@@ -347,9 +346,10 @@ def assign_salary_sources( request ):
         return not_allowed( request )
 
     # pylint: disable=no-member
-    users = User.objects.all().order_by( 'last_name', 'first_name' )
+    users = User.objects.all()
 
-    employee_list = Employee.objects.filter( user = users )
+    employee_list = Employee.objects.filter( user = users ).order_by( 'user__last_name' )
+
     salary_sources = SalarySource.objects.all()
 
     time_sheet_data = timesheet.generate_timesheet_data( employee )
@@ -456,13 +456,9 @@ def manage_users( request ):
     message = None
     userdata = None
 
-    existing_accounts = []
 
-    existing_employees = Employee.objects.all()
-    for empl in existing_employees:
-        existing_accounts.append(( empl.user.last_name, empl.user.first_name ) )
-    existing_accounts.sort()
-    
+    existing_accounts = Employee.objects.all().order_by( 'user__last_name' )
+
 
     # a few cases here, create, update, defaults for not existing
     if request.method == "POST":
@@ -610,7 +606,7 @@ def approved_documents( request ):
     # dropdown with types of document types is defined in the template
 
     # dropdown with employees
-    employees = Employee.objects.all()
+    employees = Employee.objects.all().order_by('user__first_name')
 
     document_types = {"ALL": "All",
                       "TIMESHEET": "Time sheet",
