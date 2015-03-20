@@ -603,9 +603,9 @@ def approved_documents( request ):
     from django.db import connection
     cursor = connection.cursor()
     cursor.execute( "select distinct period from \"TimeSheetManager_timesheet\"")
-    period_list = cursor.fetchall()
+    period_list = cursor.fetchall()[0]
     periods = []
-    for period in period_list[0]:
+    for period in period_list:
         periods.append({"period": period})
         
         
