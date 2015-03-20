@@ -17,7 +17,7 @@ Current leave balance<br>
 </div>
 
 <div class="form-container">
-	<form action="requestleave" method="POST">
+	<form action="{% url "request-leave" %}" method="POST">
 	    {% csrf_token %}
 	    {{ form }}
 	    <input type="submit" value="Submit" />

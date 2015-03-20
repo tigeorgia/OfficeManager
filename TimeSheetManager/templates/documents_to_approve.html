@@ -23,7 +23,7 @@
 				<td></td>		
 			</thead>
 			{% for leave_request in documents.leave_requests %}
-			<form action="docstoapprove" method="post">
+			<form action="{% url "documents-to-approve" %}" method="post">
 				{% csrf_token %}
 				<tr>
 					<td class="hidden"><input name="id" value="{{ leave_request.id }}"></input></td>
@@ -55,7 +55,7 @@
 				<td></td>		
 			</thead>
 			{% for time_sheet_request in documents.time_sheets %}
-			<form action="docstoapprove" method="post">
+			<form action="{% url "documents-to-approve" %}" method="post">
 				{% csrf_token %}
 				<tr>
 					<td class="hidden"><input name="id" value="{{ time_sheet_request.id }}"></input></td>

@@ -8,7 +8,7 @@
 {% block content %}
 
 <div class="form-container">
-	<form action="assignsalary" method="post">
+	<form action="{% url "assign-salary" %}" method="post">
 		{% csrf_token %}
 		<label>Salary sources for {{ period }}</label> 
 

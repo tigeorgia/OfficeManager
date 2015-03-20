@@ -32,11 +32,11 @@ For O Manager:
 {% if employee.role == 'EMPL' or employee.role == 'FMAN' or employee.role == 'OMAN'%}
 
 <div class="front-page-buttons timesheet-actions" id="employee-actions">
-	<a href="submittimesheet">
+	<a href="{% url "submit-time-sheet" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Submit Time Sheet" %}</div> 
 	</a>
 
-	<a href='requestleave'>
+	<a href="{% url "request-leave" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Request Leave" %}</div> 
 	</a>
 	<!--
@@ -45,7 +45,7 @@ For O Manager:
 		</a>
 	-->
 
-	<a href='docstoapprove'>
+	<a href="{% url "documents-to-approve" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Documents to Approve" %}</div> 
 	</a>
 </div>
@@ -58,11 +58,11 @@ For O Manager:
 {% if employee.role == 'FMAN' or employee.role == 'OMAN'%}
 
 <div class="front-page-buttons timesheet-actions" id="finman-actions">
-	<a href='salarysources'>
+	<a href="{% url "manage-salary-sources" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Manage Salary Sources" %}</div> 
 	</a>
 
-	<a href='assignsalary'>
+	<a href="{% url "assign-salary" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Assign Salary Sources" %}</div> 
 	</a>
 </div>
@@ -73,7 +73,7 @@ For O Manager:
 {% if employee.role == 'OMAN' %}
 
 <div class="front-page-buttons timesheet-actions" id="offman-actions">
-	<a href='approveddocuments'>
+	<a href="{% url "approved-documents" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Approved Documents" %}</div> 
 	</a>
 	<!--
@@ -82,7 +82,7 @@ For O Manager:
 		</a>
 	-->
 
-	<a href='manageaccounts'>
+	<a href="{% url "manage-accounts" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Employees" %}</div> 
 	</a>
 

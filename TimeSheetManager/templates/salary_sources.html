@@ -6,7 +6,7 @@
 {% block content %}
 
 <div class="form-container">
-	<form action="salarysources" method="POST">
+	<form action="{% url "manage-salary-sources" %}" method="POST">
 	    {% csrf_token %}
 	    {{ form }}
 	    <input class="hidden" name="edited_id" value="{{ edited_id }}"></input>
@@ -21,7 +21,7 @@
 	<tbody>
 		{% for source in sourcelist %}
 
-		<form action="salarysources" method="POST">
+		<form action="{% url "manage-salary-sources" %}" method="POST">
 			{% csrf_token %}
 			<tr>
 				<td class="hidden"><input name="id" value="{{ source.id }}"></input></td>

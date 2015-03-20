@@ -11,18 +11,18 @@
 <div id="navigation-menu">
 
 	<ul id="nav-menu">
-		<li><a href="submittimesheet">Submit Time Sheet</a></li>	
-		<li><a href="requestleave">Request Leave</a></li>	
-		<li><a href="docstoapprove">Approve Documents</a></li>
+		<li><a href="{% url "submit-time-sheet" %}">Submit Time Sheet</a></li>	
+		<li><a href="{% url "request-leave" %}">Request Leave</a></li>	
+		<li><a href="{% url "documents-to-approve" %}">Approve Documents</a></li>
 
 		{% if employee.role == "FMAN" or employee.role == "OMAN" %}		
-		<li><a href="salarysources">Manage Salary Sources</a></li>	
-		<li><a href="assignsalary">Assign Salary Sources</a></li>
+		<li><a href="{% url "manage-salary-sources" %}">Manage Salary Sources</a></li>	
+		<li><a href="{% url "assign-salary" %}">Assign Salary Sources</a></li>
 		{% endif %}
 
 		{% if employee.role == "OMAN" %}		
-		<li><a href="manageaccounts">Employees</a></li>	
-		<li><a href="approveddocuments">Approved Documents</a></li>
+		<li><a href="{% url "manage-accounts" %}">Employees</a></li>	
+		<li><a href="{% url "approved-documents" %}">Approved Documents</a></li>
 		{% endif %}
 	</ul>
 

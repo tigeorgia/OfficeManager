@@ -17,7 +17,6 @@
 		<link href={% static "css/frontpage.css" %} rel="stylesheet" type="text/css"/>
 		<link href={% static "css/timesheets.css" %} rel="stylesheet" type="text/css"/>
 		<link href={% static "css/forms.css" %} rel="stylesheet" type="text/css"/>
-		<link href={% static "css/employees.css" %} rel="stylesheet" type="text/css"/>
 
 		{% block stylesheets %}{% endblock stylesheets %}
 	
@@ -36,7 +35,7 @@
 			<div id="user-info">
 				{% if employee %}
 				{{ employee.user.first_name}} {{ employee.user.last_name }}
-				<a href="/logout">Log out</a>
+				<a href="{% url "system-logout" %}">Log out</a>
 				{% endif %}
 			</div>
 		</div>

@@ -7,7 +7,7 @@
 
 {% block content %}
 
-<form class="submit-button" action="submittimesheet" method="POST">
+<form class="submit-button" action="{% url "submit-time-sheet" %}" method="POST">
 {% csrf_token %}
 <input type="submit" value="Submit"></input>
 </form>

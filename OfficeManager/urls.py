@@ -5,7 +5,7 @@ from FrontPage.views import frontpage , sitelogout
 
 urlpatterns = patterns( '',
     url( r'^admin/', include( admin.site.urls ) ),
-    url( r'^$', frontpage ),
-    url( r'^logout/$', sitelogout ),
-    url( r'^timesheet/', include( 'TimeSheetManager.urls' ) )
+    url( r'^$', frontpage),
+    url( r'^logout/$', sitelogout, name = "system-logout" ),
+    url( r'^timesheet/', include( 'TimeSheetManager.urls') )
  )
