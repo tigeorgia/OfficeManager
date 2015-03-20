@@ -68,7 +68,7 @@ class LeaveForm( forms.ModelForm ):
 # is linked to user, date (month) and leaves related to the covered time period
 class TimeSheet( models.Model ):
     employee = models.ForeignKey( Employee )
-    leaves = ManyToManyField( Leave )
+
     # will use this to make sure time sheets are not repeated
     period = models.CharField( max_length = 64)
     # set to true by a financial manager
