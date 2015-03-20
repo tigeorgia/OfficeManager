@@ -597,11 +597,19 @@ def approved_documents( request ):
         return not_allowed( request )
 
     message = None
-    # dropdown with periods
-    periods = TimeSheet.objects.raw( 'select id, period from "TimeSheetManager_timesheet" group by period order by period desc' )
-    period_list = []
-    for period in periods:
-        period_list.append( period.period )
+    
+    
+    # dropdown with periods,have to do direct db query
+    from django.db import connection
+    cursor = connection.cursor()
+    cursor.execute( "select distinct period from \"TimeSheetManager_timesheet\"")
+    period_list = cursor.fetchall()
+    periods = []
+    for period in period_list[0]:
+        periods.append({"period": period})
+        
+        
+        
 
     # dropdown with types of document types is defined in the template
 
@@ -619,7 +627,7 @@ def approved_documents( request ):
                 "documenttypes" : document_types,
                 }
 
-    reportdata = {"report_period": periods[0].period,
+    reportdata = {"report_period": periods[0]['period'],
                   "report_employee": "All",
                   "report_document": "ALL"}
 
