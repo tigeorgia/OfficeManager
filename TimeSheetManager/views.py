@@ -598,7 +598,7 @@ def approved_documents( request ):
 
     message = None
     # dropdown with periods
-    periods = TimeSheet.objects.raw( 'select id, period from TimeSheetManager_timesheet group by period order by period desc' )
+    periods = TimeSheet.objects.raw( 'select id, period from "TimeSheetManager_timesheet" group by period order by period desc' )
     period_list = []
     for period in periods:
         period_list.append( period.period )
