@@ -44,7 +44,7 @@ body {
 
 #site-header #user-info a,
 #navigation-menu * a {
-	border-radius: 4pt;
+	border-radius: 2pt;
 	border: 2px gray ridge;
 	padding: .3em;
 	margin-left: 2em;
@@ -80,6 +80,7 @@ body {
 	left:0;
 	top: 0;
 	background-color: black;
+	min-height: 3em;
 }
 
 #navigation-menu * li {

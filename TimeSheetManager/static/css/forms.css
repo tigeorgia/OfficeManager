@@ -9,7 +9,7 @@ form {
 	border: 2px gray ridge;
 	width: 300pt;
 	margin: auto;
-	border-radius: 4pt;
+	border-radius: 2pt;
 	
 /* 	background-image: url( '../images/form_background_alpha.png'); */
 /* 	background-size: 100% 100%; */
@@ -32,8 +32,8 @@ form.submit-button {
 	padding: 0;
 	border: none;
 	position: absolute;
-	left: 52em;
-	top: 15em;
+	right: 0em;
+	top: 9em;
 }
 
 

@@ -9,22 +9,25 @@
 -->
 
 <div id="navigation-menu">
+	{% if not hidemenu %}
+		{% if employee.user.is_authenticated %}
 
-	<ul id="nav-menu">
-		<li><a href="{% url "submit-time-sheet" %}">Submit Time Sheet</a></li>	
-		<li><a href="{% url "request-leave" %}">Request Leave</a></li>	
-		<li><a href="{% url "documents-to-approve" %}">Approve Documents</a></li>
+		<ul id="nav-menu">
+			<li><a href="{% url "submit-time-sheet" %}">Submit Time Sheet</a></li>	
+			<li><a href="{% url "request-leave" %}">Request Leave</a></li>	
+			<li><a href="{% url "documents-to-approve" %}">Approve Documents</a></li>
+	
+			{% if employee.role == "FMAN" or employee.role == "OMAN" %}		
+			<li><a href="{% url "manage-salary-sources" %}">Manage Salary Sources</a></li>	
+			<li><a href="{% url "assign-salary" %}">Assign Salary Sources</a></li>
+			{% endif %}
+	
+			{% if employee.role == "OMAN" %}		
+			<li><a href="{% url "manage-accounts" %}">Employees</a></li>	
+			<li><a href="{% url "approved-documents" %}">Approved Documents</a></li>
+			{% endif %}
+		</ul>
 
-		{% if employee.role == "FMAN" or employee.role == "OMAN" %}		
-		<li><a href="{% url "manage-salary-sources" %}">Manage Salary Sources</a></li>	
-		<li><a href="{% url "assign-salary" %}">Assign Salary Sources</a></li>
 		{% endif %}
-
-		{% if employee.role == "OMAN" %}		
-		<li><a href="{% url "manage-accounts" %}">Employees</a></li>	
-		<li><a href="{% url "approved-documents" %}">Approved Documents</a></li>
-		{% endif %}
-	</ul>
-
-
+	{% endif %}
 </div>
