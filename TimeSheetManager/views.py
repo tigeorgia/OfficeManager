@@ -647,96 +647,97 @@ def approved_documents( request ):
         reportdata["report_document"] = report_document = request.POST['document-type']
         reportdata["report_employee"] = report_employee = request.POST['employee']
 
-
-        # pylint: disable=no-member
-        if report_employee == "All":
-            report_employee = Employee.objects.all()
-        else:
-            report_user = User.objects.get( username = report_employee )
-            report_employee = [Employee.objects.get( user = report_user )]
-
-        if report_period == "All":
-            report_period = period_list
-
-            # report dates
-            month, year = period_list[0].split( ' ' )
-            month_number = timesheet.months.index( month ) + 1
-            start_date = datetime.date( int( year ), month_number, 1 )
-
-            month, year = period_list[-1].split( ' ' )
-            month_number = timesheet.months.index( month ) + 1
-            end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
-
-        else:
-            report_period = [report_period]
-            # report dates
-            month, year = period_list[0].split( ' ' )
-            month_number = timesheet.months.index( month ) + 1
-            start_date = datetime.date( int( year ), month_number, 1 )
-
-            end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
-
-
-        if report_document == "ALL" or report_document == "TIMESHEET":
-            time_sheets = TimeSheet.objects.filter( employee__in = report_employee,
-                                                    period__in = report_period,
-                                                    approve_date__isnull = False )
-
-            documents['timesheets'] = []
-            for time_sheet in time_sheets:
-                document = {}
-                document['timesheet'] = time_sheet
-                document['viewdata'] = timesheet.generate_timesheet_data( time_sheet.employee, time_sheet, True )
-
-
-                documents['timesheets'].append( document )
-        else:
-            documents['timesheets'] = None
-
-
-
-
-
-
-
-        if report_document == "ALL" or report_document == "LEAVEREQUEST":
-            leave_requests = []
-            for each_employee in report_employee:
-                l_requests = timesheet.find_leave_requests( each_employee, ( start_date, end_date ) )
-                leave_requests.append( l_requests['requests'] )
-
-            documents['leaverequests'] = []
-            for req_list in leave_requests:
-                for l_req in req_list:
-                    l_req.type = dict( l_req.TYPES )[ l_req.type]
-                    documents['leaverequests'].append( {"data": l_req} )
-
-        else:
-            documents['leaverequests'] = None
-
-
-
-
-
-        if report_document == "ALL" or report_document == "SALARYASSIGNMENT":
-            if reportdata["report_period"] == 'All':
-                salary_assigments = SalaryAssignment.objects.all()
+        if period_list:
+            # pylint: disable=no-member
+            if report_employee == "All":
+                report_employee = Employee.objects.all()
             else:
-                salary_assigments = SalaryAssignment.objects.filter( period = reportdata["report_period"] )
+                report_user = User.objects.get( username = report_employee )
+                report_employee = [Employee.objects.get( user = report_user )]
+    
+            if report_period == "All":
+                report_period = period_list
+    
+                # report dates
+                month, year = period_list[0].split( ' ' )
+                month_number = timesheet.months.index( month ) + 1
+                start_date = datetime.date( int( year ), month_number, 1 )
+    
+                month, year = period_list[-1].split( ' ' )
+                month_number = timesheet.months.index( month ) + 1
+                end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
+    
+            else:
+                report_period = [report_period]
+                # report dates
+                month, year = period_list[0].split( ' ' )
+                month_number = timesheet.months.index( month ) + 1
+                start_date = datetime.date( int( year ), month_number, 1 )
+    
+                end_date = datetime.date( int( year ), month_number + 1, 1 ) - datetime.timedelta( days = 1 )
+    
+    
+            if report_document == "ALL" or report_document == "TIMESHEET":
+                time_sheets = TimeSheet.objects.filter( employee__in = report_employee,
+                                                        period__in = report_period,
+                                                        approve_date__isnull = False )
+    
+                documents['timesheets'] = []
+                for time_sheet in time_sheets:
+                    document = {}
+                    document['timesheet'] = time_sheet
+                    document['viewdata'] = timesheet.generate_timesheet_data( time_sheet.employee, time_sheet, True )
+    
+    
+                    documents['timesheets'].append( document )
+            else:
+                documents['timesheets'] = None
+                
+    
+    
+    
+    
+    
+    
+            if report_document == "ALL" or report_document == "LEAVEREQUEST":
+                leave_requests = []
+                for each_employee in report_employee:
+                    l_requests = timesheet.find_leave_requests( each_employee, ( start_date, end_date ) )
+                    leave_requests.append( l_requests['requests'] )
+    
+                documents['leaverequests'] = []
+                for req_list in leave_requests:
+                    for l_req in req_list:
+                        l_req.type = dict( l_req.TYPES )[ l_req.type]
+                        documents['leaverequests'].append( {"data": l_req} )
+    
+            else:
+                documents['leaverequests'] = None
 
-            documents['employeelist'] = report_employee
-            documents['periodlist'] = period_list
-            documents['salarysources'] = SalarySource.objects.all()
-
-        else:
-            salary_assigments = None
-
-        documents['salaryassignments'] = salary_assigments
-
-
-
-        reportdata['documents'] = documents
-
+                
+    
+    
+    
+            if report_document == "ALL" or report_document == "SALARYASSIGNMENT":
+                if reportdata["report_period"] == 'All':
+                    salary_assigments = SalaryAssignment.objects.all()
+                else:
+                    salary_assigments = SalaryAssignment.objects.filter( period = reportdata["report_period"] )
+    
+                documents['employeelist'] = report_employee
+                documents['periodlist'] = period_list
+                documents['salarysources'] = SalarySource.objects.all()
+    
+            else:
+                salary_assigments = None
+    
+            documents['salaryassignments'] = salary_assigments
+    
+    
+    
+            reportdata['documents'] = documents
+    else:
+        message = "There is no data in the system"
 
 #         message = documents['leaverequests']
 
