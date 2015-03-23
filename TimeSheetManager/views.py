@@ -630,9 +630,15 @@ def approved_documents( request ):
                 "documenttypes" : document_types,
                 }
 
-    reportdata = {"report_period": periods[0]['period'],
+    if periods != []:
+        report_period = periods[0]['period']
+    else:
+        report_period = 'ALL'
+        
+    reportdata = {"report_period": report_period,
                   "report_employee": "All",
                   "report_document": "ALL"}
+        
 
     documents = {}
 
