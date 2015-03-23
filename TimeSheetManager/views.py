@@ -736,8 +736,8 @@ def approved_documents( request ):
     
     
             reportdata['documents'] = documents
-    else:
-        message = "There is no data in the system"
+        else:
+            message = "There is no data in the system"
 
 #         message = documents['leaverequests']
 

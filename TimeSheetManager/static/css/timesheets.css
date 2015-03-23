@@ -141,6 +141,9 @@
 }
 
 /* salary assignment table */
+#report-salary-assignment {
+	float: none;
+}
 
 #report-salary-assignment td {
 	width: 5em;
