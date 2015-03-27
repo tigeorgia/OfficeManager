@@ -1,3 +1,8 @@
+## Usability note
+
+Due to reporting requirements applicable to TI Georgia, the development of this project has been stopped.
+Its use makes sense in an environment where digital document approval is considered a valid path for reporting workflow. 
+
 ## Office Manager
 
 The application close follows the work flow of work time reporting currently used at Transparency International Georgia.
