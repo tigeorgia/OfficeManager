@@ -1,0 +1,66 @@
+@charset "utf-8";
+
+.form-container {
+	
+}
+
+form {
+	padding: 2em 1em 2em 3em;
+	border: 2px gray ridge;
+	width: 300pt;
+	margin: auto;
+	border-radius: 2pt;
+	
+/* 	background-image: url( '../images/form_background_alpha.png'); */
+/* 	background-size: 100% 100%; */
+}
+
+form * {
+	display: block;
+	width: 90%;
+}
+
+form input, form textarea, form select {
+	margin-bottom: .9em;
+}
+
+form input {
+	height: 3em;
+}
+
+form.submit-button {
+	padding: 0;
+	border: none;
+	position: absolute;
+	right: 0em;
+	top: 9em;
+}
+
+
+.form-table td {
+	display: table-cell;
+	width: 45em;
+
+}
+
+.form-table td.hidden {
+	display: none;
+}
+
+.report-form-container {
+	float: left;
+	width: 20em;
+}
+
+.report-form-container form {
+	position: relative;
+	width: 70%;
+	margin: auto;	
+	padding: 1em 0 1em 1em;
+}
+
+.manager-reports {
+	float: right;
+	margin-right: 3em;
+	width: 220mm;
+}
