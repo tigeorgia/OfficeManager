@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from employee.views import employee_login, not_allowed
+from employee.views import not_allowed, checkuserloggedin
 from employee.models import Profile
 from timesheet.models import TimeSheet
 from timesheet import tshelpers
@@ -9,11 +9,8 @@ from leaverequest.models import Leave
 from django.contrib.auth.models import User
 from budgetshare.models import SalaryAssignment, SalarySource
 
-
+@checkuserloggedin
 def list_requests_to_approve( request ):
-
-    if not request.user.is_authenticated():
-        return employee_login( request, list_requests_to_approve )
 
     employee = Profile.objects.get( user = request.user )
     time_sheet_employee = None
@@ -88,10 +85,8 @@ def list_requests_to_approve( request ):
 
 
 
-
+@checkuserloggedin
 def approved_documents( request ):
-    if not request.user.is_authenticated():
-        return employee_login( request, approved_documents )
 
     employee = Profile.objects.get( user = request.user )
 

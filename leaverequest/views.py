@@ -1,14 +1,12 @@
 from django.shortcuts import render
-from employee.views import employee_login
+from employee.views import checkuserloggedin
 from employee.models import Profile
 from timesheet import tshelpers
 from leaverequest import models
 import datetime
 
+@checkuserloggedin
 def request_leave( request ):
-
-    if not request.user.is_authenticated():
-        return employee_login( request, request_leave )
 
 
     employee = Profile.objects.get( user = request.user )

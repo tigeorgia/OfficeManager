@@ -6,6 +6,20 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django_auth_ldap.backend import LDAPBackend
 
+
+
+# decorator for all methods than need a user to be logged in
+def checkuserloggedin( func):
+    
+    def checklogin( request):
+        if not request.user.is_authenticated():
+            return employee_login( request, func )
+        else:
+            return func(request)
+    
+    return checklogin
+
+
 # a little ldap helper
 def available_user_list():
     ldap_client = ldap.initialize( settings.AUTH_LDAP_SERVER_URI )
@@ -69,11 +83,8 @@ def employee_login( request, callback_view ):
 
     return render( request, "login_page.html" )
 
-
+@checkuserloggedin
 def manage_users( request ):
-
-    if not request.user.is_authenticated():
-        return employee_login( request, manage_users )
 
     employee = Profile.objects.get( user = request.user )
 

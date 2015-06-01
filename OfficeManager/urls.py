@@ -2,7 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from frontpage.views import frontpage , sitelogout, front_page
 
-from budgetshare.views import import_salary_assignment, manage_salary_sources,\
+from budgetshare.views import import_salary_assignments, manage_salary_sources,\
     assign_salary_sources
 from publicholidays.views import import_public_holidays
 from timesheet.views import submit_time_sheet
@@ -15,7 +15,7 @@ urlpatterns = patterns( '',
     url( r'^$', frontpage),
     url( r'^logout/$', sitelogout, name = "system-logout" ),
     #url( r'^timesheet/', include( 'TimeSheetManager.urls') ),
-    url( r'^budgetshare/$', import_salary_assignment, name = "import-salary-assigments"),
+    url( r'^budgetshare/$', import_salary_assignments, name = "import-salary-assignments"),
     url( r'^publicholidays/$', import_public_holidays, name = "import-public-holidays"),
     
     

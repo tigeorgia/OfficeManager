@@ -1,22 +1,36 @@
 from django.shortcuts import render
-from django.http.response import HttpResponse
+
 from employee.views import employee_login, not_allowed
-from cProfile import Profile
 from budgetshare.models import SalarySourceForm, SalarySource, SalaryAssignment
 from django.contrib.auth.models import User
 from timesheet.tshelpers import generate_timesheet_data, send_notification
+from employee.models import Profile
+from frontpage.views import checkuserloggedin
 
 
 
-def import_salary_assignment( request):
-    
-    return HttpResponse(' Import salary assigments ')
+
+@checkuserloggedin
+def import_salary_assignments( request ):
+
+    #----------------------------------- if not request.user.is_authenticated():
+        #----------- return employee_login( request, import_salary_assignments )
+
+    employee = Profile.objects.get( user = request.user )
+
+    return render( request, "import_salary_assignments.html", { "employee": employee} )
 
 
+
+
+
+
+
+
+
+
+@checkuserloggedin
 def manage_salary_sources( request ):
-
-    if not request.user.is_authenticated():
-        return employee_login( request, manage_salary_sources )
 
     employee = Profile.objects.get( user = request.user )
 
@@ -60,11 +74,10 @@ def manage_salary_sources( request ):
 
 
 
-
+@checkuserloggedin
 def assign_salary_sources( request ):
 
-    if not request.user.is_authenticated():
-        return employee_login( request, assign_salary_sources )
+
 
     employee = Profile.objects.get( user = request.user )
 

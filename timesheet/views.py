@@ -1,15 +1,12 @@
 from django.shortcuts import render
-from employee.views import employee_login
+from employee.views import checkuserloggedin
 from employee.models import Profile
 from timesheet import tshelpers
 from models import TimeSheet
-import timesheet
 import datetime
 
+@checkuserloggedin
 def submit_time_sheet( request ):
-
-    if not request.user.is_authenticated():
-        return employee_login( request, submit_time_sheet )
 
     employee = Profile.objects.get( user = request.user )
 
