@@ -119,7 +119,7 @@ def approved_documents( request ):
     # dropdown with types of document types is defined in the template
 
     # dropdown with employees
-    employees = Profile.objects.all().order_by('user__first_name')
+    employees = Profile.objects.all().order_by('user__last_name')
 
     document_types = {"ALL": "All",
                       "TIMESHEET": "Time sheet",
