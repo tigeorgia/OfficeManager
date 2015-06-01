@@ -1,0 +1,28 @@
+{% extends "managerbase.html"%}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+
+{% block content %}
+
+<div class="balance-information">
+Current leave balance<br>
+
+<table>
+<tr><td>Vacation:</td><td>{{ timesheet.leave.0 }}</td></tr>
+
+<tr><td>Sick:</td><td>{{ timesheet.leave.1 }}</td></tr> 
+</table>
+</div>
+
+<div class="form-container">
+	<form action="{% url "request-leave" %}" method="POST">
+	    {% csrf_token %}
+	    {{ form }}
+	    <input type="submit" value="Submit" />
+	</form>
+</div>
+
+
+{% endblock content %}
