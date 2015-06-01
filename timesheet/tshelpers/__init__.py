@@ -72,7 +72,7 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
 
     working_time = end_hour * 60 + end_minute - start_hour * 60 - start_minute
 
-    day_working_time = working_time / 60. - employee.break_hours
+    day_working_time = working_time / 60.# - employee.break_hours
     working_time = "%.2f" % day_working_time
 
 
@@ -123,7 +123,6 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
                                    weekdays[ weekday],
                                    "%02d:%02d" % ( employee.workday_start.hour, employee.workday_start.minute ) ,
                                    "%02d:%02d" % ( employee.workday_end.hour, employee.workday_end.minute ) ,
-                                   employee.break_hours,
                                    working_time,
                                    weekday
                                     ) )

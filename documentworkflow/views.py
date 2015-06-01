@@ -95,7 +95,7 @@ def approved_documents( request ):
 
     employee = Profile.objects.get( user = request.user )
 
-    if employee.role != 'OMAN':
+    if employee.role != '2-OMAN':
         return not_allowed( request )
 
     message = None
@@ -104,7 +104,7 @@ def approved_documents( request ):
     # dropdown with periods,have to do direct db query
     from django.db import connection
     cursor = connection.cursor()
-    cursor.execute( "select distinct period from \"TimeSheetManager_timesheet\"")
+    cursor.execute( "select distinct period from \"timesheet_timesheet\"")
     period_list = cursor.fetchall()
     
     periods = []

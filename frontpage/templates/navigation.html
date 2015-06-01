@@ -17,16 +17,17 @@
 			<li><a href="{% url "request-leave" %}">Request Leave</a></li>	
 			<li><a href="{% url "documents-to-approve" %}">Approve Documents</a></li>
 	
-			{% if employee.role == "FMAN" or employee.role == "OMAN" %}		
+			{% if employee.role == "1-FMAN" or employee.role == "2-OMAN" %}		
 
 			<!--
 				<li><a href="{% url "manage-salary-sources" %}">Manage Salary Sources</a></li>	
 				<li><a href="{% url "assign-salary" %}">Assign Salary Sources</a></li>
 			-->
-
+			<li><a href="{% url "import-salary-assigments" %}">Import Salary Assignment</a></li>	
+			
 			{% endif %}
 	
-			{% if employee.role == "OMAN" %}		
+			{% if employee.role == "2-OMAN" %}		
 			<li><a href="{% url "manage-accounts" %}">Employees</a></li>	
 			<li><a href="{% url "approved-documents" %}">Approved Documents</a></li>
 			{% endif %}

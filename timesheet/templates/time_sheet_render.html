@@ -33,7 +33,7 @@ LOCATION - {{ employee.location }}
 		<td>Date/Day</td>
 		<td>Start Time</td>
 		<td>End Time</td>
-		<td>Break Hours</td>
+		<!-- <td>Break Hours</td> -->
 		<td>Hours Worked</td>
 	</thead>
 	<tbody>
@@ -49,12 +49,12 @@ LOCATION - {{ employee.location }}
 				<td>{{ day.3 }}</td>
 			{% endif %}
 			<td>{{ day.4 }}</td>
-			<td>{{ day.5 }}</td>
+			<!-- <td>{{ day.5 }}</td> -->
 		</tr>
 	{% endfor %}
 	</tbody>
 	<tfoot class="table-footer">
-		<td></td><td></td><td></td><td></td><td></td>
+		<td></td><td></td><td></td><td></td>
 		<td>{{ viewdata.working_time }}</td>
 	</tfoot>
 </table>
