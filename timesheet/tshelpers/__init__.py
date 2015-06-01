@@ -194,6 +194,8 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
 
 
 def send_notification( request, notify_type, email_data ):
+    ## OFF for development
+    pass
 
     # recipient - SUPERVISOR, MANAGER(s), EMPLOYEE
     # notify_type - SUBMITTED, APPROVED, SALARY_ASSIGNED
@@ -266,8 +268,7 @@ def send_notification( request, notify_type, email_data ):
         recipient = email_list
         
         
-        ## OFF for development
-        # thread.start_new( send_mail, (manager_subject, manager_content, sender, email_list, True))
+        thread.start_new( send_mail, (manager_subject, manager_content, sender, email_list, True))
         
         # send_mail( subject, content, sender, email_list, fail_silently = True )
 

@@ -113,7 +113,11 @@ def approved_documents( request ):
         for period in period_list:
             periods.append({"period": period})
         
-        
+    #--------------------------------------------------------------------- else:
+        #------------------------------- # faking it because the system is empty
+        #----------------------------------- month = datetime.date.today().month
+        #------------------------------------- year = datetime.date.today().year
+        # period_list = ['%s %d' % ( tshelpers.months[month - 1],  year)] #something for the current month
         
 
     # dropdown with types of document types is defined in the template
@@ -132,6 +136,7 @@ def approved_documents( request ):
                 "documenttypes" : document_types,
                 }
 
+    
     if periods != []:
         report_period = periods[0]['period']
     else:
