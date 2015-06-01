@@ -1,0 +1,65 @@
+{% load i18n %}
+{% load staticfiles %}
+
+<!DOCTYPE html>
+<html>
+
+	<head>
+
+		<meta charset="UTF-8">
+	
+		<title>{% trans "Transparency International Georgia" %} {% block subtitle %} | {% trans "Office Manager" %} {% endblock subtitle %}</title>
+	
+		<link href='http://fonts.googleapis.com/css?family=Roboto' rel='stylesheet' type='text/css'></link>
+		<link href="{% static "jquery-ui-1.11.4/jquery-ui.min.css" %}" rel="stylesheet" type="text/css"></link>
+		
+		<link rel='shortcut icon' type='image/x-icon' href='{% static "images/tifavicon.png" %}' />
+		
+		<link href="{% static "css/basepage.css" %}" rel="stylesheet" type="text/css"></link>
+		<link href={% static "css/frontpage.css" %} rel="stylesheet" type="text/css"/>
+		<link href={% static "css/timesheets.css" %} rel="stylesheet" type="text/css"/>
+		<link href={% static "css/forms.css" %} rel="stylesheet" type="text/css"/>
+
+		{% block stylesheets %}{% endblock stylesheets %}
+	
+		<script src="{% static "jquery-ui-1.11.4/jquery-2.1.3.min.js" %}"></script>
+		<script src="{% static "jquery-ui-1.11.4/jquery-ui.min.js" %}"></script>
+		
+		{% block scripts %}{% endblock scripts %}
+
+	</head>
+		
+	<body>
+		{% block header %} 
+		<div id="site-header">
+			<img alt="Transparency International Georgia" src={% static "images/logo-en.png" %} id="site-logo" />
+			
+			<div id="user-info">
+				{% if employee %}
+				{{ employee.user.first_name}} {{ employee.user.last_name }}
+				<a href="{% url "system-logout" %}">Log out</a>
+				{% endif %}
+			</div>
+		</div>
+		{% endblock header %}
+		
+		<div id="site-content">
+			{% include "navigation.html" %}
+	
+			{% block content %} {% endblock content %}
+		</div>
+		
+		{% if message %}
+		<div class='confirmation-message'>
+		{{ message }}
+		</div>
+		{% endif %}
+		
+		{% block footer %} 
+		<div if="site-footer">
+		</div>
+		{% endblock footer %}
+		
+	</body>
+	
+</html>
