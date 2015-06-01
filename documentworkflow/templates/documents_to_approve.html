@@ -1,0 +1,88 @@
+{% extends "managerbase.html"%}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+{% block content %}
+
+
+<div id="leave-requests-to-approve">
+	
+	{% if documents.leave_requests.count != 0 %}
+		<table class="time-sheet-table approve-table">
+			<thead>
+				<td colspan="6">Leave Request to Approve</td>
+			</thead>
+		
+			<thead>
+				<td class="hidden">ID</td>
+				<td>Employee</td>
+				<td>Start date</td>
+				<td>End date</td>
+				<td></td>
+				<td></td>		
+			</thead>
+			{% for leave_request in documents.leave_requests %}
+			<form action="{% url "documents-to-approve" %}" method="post">
+				{% csrf_token %}
+				<tr>
+					<td class="hidden"><input name="id" value="{{ leave_request.id }}"></input></td>
+					<td>{{ leave_request.employee.user.first_name }} {{ leave_request.employee.user.last_name }}</td>
+					<td>{{ leave_request.start_date }}</td>
+					<td>{{ leave_request.end_date }}</td>
+					<td><input type="submit" value="View Leave Request" name="button"></input></td>
+					<td><input type="submit" value="Approve Leave Request" name="button"></input></td>
+				</tr>
+							
+			</form>
+			{% endfor %}
+		</table>
+	{% endif %}
+</div>
+
+<div id="time-sheets-to-approve">
+
+	{% if documents.time_sheets.count != 0 %}
+		<table class="time-sheet-table approve-table">
+			<thead>
+				<td colspan="5">Time Sheets to Approve</td>
+			</thead>
+			<thead>
+				<td class="hidden">ID</td>
+				<td>Employee</td>
+				<td>Period</td>
+				<td></td>
+				<td></td>		
+			</thead>
+			{% for time_sheet_request in documents.time_sheets %}
+			<form action="{% url "documents-to-approve" %}" method="post">
+				{% csrf_token %}
+				<tr>
+					<td class="hidden"><input name="id" value="{{ time_sheet_request.id }}"></input></td>
+					<td>{{ time_sheet_request.employee.user.first_name }} {{ time_sheet_request.employee.user.last_name }}</td>
+					<td>{{ time_sheet_request.period }}</td>
+					<td><input type="submit" value="View Time Sheet" name="button"></input></td>
+					<td><input type="submit" value="Approve Time Sheet" name ="button"></input></td>
+				</tr>
+							
+			</form>
+			{% endfor %}
+		</table>
+	{% endif %}
+</div>
+
+{% if viewdocument %}
+<div class="document-view">
+
+	{% if viewdocument.type == "LEAVE_REQUEST" %}
+		{% include "report_leave_request.html" %}
+	{% endif %}
+
+	{% if viewdocument.type == "TIME_SHEET" %}
+		{% include "report_time_sheet.html" %}
+	{% endif %}
+
+</div>
+{% endif %}
+
+{% endblock content %}
