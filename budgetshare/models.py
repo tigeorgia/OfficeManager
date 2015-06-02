@@ -21,5 +21,6 @@ class SalaryAssignment( models.Model ):
     period = models.CharField( max_length = 64)
     percentage = models.IntegerField()
 
+
 class SalarySourceImport( models.Model):
     pass

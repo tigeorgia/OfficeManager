@@ -6,53 +6,74 @@
 {% block content %}
 
 <div class="form-container">
-	<form action="{% url "import-salary-assignments" %}" method="POST">
+	<form action="{% url "import-salary-assignments" %}" method="POST" enctype="multipart/form-data">
+		{% csrf_token %}
+		<label>Period</label>
+		<select name="data-period">
+			{% for month in months %}
+			<option {% if month == current_month.month %} selected {% endif %}>{{ month }} {{ current_month.year }}</option>
+			{% endfor %}
+		</select>
 
-		<!-- 
-			Gonna have a selection for the target period, month-year and a download file form
-		-->
+		<label>File to import</label>
 		
-		<p>
-		Import salary assigments
-		</p>
+		<input type="file" name="sheet" size="chars"></input>
+		
+		<input type="submit" name="Submit" value="Submit"></input>
+		
 
 	</form>
 </div>	
 
-<!--
-	<div class="form-container">
-		<form action="{% url "import-salary-assignments" %}" method="POST">
-		    {% csrf_token %}
-	
-		    <input class="hidden" name="edited_id" value="{{ edited_id }}"></input>
-		    <input type="submit" value="Save"></input>
-		</form>
-	</div>	
--->
+{% if sheetdata %} 
+<div class="document-view">
+
+<table class="report-table time-sheet-table">
+
+<thead>
+	<tr>
+		<td>Name</td>
+		{% for key in sheetdata.percentage.0.keys %}
+			{% if key != "name" %}
+			<td>{{ key }}</td>
+			{% endif %}
+		{% endfor %}
+	</tr>
+</thead>
+
+<tbody>
+{% for data in sheetdata.percentage %}
+	<tr>
+		<td>{{ data.name }}</td>
+		
+		{% for key, value in data.items %}
+			{% if key != "name" %}
+			<td>{{ value }} %</td>
+			{% endif %}
+		{% endfor %}
+
+	</tr>
+
+{% endfor %}
+</tbody>
+
+<tfoot>
+	<tr>
+		<td>{{ sheetdata.totals.name }}</td>
+		
+		{% for key, value in sheetdata.totals.items %}
+			{% if key != "name" %}
+			<td>{{ value }} %</td>
+			{% endif %}
+		{% endfor %}
+	</tr>
+
+</tfoot>
+
+</table>
+</div>
 
 
-
-<!--
-	<table class="time-sheet-table report-table-small approve-table" id="employee-info">
-		<thead>
-			<td colspan="4">Existing salary sources</td>
-		</thead>
-		<tbody>
-			{% for source in sourcelist %}
-	
-			<form action="{% url "manage-salary-sources" %}" method="POST">
-				{% csrf_token %}
-				<tr>
-					<td class="hidden"><input name="id" value="{{ source.id }}"></input></td>
-					<td><input name="code" value="{{ source.code }}" disabled></input></td>
-					<td><input type="submit" name="button" value="Edit"></input></td>
-					<td><input type="submit" name="button" value="Delete"></input></td>
-				</tr>
-			</form>
-	
-			{% endfor %}
-		</tbody>
-	</table>
--->
+{% endif %}
 
 {% endblock content %}
