@@ -202,10 +202,10 @@ def import_to_database( budget_percentage, budget_period ):
             if entry[code] <= 0:
                 continue
             
-            SalaryAssignment( employee = employee, 
-                              source = source,
-                              period = budget_period,
-                              percentage = entry[code]).save()
+            SalaryAssignment.objects.get_or_create( employee = employee, 
+                                                    source = source,
+                                                    period = budget_period,
+                                                    percentage = entry[code])[0].save()
             
 
 
