@@ -5,9 +5,19 @@
 
 {% block content %}
 
-<p>
-Import salary assigments
-</p>
+<div class="form-container">
+	<form action="{% url "import-salary-assignments" %}" method="POST">
+
+		<!-- 
+			Gonna have a selection for the target period, month-year and a download file form
+		-->
+		
+		<p>
+		Import salary assigments
+		</p>
+
+	</form>
+</div>	
 
 <!--
 	<div class="form-container">

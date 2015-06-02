@@ -2,8 +2,7 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 from frontpage.views import frontpage , sitelogout, front_page
 
-from budgetshare.views import import_salary_assignments, manage_salary_sources,\
-    assign_salary_sources
+from budgetshare.views import import_salary_assignments
 from publicholidays.views import import_public_holidays
 from timesheet.views import submit_time_sheet
 from leaverequest.views import request_leave
@@ -23,8 +22,8 @@ urlpatterns = patterns( '',
     url( r'^submittimesheet$', submit_time_sheet, name = "submit-time-sheet" ),
     url( r'^requestleave$', request_leave, name = "request-leave" ),
     url( r'^docstoapprove$', list_requests_to_approve, name = "documents-to-approve" ),
-    url( r'^salarysources$', manage_salary_sources, name = "manage-salary-sources" ),
-    url( r'^assignsalary$', assign_salary_sources, name = "assign-salary" ),
+    #     url( r'^salarysources$', manage_salary_sources, name = "manage-salary-sources" ),
+    #     url( r'^assignsalary$', assign_salary_sources, name = "assign-salary" ),
     url( r'^manageaccounts$', manage_users, name = "manage-accounts" ),
     url( r'^approveddocuments$', approved_documents, name = "approved-documents" ),
 

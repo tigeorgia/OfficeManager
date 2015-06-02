@@ -55,6 +55,7 @@ For O Manager:
 <!-- Employee + Financial Manager -->	
 {% if employee.role == '1-FMAN' or employee.role == '2-OMAN'%}
 
+{% comment%}
 <!--
 <div class="front-page-buttons timesheet-actions" id="finman-actions">
 	<a href="{% url "manage-salary-sources" %}">
@@ -66,6 +67,7 @@ For O Manager:
 	</a>
 </div>
 -->
+{% endcomment %}
 
 {% endif %}
 
@@ -84,6 +86,10 @@ For O Manager:
 
 	<a href="{% url "manage-accounts" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Employees" %}</div> 
+	</a>
+
+	<a href="{% url "import-public-holidays" %}">
+ 	<div type="button" class="front-page-button time-sheets-button">{% trans "Import Public Holidays" %}</div> 
 	</a>
 
 </div>

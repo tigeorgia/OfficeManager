@@ -19,17 +19,22 @@
 	
 			{% if employee.role == "1-FMAN" or employee.role == "2-OMAN" %}		
 
+			{% comment %}
 			<!--
 				<li><a href="{% url "manage-salary-sources" %}">Manage Salary Sources</a></li>	
 				<li><a href="{% url "assign-salary" %}">Assign Salary Sources</a></li>
 			-->
-			<li><a href="{% url "import-salary-assignments" %}">Import Salary Assignment</a></li>	
+			{% endcomment %}
+			
+			<li><a href="{% url "import-salary-assignments" %}">Import Salary Assignments</a></li>	
 			
 			{% endif %}
 	
 			{% if employee.role == "2-OMAN" %}		
 			<li><a href="{% url "manage-accounts" %}">Employees</a></li>	
 			<li><a href="{% url "approved-documents" %}">Approved Documents</a></li>
+			<li><a href="{% url "import-public-holidays" %}">Import Holidays</a></li>
+			
 			{% endif %}
 		</ul>
 

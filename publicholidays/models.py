@@ -1,3 +1,7 @@
 from django.db import models
 
-# Create your models here.
+class PublicHoliday( models.Model):
+    
+    date = models.DateField()
+    name = models.TextField( max_length = 256)
+    type = models.TextField( max_length = 256)

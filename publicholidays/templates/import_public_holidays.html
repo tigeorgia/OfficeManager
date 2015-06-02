@@ -1,0 +1,33 @@
+{% extends "managerbase.html" %}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+{% block content %}
+
+
+
+<table class="time-sheet-table approve-table">
+	<thead><tr>
+		<td>Date</td>
+		<td>Name</td>
+		<td>Type</td>
+	</tr></thead>
+	
+	<tbody>
+		{% autoescape off %}
+		{% for holiday in holidays %}
+		<tr>
+		<td>{{ holiday.0 }}</td>
+		<td>{{ holiday.1 }}</td>
+		<td>{{ holiday.2 }}</td>
+		</tr>
+		{% endfor %}
+		{% endautoescape %}
+		
+	</tbody>
+
+</table>
+
+
+{% endblock content %}
