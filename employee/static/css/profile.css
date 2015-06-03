@@ -8,6 +8,7 @@
 }
 
 #profile-details.profile-form {
+/* 	width: auto; */
 	width: 60%;
 } 
 
@@ -29,6 +30,10 @@
 	text-align: right;
 }
 
+.profile-form form .multiline {
+	height: 10em;
+}
+
 .profile-form form input,
 .profile-form form select {
 	width: 250pt;
@@ -40,3 +45,14 @@
 	display: block !important;
 	width: 80pt;
 }
+
+#profile-list form {
+	padding-left: 2em;
+	padding-right: 2em;
+}
+
+#profile-list form select,
+#profile-list form input {
+	width: 150pt !important;
+}
+

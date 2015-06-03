@@ -17,6 +17,18 @@
 		
 		<form  action="{% url "employee-profile" %}">
 		
+			<input type="submit" value="Update View"></input>
+						
+			<select size="50">
+			{% for empl in employeelist %}
+			<option value="{{ empl.1.sAMAccountName.0 }}"    
+			{% if employee.user.username = empl.1.sAMAccountName.0 %} selected {% endif %}
+			
+			>{{ empl.1.sn.0 }}, {{ empl.1.givenName.0 }}</option>
+			{% endfor %}
+			</select>
+			<br>
+			
 		</form>
 	
 	</div>
@@ -30,6 +42,12 @@
 		<form action="{% url "employee-profile" %}">
 			<img class="profile-image" src="{{ employee.picture.url }}" alt="Profile picture"></img>
 			
+
+<!--			
+<table>
+<tr>		
+<td>
+-->	
 			<!-- upload image for HR -->
 			<label>First name:</label>
 			<input type="text" value="{{ employee.user.first_name }}" {% if not editable %} disabled {% endif %}></input>
@@ -58,7 +76,10 @@
 			{% endfor %}
 			</select>
 			<br>
-			
+<!--
+</td>
+<td>
+-->			
 			<label>Employment status:</label>
 			<select {% if not editable %} disabled {% endif %}>
 			{% for stat in employee.EMPLOYMENT_STATUS %}
@@ -118,12 +139,13 @@
 			<br>
 
 			<label>Address:</label>
-			<input type="text" value="{{ employee.address }}" {% if not editable %} disabled {% endif %}></input>
+			<input type="text" class="multiline" value="{{ employee.address }}" {% if not editable %} disabled {% endif %}></input>
 			<br>
-
-	
-
-
+<!--
+</td>
+</tr>
+</table>
+-->
 	
 
 
