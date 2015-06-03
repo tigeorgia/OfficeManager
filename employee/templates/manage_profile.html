@@ -61,6 +61,8 @@
 			<input type="text" value="{{ employee.position }}" {% if not editable %} disabled {% endif %}></input>
 			<br>
 
+
+
 			<label>Location:</label>
 			<select {% if not editable %} disabled {% endif %}>
 			{% for loc in employee.LOCATIONS %}
@@ -76,6 +78,21 @@
 			{% endfor %}
 			</select>
 			<br>
+			
+			
+		
+			<label>Supervisor:</label>
+			<select {% if not editable %} disabled {% endif %}>
+			{% for empl in employeelist %}
+			<option value="{{ empl.1.sAMAccountName.0 }}"    
+			{% if employee.supervisor.username = empl.1.sAMAccountName.0 %} selected {% endif %}
+			
+			>{{ empl.1.sn.0 }}, {{ empl.1.givenName.0 }}</option>
+			{% endfor %}
+			</select>
+			<br>
+			
+			
 <!--
 </td>
 <td>

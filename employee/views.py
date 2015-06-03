@@ -22,9 +22,7 @@ def checkuserloggedin( func ):
 @checkuserloggedin
 def manage_profile( request, employee ):
 
-    employee_list = None
-    if employee.role == '2-OMAN' or employee.seniority == '0-SEN':
-        employee_list = available_user_list()
+    employee_list = available_user_list()
 
     profile_editable = None
     if employee.role == '2-OMAN':
