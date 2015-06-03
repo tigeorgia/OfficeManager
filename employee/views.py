@@ -26,7 +26,7 @@ def manage_profile( request, employee ):
 
     profile_editable = None
     if employee.role == '2-OMAN':
-        profile_editable = False # should be exactly the oposite, this is for tests
+        profile_editable = False # should be exactly the opposite, this is for tests
         
     # if none other selected
     edited_employee = employee
