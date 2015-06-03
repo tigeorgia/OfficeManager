@@ -30,6 +30,43 @@ class Profile( models.Model ):
                                   default = '2-STD' )
 
 
+
+    # added using HR's list
+    picture = models.ImageField( upload_to = 'profile', null = True )
+    mobile_num = models.CharField( max_length = 256, null = True )
+    personal_num = models.CharField( max_length = 256, null = True )
+
+    date_of_birth = models.DateField( null = True)
+    address = models.TextField( null = True)
+
+    EMPLOYMENT_STATUS = {( '0-FULL', 'Full time'),
+                         ( '1-PART', 'Part time' )}
+
+    employment_status = models.CharField( max_length = 64,
+                                          choices = EMPLOYMENT_STATUS,
+                                          default = '0-FULL',
+                                          null = True )
+
+    contract_start = models.DateField( null = True)
+    contract_end = models.DateField( null = True)
+    salary_gross_usd = models.DecimalField( decimal_places = 2, max_digits = 16, null = True)
+    salary_net_usd = models.DecimalField( decimal_places = 2, max_digits = 16, null = True)
+    
+    # benefits
+    insurance = models.BooleanField( default = False)
+    gsm_limit = models.DecimalField( decimal_places = 2, max_digits = 16, default = '0.0')
+
+
+
+
+
+
+
+
+
+
+
+    # this will be moved to another model, somewhere in the timesheet application
     workday_start = models.TimeField( default = "10:00" )
     workday_end = models.TimeField( default = "18:00" )
 
