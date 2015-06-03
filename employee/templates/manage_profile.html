@@ -3,11 +3,145 @@
 {% load i18n %} 
 {% load staticfiles %}
 
-
+{% block stylesheets %}
+<link href={% static "css/profile.css" %} rel="stylesheet" type="text/css"/>
+{% endblock stylesheets %}
 
 {% block content %}
 
+<div id="profile-view">
 
+	<!-- Employee list only for HR -->
+	{% if employee.role == '2-OMAN' or employee.seniority == '0-SEN' %}
+	<div id="profile-list" class="selectable-list profile-form">
+		
+		<form  action="{% url "employee-profile" %}">
+		
+		</form>
+	
+	</div>
+	{% endif %}
+
+	<!-- Employee detail for everybody -->
+	<!-- editable only for HR -->
+	<div id="profile-details" class="profile-form">	
+		
+		
+		<form action="{% url "employee-profile" %}">
+			<img class="profile-image" src="{{ employee.picture.url }}" alt="Profile picture"></img>
+			
+			<!-- upload image for HR -->
+			<label>First name:</label>
+			<input type="text" value="{{ employee.user.first_name }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+			
+			<label>Last name:</label>
+			<input type="text" value="{{ employee.user.last_name }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+			
+			<label>Position:</label>
+			<input type="text" value="{{ employee.position }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+
+			<label>Location:</label>
+			<select {% if not editable %} disabled {% endif %}>
+			{% for loc in employee.LOCATIONS %}
+			<option value="{{ loc.0 }}" {% if employee.location == loc.0 %} selected {% endif %}>{{ loc.1 }}</option>
+			{% endfor %}
+			</select>
+			<br>
+
+			<label>Seniority:</label>
+			<select {% if not editable %} disabled {% endif %}>
+			{% for sen in employee.SENIORITIES %}
+			<option value="{{ sen.0 }}" {% if employee.seniority == sen.0 %} selected {% endif %}>{{ sen.1 }}</option>
+			{% endfor %}
+			</select>
+			<br>
+			
+			<label>Employment status:</label>
+			<select {% if not editable %} disabled {% endif %}>
+			{% for stat in employee.EMPLOYMENT_STATUS %}
+			<option value="{{ stat.0 }}" {% if employee.employment_status == stat.0 %} selected {% endif %}>{{ stat.1 }}</option>
+			{% endfor %}
+			</select>
+			<br>
+			
+			<label>Contract Start Date:</label>
+			<input type="text" value="{{ employee.contract_start }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+			
+			<label>Contract End Date:</label>
+			<input type="text" value="{{ employee.contract_end }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+			
+			<label>Gross salary (USD):</label>
+			<input type="number" value="{{ employee.salary_gross_usd }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+			
+			<label>Net salary (USD):</label>
+			<input type="number" value="{{ employee.salary_net_usd }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+						
+			<label>Insurance:</label>
+			<select {% if not editable %} disabled {% endif %}>
+			<option value="True" {% if employee.insurrance %} selected {% endif %}>Yes</option>
+			<option value="False" {% if not employee.role %} selected {% endif %}>No</option>
+			</select>
+			<br>
+
+			<label>GSM Limit:</label>
+			<input type="number" value="{{ employee.gsm_limit }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+
+			
+			
+			<label>System role:</label>
+			<select {% if not editable %} disabled {% endif %}>
+			{% for rol in employee.ROLES %}
+			<option value="{{ rol.0 }}" {% if employee.role == rol.0 %} selected {% endif %}>{{ rol.1 }}</option>
+			{% endfor %}
+			</select>
+			<br>
+
+
+			<label>Mobile Number:</label>
+			<input type="text" value="{{ employee.mobile_num }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+
+			<label>Personal Number:</label>
+			<input type="text" value="{{ employee.personal_num }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+
+			<label>Date of Birth:</label>
+			<input type="text" value="{{ employee.date_of_birth }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+
+			<label>Address:</label>
+			<input type="text" value="{{ employee.address }}" {% if not editable %} disabled {% endif %}></input>
+			<br>
+
+	
+
+
+	
+
+
+
+		</form>
+	
+		<!-- attachment list -->
+		<!-- link to delete document for HR -->
+		
+		<!-- link to attach document for HR -->
+		<!-- Submit button only for HR -->
+		
+		
+	</div>
+
+	
+
+</div>
 
 
 {% endblock content %}

@@ -26,33 +26,37 @@ def import_salary_assignments( request, employee):
     sheet_data = None
 
     if request.method == "POST":
-        if request.FILES['sheet']:
-            sheet_data = read_excel_sheet( request.FILES['sheet'] )
-
-
-
-            data_verified = verify_excel_data( sheet_data )
-
-            if data_verified == False:
-                message = "Error in data, please check the excel sheet"
-                sheet_data = None
-            else:
-
-                budget_percentage = sheet_data[:-1]
-                budget_totals = sheet_data[-1]
-
-                budget_period = request.POST['data-period']
-
-                import_to_database( budget_percentage, budget_period )
-
-
-                message = "Data has been imported"
-
-
-                sheet_data = {
-                              "percentage": budget_percentage,
-                              "totals" : budget_totals
-                              }
+        
+        # this pretty much verifies whether we're coming from this page or from loggin in
+        if request.FILES:
+            
+            if request.FILES['sheet']:
+                sheet_data = read_excel_sheet( request.FILES['sheet'] )
+    
+    
+    
+                data_verified = verify_excel_data( sheet_data )
+    
+                if data_verified == False:
+                    message = "Error in data, please check the excel sheet"
+                    sheet_data = None
+                else:
+    
+                    budget_percentage = sheet_data[:-1]
+                    budget_totals = sheet_data[-1]
+    
+                    budget_period = request.POST['data-period']
+    
+                    import_to_database( budget_percentage, budget_period )
+    
+    
+                    message = "Data has been imported"
+    
+    
+                    sheet_data = {
+                                  "percentage": budget_percentage,
+                                  "totals" : budget_totals
+                                  }
 
 
     return render( request, "import_salary_assignments.html",

@@ -6,8 +6,6 @@ from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django_auth_ldap.backend import LDAPBackend
 
-
-
 # decorator for all methods than need a user to be logged in
 def checkuserloggedin( func ):
 
@@ -19,6 +17,38 @@ def checkuserloggedin( func ):
             return func( request, employee )
 
     return checklogin
+
+
+@checkuserloggedin
+def manage_profile( request, employee ):
+
+    employee_list = None
+    if employee.role == '2-OMAN' or employee.seniority == '0-SEN':
+        employee_list = available_user_list()
+
+    profile_editable = None
+    if employee.role == '2-OMAN':
+        profile_editable = False # should be exactly the oposite, this is for tests
+        
+    # if none other selected
+    edited_employee = employee
+
+    
+
+
+
+
+    return render( request, 
+                   "manage_profile.html", 
+                   {
+                    "employee": employee,
+                    "employeelist": employee_list,
+                    "editedemployee": edited_employee,
+                    "editable": profile_editable,
+                    } 
+                  )
+
+
 
 
 # a little ldap helper
@@ -65,7 +95,8 @@ def employee_login( request, callback_view ):
 
     login_status = check_employee_login( request )
     if login_status == 0:
-        return  callback_view( request )
+        employee = Profile.objects.get( user = request.user )
+        return  callback_view( request, employee )
     elif login_status == 1:
         return render( request, "frontpage.html", {"message": "You have successfully authenticated but " +
                                                   "your time sheet account has not been created by " +
@@ -235,14 +266,3 @@ def manage_users( request, employee ):
                                                   'message': message,
                                                   "viewdata": viewdata} )
 
-@checkuserloggedin
-def manage_profile( request, employee ):
-#     employee = Profile.objects.get( user = request.user )
-
-
-
-
-
-
-
-    return render( request, "manage_profile.html", { "employee": employee} )

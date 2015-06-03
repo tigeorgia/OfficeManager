@@ -7,7 +7,8 @@ from publicholidays.views import import_public_holidays
 from timesheet.views import submit_time_sheet
 from leaverequest.views import request_leave
 from documentworkflow.views import list_requests_to_approve, approved_documents
-from employee.views import manage_users, manage_profile
+from employee.views import manage_profile
+from OfficeManager import settings
 
 urlpatterns = patterns( '',
     url( r'^admin/', include( admin.site.urls ) ),
@@ -24,10 +25,13 @@ urlpatterns = patterns( '',
     url( r'^docstoapprove$', list_requests_to_approve, name = "documents-to-approve" ),
     #     url( r'^salarysources$', manage_salary_sources, name = "manage-salary-sources" ),
     #     url( r'^assignsalary$', assign_salary_sources, name = "assign-salary" ),
-    url( r'^manageaccounts$', manage_users, name = "manage-accounts" ),
+    #     url( r'^manageaccounts$', manage_users, name = "manage-accounts" ),
     url( r'^approveddocuments$', approved_documents, name = "approved-documents" ),
     
-    url( r'^employeeprofile$', manage_profile, name = "employee-profile")
+    url( r'^employeeprofile$', manage_profile, name = "employee-profile"),
+    
+    # this is necessary for Django server to serve mediafiles,notsure if this does the trick when deployed to Apache
+    url( r'^officemanager/media/(?P<path>.*)$', 'django.views.static.serve', {'document_root': settings.MEDIA_ROOT}),
 
 
  )

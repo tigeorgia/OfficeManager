@@ -1,0 +1,42 @@
+@charset "utf-8";
+
+.profile-form {
+	float: left;
+	padding: 2em;
+	position: relative;
+	width: 20%;
+}
+
+#profile-details.profile-form {
+	width: 60%;
+} 
+
+
+.profile-form form {
+	width: 80%;
+}
+
+.profile-form form label,
+.profile-form form input,
+.profile-form form select {
+	display: inline-block;
+
+}
+
+.profile-form form label {
+	width: 70pt;
+	padding-right: 1em;
+	text-align: right;
+}
+
+.profile-form form input,
+.profile-form form select {
+	width: 250pt;
+	padding-left: 1em;
+	
+}
+
+.profile-form form .profile-image {
+	display: block !important;
+	width: 80pt;
+}
