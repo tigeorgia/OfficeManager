@@ -1,15 +1,12 @@
 from django.shortcuts import render
 from employee.views import checkuserloggedin
-from employee.models import Profile
 from timesheet import tshelpers
 from leaverequest import models
 import datetime
 
 @checkuserloggedin
-def request_leave( request ):
+def request_leave( request, employee ):
 
-
-    employee = Profile.objects.get( user = request.user )
     time_sheet_data = tshelpers.generate_timesheet_data( employee )
 
     if request.method != "POST":

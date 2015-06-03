@@ -9,7 +9,16 @@ class Profile( models.Model ):
     supervisor = models.ForeignKey( User )
 
     position = models.CharField( max_length = 64 )
-    location = models.CharField( max_length = 64 )
+    
+    LOCATIONS = {( '0-TBIL', 'Tbilisi'),
+                 ( '0-BATU', 'Batumi'),
+                 ( '0-KUTA', 'Kutaisi'),
+                 ( '0-ZUGD', 'Zugdidi'),
+                 }
+    
+    location = models.CharField( max_length = 64,
+                                 choices = LOCATIONS,
+                                 default = '0-TBIL' )
 
 
     ROLES = {( '0-EMPL', 'Employee' ),

@@ -14,9 +14,7 @@ from django.contrib.auth.models import User
 
 
 @checkuserloggedin
-def import_salary_assignments( request ):
-
-    employee = Profile.objects.get( user = request.user )
+def import_salary_assignments( request, employee):
 
     months = tshelpers.months
     current_month = {

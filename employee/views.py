@@ -9,14 +9,15 @@ from django_auth_ldap.backend import LDAPBackend
 
 
 # decorator for all methods than need a user to be logged in
-def checkuserloggedin( func):
-    
-    def checklogin( request):
+def checkuserloggedin( func ):
+
+    def checklogin( request ):
         if not request.user.is_authenticated():
             return employee_login( request, func )
         else:
-            return func(request)
-    
+            employee = Profile.objects.get( user = request.user )
+            return func( request, employee )
+
     return checklogin
 
 
@@ -84,9 +85,8 @@ def employee_login( request, callback_view ):
     return render( request, "login_page.html" )
 
 @checkuserloggedin
-def manage_users( request ):
+def manage_users( request, employee ):
 
-    employee = Profile.objects.get( user = request.user )
 
     if employee.role != '2-OMAN':
         return not_allowed( request )
@@ -235,3 +235,14 @@ def manage_users( request ):
                                                   'message': message,
                                                   "viewdata": viewdata} )
 
+@checkuserloggedin
+def manage_profile( request, employee ):
+#     employee = Profile.objects.get( user = request.user )
+
+
+
+
+
+
+
+    return render( request, "manage_profile.html", { "employee": employee} )

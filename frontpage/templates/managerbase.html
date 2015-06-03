@@ -36,7 +36,7 @@
 			
 			<div id="user-info">
 				{% if employee %}
-				{{ employee.user.first_name}} {{ employee.user.last_name }}
+				<a href = "{% url "employee-profile" %}">{{ employee.user.first_name}} {{ employee.user.last_name }}</a>
 				<a href="{% url "system-logout" %}">Log out</a>
 				{% endif %}
 			</div>

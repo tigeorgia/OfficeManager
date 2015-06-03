@@ -7,7 +7,7 @@ from publicholidays.views import import_public_holidays
 from timesheet.views import submit_time_sheet
 from leaverequest.views import request_leave
 from documentworkflow.views import list_requests_to_approve, approved_documents
-from employee.views import manage_users
+from employee.views import manage_users, manage_profile
 
 urlpatterns = patterns( '',
     url( r'^admin/', include( admin.site.urls ) ),
@@ -26,6 +26,8 @@ urlpatterns = patterns( '',
     #     url( r'^assignsalary$', assign_salary_sources, name = "assign-salary" ),
     url( r'^manageaccounts$', manage_users, name = "manage-accounts" ),
     url( r'^approveddocuments$', approved_documents, name = "approved-documents" ),
+    
+    url( r'^employeeprofile$', manage_profile, name = "employee-profile")
 
 
  )

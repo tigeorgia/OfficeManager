@@ -2,16 +2,13 @@ from django.shortcuts import render
 
 import datetime
 from employee.views import checkuserloggedin
-from employee.models import Profile
 import urllib
 from BeautifulSoup import BeautifulSoup
 from publicholidays.models import PublicHoliday
 
 @checkuserloggedin
-def import_public_holidays( request):
-    
-    employee = Profile.objects.get( user = request.user )
-    
+def import_public_holidays( request, employee):
+        
     DOWNLOAD_ADDRESS = "http://www.timeanddate.com/holidays/georgia/"
     
     current_year = datetime.date.today().year

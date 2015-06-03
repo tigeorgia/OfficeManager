@@ -1,14 +1,11 @@
 from django.shortcuts import render
 from employee.views import checkuserloggedin
-from employee.models import Profile
 from timesheet import tshelpers
 from models import TimeSheet
 import datetime
 
 @checkuserloggedin
-def submit_time_sheet( request ):
-
-    employee = Profile.objects.get( user = request.user )
+def submit_time_sheet( request, employee ):
 
     timesheet_data = tshelpers.generate_timesheet_data( employee )
     timesheet_db = TimeSheet.objects.filter( employee = employee, period = timesheet_data['period'] )

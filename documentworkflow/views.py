@@ -10,9 +10,8 @@ from django.contrib.auth.models import User
 from budgetshare.models import SalaryAssignment, SalarySource
 
 @checkuserloggedin
-def list_requests_to_approve( request ):
+def list_requests_to_approve( request, employee ):
 
-    employee = Profile.objects.get( user = request.user )
     time_sheet_employee = None
 
     view_document = []
@@ -86,9 +85,8 @@ def list_requests_to_approve( request ):
 
 
 @checkuserloggedin
-def approved_documents( request ):
+def approved_documents( request, employee ):
 
-    employee = Profile.objects.get( user = request.user )
 
     if employee.role != '2-OMAN':
         return not_allowed( request )
