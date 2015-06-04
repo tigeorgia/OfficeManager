@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django_auth_ldap.backend import LDAPBackend
 import os
 from attachment.models import ProfileAttachment
+from django.utils.datetime_safe import datetime
 
 # decorator for all methods than need a user to be logged in
 def checkuserloggedin( func ):
@@ -80,8 +81,8 @@ def save_profile_to_database( request ):
     profile.supervisor = supervisor
 
     profile.employment_status = post_data["empl-status"]
-    profile.contract_start = post_data["contract-start"]
-    profile.contract_end = post_data["contract-end"]
+    profile.contract_start = datetime.strptime( post_data["contract-start"], '%Y-%m-%d') 
+    profile.contract_end = datetime.strptime( post_data["contract-end"], '%Y-%m-%d') 
     profile.salary_gross_usd = post_data["salary-gross"]
     profile.salary_net_usd = post_data["salary-net"]
 
@@ -94,7 +95,7 @@ def save_profile_to_database( request ):
 
     profile.mobile_num = post_data["mobile-num"]
     profile.personal_num = post_data["personal-num"]
-    profile.date_of_birth = post_data["date-of-birth"]
+    profile.date_of_birth = datetime.strptime( post_data["date-of-birth"], '%Y-%m-%d') 
     profile.address = post_data["address"]
 
     profile.leave_balance_HOLS = post_data["leave-hols"]
@@ -102,6 +103,7 @@ def save_profile_to_database( request ):
 
     try:
         profile.save()
+        
         message = "Profile data has been saved"
 
         if request.FILES:
@@ -146,8 +148,6 @@ def save_profile_to_database( request ):
                                            url = attachment_link)
             attachment.save()
                 
-            
-
     
     except:
         message = "Error saving profile"
@@ -175,8 +175,7 @@ def save_file( request, target_dir, in_file, profile ):
         for chunk in in_file.chunks():
             destination.write( chunk )
     
-    file_url = settings.MEDIA_URL + 'profile/%s' % profile.user.username + "/" + in_file.name
-    return file_url
+
 
 def update_profile_data( post_data ):
 
