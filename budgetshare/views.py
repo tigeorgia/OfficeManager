@@ -195,7 +195,7 @@ def import_to_database( budget_percentage, budget_period ):
             if not user:
                 continue
             
-            employee = Profile.objects.get( user = user )
+            employee = Profile.objects.filter( user = user )
             if not employee:
                 continue
             
