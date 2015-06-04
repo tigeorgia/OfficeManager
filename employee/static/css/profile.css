@@ -8,24 +8,21 @@
 }
 
 #profile-details.profile-form {
-/* 	width: auto; */
+	/* 	width: auto; */
 	width: 60%;
-} 
-
+}
 
 .profile-form form {
 	width: 80%;
 }
 
-.profile-form form label,
-.profile-form form input,
-.profile-form form select {
+.profile-form form label, .profile-form form input, .profile-form form select,
+	.profile-form form textarea {
 	display: inline-block;
-
 }
 
 .profile-form form label {
-	width: 70pt;
+	width: 100pt;
 	padding-right: 1em;
 	text-align: right;
 }
@@ -34,11 +31,10 @@
 	height: 10em;
 }
 
-.profile-form form input,
-.profile-form form select {
+.profile-form form input, .profile-form form select, .profile-form form textarea
+	{
 	width: 250pt;
 	padding-left: 1em;
-	
 }
 
 .profile-form form .profile-image {
@@ -51,8 +47,34 @@
 	padding-right: 2em;
 }
 
-#profile-list form select,
-#profile-list form input {
+#profile-list form select, #profile-list form input {
 	width: 150pt !important;
 }
 
+.profile-form form textarea {
+	padding-top: 1em;
+	padding-bottom: 1em;
+}
+
+.profile-form form div {
+	border: 2px gray ridge;
+	border-radius: 2pt;
+	padding: 1em 1em;
+}
+
+.profile-form form div p {
+	width: 80%;
+	margin: auto;
+	text-align: center;
+	margin-bottom: 1em;
+}
+
+.profile-form form input[type="submit"] {
+	width: 95%;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
+
+.profile-form .hidden {
+	display: none;
+}

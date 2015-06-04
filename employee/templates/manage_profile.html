@@ -15,14 +15,15 @@
 	{% if employee.role == '2-OMAN' or employee.seniority == '0-SEN' %}
 	<div id="profile-list" class="selectable-list profile-form">
 		
-		<form  action="{% url "employee-profile" %}">
-		
-			<input type="submit" value="Update View"></input>
+		<form  action="{% url "employee-profile" %}" method='post'>
+			{% csrf_token %}
+			
+			<input name = 'button' type="submit" value="Update View"></input>
 						
-			<select size="50">
+			<select size="50" name="ldap-user-name">
 			{% for empl in employeelist %}
 			<option value="{{ empl.1.sAMAccountName.0 }}"    
-			{% if employee.user.username = empl.1.sAMAccountName.0 %} selected {% endif %}
+			{% if editedemployee.user.username = empl.1.sAMAccountName.0 %} selected {% endif %}
 			
 			>{{ empl.1.sn.0 }}, {{ empl.1.givenName.0 }}</option>
 			{% endfor %}
@@ -39,42 +40,62 @@
 	<div id="profile-details" class="profile-form">	
 		
 		
-		<form action="{% url "employee-profile" %}">
-			<img class="profile-image" src="{{ employee.picture.url }}" alt="Profile picture"></img>
+		<form action="{% url "employee-profile" %}" method="POST" enctype="multipart/form-data">
+		
+			{% csrf_token %}
 			
+			<!-- Submit button only for HR -->
+			{% if employee.role == '2-OMAN' %}
+			<input name="button" type="submit" value="Save Profile"></input>
+			{% endif %}
+		
 
+			{% if editedemployee.picture %}
+			<img class="profile-image" src="{{ editedemployee.picture.url }}" alt="Profile picture"></img>
+			{% endif %}
+			
+			{% if employee.role == '2-OMAN' %}
+			<!-- upload image for HR -->
+			<label>Select picture:</label>
+			<input name="picture" type="file" ></input>
+			<br>
+			{% endif %}
 <!--			
 <table>
 <tr>		
 <td>
--->	
-			<!-- upload image for HR -->
+-->			<input name="user-id" value = "{{ editedemployee.user.id }}" class="hidden"></input>
+			
 			<label>First name:</label>
-			<input type="text" value="{{ employee.user.first_name }}" {% if not editable %} disabled {% endif %}></input>
+			<input type="text" value="{{ editedemployee.user.first_name }}"  disabled></input>
 			<br>
 			
 			<label>Last name:</label>
-			<input type="text" value="{{ employee.user.last_name }}" {% if not editable %} disabled {% endif %}></input>
+			<input type="text" value="{{ editedemployee.user.last_name }}" disabled ></input>
 			<br>
 			
+			<label>e-mail:</label>
+			<input type="text" value="{{ editedemployee.user.email }}" disabled ></input>
+			<br>
+
 			<label>Position:</label>
-			<input type="text" value="{{ employee.position }}" {% if not editable %} disabled {% endif %}></input>
+			<input name="position" type="text" value="{{ editedemployee.position }}" {% if not editable %} disabled {% endif %}></input>
 			<br>
 
 
 
 			<label>Location:</label>
-			<select {% if not editable %} disabled {% endif %}>
-			{% for loc in employee.LOCATIONS %}
-			<option value="{{ loc.0 }}" {% if employee.location == loc.0 %} selected {% endif %}>{{ loc.1 }}</option>
+			<select name="location" {% if not editable %} disabled {% endif %}>
+			{% for loc in editedemployee.LOCATIONS %}
+			<option value="{{ loc.0 }}" {% if editedemployee.location == loc.0 %} selected {% endif %}>{{ loc.1 }}</option>
 			{% endfor %}
 			</select>
 			<br>
 
 			<label>Seniority:</label>
-			<select {% if not editable %} disabled {% endif %}>
-			{% for sen in employee.SENIORITIES %}
-			<option value="{{ sen.0 }}" {% if employee.seniority == sen.0 %} selected {% endif %}>{{ sen.1 }}</option>
+			<select name="seniority" {% if not editable %} disabled {% endif %}>
+			{% for sen in editedemployee.SENIORITIES %}
+			<option value="{{ sen.0 }}" {% if editedemployee.seniority == sen.0 %} selected {% endif %}>{{ sen.1 }}</option>
 			{% endfor %}
 			</select>
 			<br>
@@ -82,10 +103,10 @@
 			
 		
 			<label>Supervisor:</label>
-			<select {% if not editable %} disabled {% endif %}>
+			<select name="supervisor" {% if not editable %} disabled {% endif %}>
 			{% for empl in employeelist %}
 			<option value="{{ empl.1.sAMAccountName.0 }}"    
-			{% if employee.supervisor.username = empl.1.sAMAccountName.0 %} selected {% endif %}
+			{% if editedemployee.supervisor.username = empl.1.sAMAccountName.0 %} selected {% endif %}
 			
 			>{{ empl.1.sn.0 }}, {{ empl.1.givenName.0 }}</option>
 			{% endfor %}
@@ -98,82 +119,132 @@
 <td>
 -->			
 			<label>Employment status:</label>
-			<select {% if not editable %} disabled {% endif %}>
-			{% for stat in employee.EMPLOYMENT_STATUS %}
-			<option value="{{ stat.0 }}" {% if employee.employment_status == stat.0 %} selected {% endif %}>{{ stat.1 }}</option>
+			<select name="empl-status"{% if not editable %} disabled {% endif %}>
+			{% for stat in editedemployee.EMPLOYMENT_STATUS %}
+			<option value="{{ stat.0 }}" {% if editedemployee.employment_status == stat.0 %} selected {% endif %}>{{ stat.1 }}</option>
 			{% endfor %}
 			</select>
 			<br>
 			
-			<label>Contract Start Date:</label>
-			<input type="text" value="{{ employee.contract_start }}" {% if not editable %} disabled {% endif %}></input>
+			<label>Contract Start Date (YYYY-MM-DD):</label>
+			
+			<input name="contract-start" type="text" value=
+			{% if editedemployee.contract_end == None %}""{% else%}
+			"{{ editedemployee.contract_start|date:"Y-m-d" }}" {% endif %}
+			{% if not editable %} disabled {% endif %}></input>
 			<br>
 			
-			<label>Contract End Date:</label>
-			<input type="text" value="{{ employee.contract_end }}" {% if not editable %} disabled {% endif %}></input>
+			<label>Contract End Date (YYYY-MM-DD):</label>
+			<input name="contract-end" type="text" value=
+			{% if editedemployee.contract_end == None %}""{% else %}
+			"{{ editedemployee.contract_end|date:"Y-m-d" }}"{% endif %}
+			{% if not editable %} disabled {% endif %}></input>
 			<br>
 			
 			<label>Gross salary (USD):</label>
-			<input type="number" value="{{ employee.salary_gross_usd }}" {% if not editable %} disabled {% endif %}></input>
+			<input name="salary-gross" type="number" value="{{ editedemployee.salary_gross_usd }}" {% if not editable %} disabled {% endif %}></input>
 			<br>
 			
 			<label>Net salary (USD):</label>
-			<input type="number" value="{{ employee.salary_net_usd }}" {% if not editable %} disabled {% endif %}></input>
+			<input name="salary-net" type="number" value="{{ editedemployee.salary_net_usd }}" {% if not editable %} disabled {% endif %}></input>
 			<br>
 						
 			<label>Insurance:</label>
-			<select {% if not editable %} disabled {% endif %}>
-			<option value="True" {% if employee.insurrance %} selected {% endif %}>Yes</option>
-			<option value="False" {% if not employee.role %} selected {% endif %}>No</option>
+			<select name="insurance" {% if not editable %} disabled {% endif %}>
+			<option value="True" {% if editedemployee.insurrance %} selected {% endif %}>Yes</option>
+			<option value="False" {% if not editedemployee.role %} selected {% endif %}>No</option>
 			</select>
 			<br>
 
 			<label>GSM Limit:</label>
-			<input type="number" value="{{ employee.gsm_limit }}" {% if not editable %} disabled {% endif %}></input>
+			<input name="gsm-limit" type="number" value="{{ editedemployee.gsm_limit }}" {% if not editable %} disabled {% endif %}></input>
 			<br>
 
 			
 			
 			<label>System role:</label>
-			<select {% if not editable %} disabled {% endif %}>
-			{% for rol in employee.ROLES %}
-			<option value="{{ rol.0 }}" {% if employee.role == rol.0 %} selected {% endif %}>{{ rol.1 }}</option>
+			<select name="system-role" {% if not editable %} disabled {% endif %}>
+			{% for rol in editedemployee.ROLES %}
+			<option value="{{ rol.0 }}" {% if editedemployee.role == rol.0 %} selected {% endif %}>{{ rol.1 }}</option>
 			{% endfor %}
 			</select>
 			<br>
 
 
 			<label>Mobile Number:</label>
-			<input type="text" value="{{ employee.mobile_num }}" {% if not editable %} disabled {% endif %}></input>
+			<input name="mobile-num" type="text" value=
+			{% if editedemployee.mobile_num == None %}""{% else%}
+			"{{ editedemployee.mobile_num }}" {% endif %}
+			{% if not editable %} disabled {% endif %}></input>
 			<br>
 
 			<label>Personal Number:</label>
-			<input type="text" value="{{ employee.personal_num }}" {% if not editable %} disabled {% endif %}></input>
+			<input name="personal-num"type="text" value=
+			{% if editedemployee.personal_num == None %}""{% else%}
+			"{{ editedemployee.personal_num }}" {% endif %}
+			{% if not editable %} disabled {% endif %}></input>
 			<br>
 
 			<label>Date of Birth:</label>
-			<input type="text" value="{{ employee.date_of_birth }}" {% if not editable %} disabled {% endif %}></input>
+			<input name="date-of-birth" type="text" value=
+			{% if editedemployee.date_of_birth == None %}""{% else%}
+			"{{ editedemployee.date_of_birth|date:"Y-m-d" }}" {% endif %}
+			{% if not editable %} disabled {% endif %}></input>
 			<br>
 
-			<label>Address:</label>
-			<input type="text" class="multiline" value="{{ employee.address }}" {% if not editable %} disabled {% endif %}></input>
+			<label>Address:</label><br><label></label>
+			<textarea name="address" type="text" class="multiline" {% if not editable %} disabled {% endif %}>
+			{% if editedemployee.address != None %}
+			{{ editedemployee.address }} {% endif %}
+			</textarea>
 			<br>
-<!--
-</td>
-</tr>
-</table>
--->
 	
+			<label>Vacation balance</label>
+			<input name="leave-hols" type="number" value={% if editedemployee.leave_balance_HOLS %} "{{ editedemployee.leave_balance_HOLS }}" {% else %} "" {% endif %}></input>
+			
+			<label>Sick balance</label>
+			<input name="leave-sick" type="number" value={% if editedemployee.leave_balance_SICK %} "{{ editedemployee.leave_balance_SICK }}" {% else %} "" {% endif %}></input>
+	
+	
+			<div id="attachment-list">
+				<p>Attached documents</p>
+			
+				<!-- attachment list -->
+				<ul>
+				{% for attach in attachments %}
+				<li><a href="{{ attach.url }}">{{ attach.name }}</a></li>
+				{% endfor %}
+				</ul>
+				
+				<!-- links to delete document for HR -->
+			
+			
+
+				<!-- link to attach document for HR -->
+	
+				{% if employee.role == '2-OMAN' %}
+				<!-- upload image for HR -->
+				<label>Document name</label>
+				<input name="attachment-name" type="text"></input>
+				
+				<label>File</label>
+				<input name="attachment-file"type="file" ></input>
+				
+				<label>Link</label>
+				<input name="attachment-link" type="text" ></input>
+				<br>
+				{% endif %}
 
 
+			</div>
+			
+			<!-- Submit button only for HR -->
+			{% if employee.role == '2-OMAN' %}
+			<input name="button" type="submit" value="Save Profile"></input>
+			{% endif %}
 
 		</form>
 	
-		<!-- attachment list -->
-		<!-- link to delete document for HR -->
-		
-		<!-- link to attach document for HR -->
-		<!-- Submit button only for HR -->
 		
 		
 	</div>

@@ -2,6 +2,7 @@ from django.db import models
 from django.db.models.fields.related import OneToOneField
 from django.contrib.auth.models import User
 
+
 # a profile of an Employee that HR holds
 class Profile( models.Model ):
 
@@ -9,13 +10,13 @@ class Profile( models.Model ):
     supervisor = models.ForeignKey( User )
 
     position = models.CharField( max_length = 64 )
-    
-    LOCATIONS = {( '0-TBIL', 'Tbilisi'),
-                 ( '0-BATU', 'Batumi'),
-                 ( '0-KUTA', 'Kutaisi'),
-                 ( '0-ZUGD', 'Zugdidi'),
+
+    LOCATIONS = {( '0-TBIL', 'Tbilisi' ),
+                 ( '0-BATU', 'Batumi' ),
+                 ( '0-KUTA', 'Kutaisi' ),
+                 ( '0-ZUGD', 'Zugdidi' ),
                  }
-    
+
     location = models.CharField( max_length = 64,
                                  choices = LOCATIONS,
                                  default = '0-TBIL' )
@@ -45,10 +46,10 @@ class Profile( models.Model ):
     mobile_num = models.CharField( max_length = 256, null = True )
     personal_num = models.CharField( max_length = 256, null = True )
 
-    date_of_birth = models.DateField( null = True)
-    address = models.TextField( null = True)
+    date_of_birth = models.DateField( null = True )
+    address = models.TextField( null = True )
 
-    EMPLOYMENT_STATUS = {( '0-FULL', 'Full time'),
+    EMPLOYMENT_STATUS = {( '0-FULL', 'Full time' ),
                          ( '1-PART', 'Part time' )}
 
     employment_status = models.CharField( max_length = 64,
@@ -56,14 +57,14 @@ class Profile( models.Model ):
                                           default = '0-FULL',
                                           null = True )
 
-    contract_start = models.DateField( null = True)
-    contract_end = models.DateField( null = True)
-    salary_gross_usd = models.DecimalField( decimal_places = 2, max_digits = 16, null = True)
-    salary_net_usd = models.DecimalField( decimal_places = 2, max_digits = 16, null = True)
-    
+    contract_start = models.DateField( null = True )
+    contract_end = models.DateField( null = True )
+    salary_gross_usd = models.DecimalField( decimal_places = 2, max_digits = 16, null = True )
+    salary_net_usd = models.DecimalField( decimal_places = 2, max_digits = 16, null = True )
+
     # benefits
-    insurance = models.BooleanField( default = False)
-    gsm_limit = models.DecimalField( decimal_places = 2, max_digits = 16, default = '0.0')
+    insurance = models.BooleanField( default = False )
+    gsm_limit = models.DecimalField( decimal_places = 2, max_digits = 16, default = '0.0' )
 
 
 
@@ -89,3 +90,8 @@ class Profile( models.Model ):
 
     leave_earn_HOLS = models.DecimalField( default = 2.0, decimal_places = 2, max_digits = 4 )
     leave_earn_SICK = models.DecimalField( default = 1.08, decimal_places = 2, max_digits = 4 )
+
+
+
+
+

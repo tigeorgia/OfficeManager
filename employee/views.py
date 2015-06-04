@@ -5,6 +5,8 @@ from employee.models import Profile
 from django.contrib.auth import logout, authenticate, login
 from django.contrib.auth.models import User
 from django_auth_ldap.backend import LDAPBackend
+import os
+from attachment.models import ProfileAttachment
 
 # decorator for all methods than need a user to be logged in
 def checkuserloggedin( func ):
@@ -26,28 +28,178 @@ def manage_profile( request, employee ):
 
     profile_editable = None
     if employee.role == '2-OMAN':
-        profile_editable = False # should be exactly the opposite, this is for tests
-        
+        profile_editable = True  # should be exactly the opposite, this is for tests
+
     # if none other selected
     edited_employee = employee
+    message = ''
 
-    
+    if request.method == 'POST':
 
+        if request.POST['button'].upper() == "UPDATE VIEW":
 
+            profile_data = update_profile_data( request.POST )
+            message = profile_data['message']
+            edited_employee = profile_data['user-profile']
 
+        if request.POST['button'].upper() == "SAVE PROFILE":
 
-    return render( request, 
-                   "manage_profile.html", 
+            save_result = save_profile_to_database( request )
+            edited_employee = save_result['profile']
+            message = save_result["message"]
+
+    attachments = ProfileAttachment.objects.filter( profile = edited_employee)
+
+    return render( request,
+                   "manage_profile.html",
                    {
                     "employee": employee,
                     "employeelist": employee_list,
                     "editedemployee": edited_employee,
                     "editable": profile_editable,
-                    } 
+                    "message": message,
+                    "attachments": attachments,
+
+                    }
                   )
 
 
 
+def save_profile_to_database( request ):
+
+    post_data = request.POST
+    # profile modeldata
+    profile = Profile.objects.get_or_create( user__id = post_data["user-id"] )
+    profile = profile[0]
+
+    profile.position = post_data["position"]
+    profile.location = post_data["location"]
+    profile.seniority = post_data["seniority"]
+
+    supervisor = LDAPBackend().populate_user( post_data['supervisor'] )
+    profile.supervisor = supervisor
+
+    profile.employment_status = post_data["empl-status"]
+    profile.contract_start = post_data["contract-start"]
+    profile.contract_end = post_data["contract-end"]
+    profile.salary_gross_usd = post_data["salary-gross"]
+    profile.salary_net_usd = post_data["salary-net"]
+
+    profile.insurance = False
+    if post_data["insurance"] == "True":
+        profile.insurance = True
+
+    profile.gsm_limit = post_data["gsm-limit"]
+    profile.role = post_data["system-role"]
+
+    profile.mobile_num = post_data["mobile-num"]
+    profile.personal_num = post_data["personal-num"]
+    profile.date_of_birth = post_data["date-of-birth"]
+    profile.address = post_data["address"]
+
+    profile.leave_balance_HOLS = post_data["leave-hols"]
+    profile.leave_balance_SICK = post_data["leave-sick"]
+
+    try:
+        profile.save()
+        message = "Profile data has been saved"
+
+        if request.FILES:
+            # handle picture upload
+            if request.FILES.has_key('picture'):
+                target_dir = settings.MEDIA_ROOT + '/profile/%s' % profile.user.username
+                save_file( request, target_dir, request.FILES['picture'], profile )
+    
+                profile.picture = "profile/%s/%s" % ( profile.user.username, request.FILES['picture'].name)
+                profile.save()
+        
+            # handle document attachment
+            if request.FILES.has_key('attachment-file'):
+                target_dir = settings.MEDIA_ROOT + '/attachments/%s' % profile.user.username
+                save_file( request, target_dir, request.FILES['attachment-file'], profile )
+                
+                attachment_name = post_data['attachment-name']
+                if attachment_name is None or attachment_name == '':
+                    attachment_name = request.FILES['attachment-file'].name
+                
+                attachment_url = settings.MEDIA_URL + "attachments/%s/%s" % ( profile.user.username, request.FILES['attachment-file'].name)
+                attachment = ProfileAttachment( 
+                                               profile = profile,
+                                               name = attachment_name,
+                                               url = attachment_url)
+                
+                attachment.save()
+    
+        # in case a link is posted instead of a file upload
+        attachment_link = post_data['attachment-link']
+        
+        if attachment_link is not None and attachment_link != '':
+            
+            attachment_name = post_data['attachment-name']
+            
+            if attachment_name is None or attachment_name == '':
+                attachment_name = attachment_link
+            
+            attachment = ProfileAttachment( 
+                                           profile = profile,
+                                           name = attachment_name,
+                                           url = attachment_link)
+            attachment.save()
+                
+            
+
+    
+    except:
+        message = "Error saving profile"
+        
+        
+
+
+
+    
+
+    return {
+            "profile": profile,
+            "message": message,
+            }
+
+
+def save_file( request, target_dir, in_file, profile ):
+
+    # saving it to temp first
+    if not os.path.isdir( target_dir):
+        os.makedirs( target_dir)
+        
+    out_file = target_dir + "/" + in_file.name
+    with open( out_file, 'wb+' ) as destination:
+        for chunk in in_file.chunks():
+            destination.write( chunk )
+    
+    file_url = settings.MEDIA_URL + 'profile/%s' % profile.user.username + "/" + in_file.name
+    return file_url
+
+def update_profile_data( post_data ):
+
+    # check if this user exists
+    message = ''
+
+    # refreshing the data from AD
+    user_data = LDAPBackend().populate_user( post_data['ldap-user-name'] )
+
+
+    user_profile = Profile.objects.filter( user = user_data )
+    if not user_profile:
+        user_profile = Profile( user = user_data )
+        user_profile.supervisor = user_profile.user
+        message = 'New Profile'
+    else:
+        user_profile = user_profile[0]
+
+
+    return {
+            "user-profile": user_profile,
+            "message": message,
+            }
 
 # a little ldap helper
 def available_user_list():
