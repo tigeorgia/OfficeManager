@@ -151,8 +151,8 @@
 						
 			<label>Insurance:</label>
 			<select name="insurance" {% if not editable %} disabled {% endif %}>
-			<option value="True" {% if editedemployee.insurrance %} selected {% endif %}>Yes</option>
-			<option value="False" {% if not editedemployee.role %} selected {% endif %}>No</option>
+			<option value="True" {% if editedemployee.insurance  %} selected {% endif %}>Yes</option>
+			<option value="False" {% if not editedemployee.insurance %} selected {% endif %}>No</option>
 			</select>
 			<br>
 
@@ -212,7 +212,7 @@
 				<!-- attachment list -->
 				<ul>
 				{% for attach in attachments %}
-				<li><a href="{{ attach.url }}">{{ attach.name }}</a></li>
+				<li><a href="{{ attach.url }}"  target="_blank">{{ attach.name }}</a></li>
 				{% endfor %}
 				</ul>
 				
