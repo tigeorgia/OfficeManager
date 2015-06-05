@@ -116,9 +116,16 @@
 	text-decoration: underline;
 	font-style: italic;
 	margin-top: .2em;
+	display: inline-block;
+	width: 10em;
 }
 
-
+#attachment-list ul li button {
+	width: 5em;
+	height: 1.5em;
+	margin-bottom: .3em;
+	
+}
 
 
 

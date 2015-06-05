@@ -49,7 +49,7 @@
 			<input name="button" type="submit" value="Save Profile"></input>
 			{% endif %}
 		
-			<input name="user-id" value = "{{ editedemployee.user.id }}" class="hidden"></input>
+			<input name="user-id" value = "{{ editedemployee.user.id }}" type="hidden"></input>
 
 			<div class="profile-group">
 
@@ -216,7 +216,14 @@
 					<!-- attachment list -->
 					<ul>
 					{% for attach in attachments %}
-					<li><a href="{{ attach.url }}"  target="_blank">{{ attach.name }}</a></li>
+					<li>
+						<a href="{{ attach.url }}"  target="_blank">{{ attach.name }}</a>
+						
+						{% if employee.role == '2-OMAN' %}
+							<button name="delete-attachment" type="submit" value="{{ attach.id }}">Remove</button>
+						{% endif %}
+					
+					</li>
 					{% endfor %}
 					</ul>
 					

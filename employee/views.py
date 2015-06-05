@@ -37,17 +37,27 @@ def manage_profile( request, employee ):
 
     if request.method == 'POST':
 
-        if request.POST['button'].upper() == "UPDATE VIEW":
+        if request.POST.has_key("button"):
 
-            profile_data = update_profile_data( request.POST )
-            message = profile_data['message']
-            edited_employee = profile_data['user-profile']
+            if request.POST['button'].upper() == "UPDATE VIEW":
+    
+                profile_data = update_profile_data( request.POST )
+                message = profile_data['message']
+                edited_employee = profile_data['user-profile']
+    
+            if request.POST['button'].upper() == "SAVE PROFILE":
+    
+                save_result = save_profile_to_database( request )
+                edited_employee = save_result['profile']
+                message = save_result["message"]
 
-        if request.POST['button'].upper() == "SAVE PROFILE":
+        if request.POST.has_key("delete-attachment"):
+            # delete attachment
+            attachment = ProfileAttachment.objects.get( id = request.POST['delete-attachment'])
+            attachment.delete()
+                
+            
 
-            save_result = save_profile_to_database( request )
-            edited_employee = save_result['profile']
-            message = save_result["message"]
 
     attachments = ProfileAttachment.objects.filter( profile = edited_employee)
 
