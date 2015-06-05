@@ -47,6 +47,11 @@
 	margin-right: 5pt;
 }
 
+
+#profile-details form select option {
+	display: block;
+}
+
 #profile-details form img {
 	max-height: 80pt;
 	width: auto;

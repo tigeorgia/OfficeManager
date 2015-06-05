@@ -111,6 +111,9 @@ def save_profile_to_database( request ):
     profile.leave_balance_HOLS = post_data["leave-hols"]
     profile.leave_balance_SICK = post_data["leave-sick"]
 
+    profile.workday_start = datetime.strptime( post_data["workday-start"], '%H:%M') 
+    profile.workday_end = datetime.strptime( post_data["workday-end"], '%H:%M') 
+
     try:
         profile.save()
         
