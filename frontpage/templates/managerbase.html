@@ -49,11 +49,11 @@
 			{% block content %} {% endblock content %}
 		</div>
 		
-		{% if message %}
+		{% if message %}{% autoescape off %}
 		<div class='confirmation-message'>
 		{{ message | linebreaksbr}}
 		</div>
-		{% endif %}
+		{% endautoescape %}{% endif %}
 		
 		{% block footer %} 
 		<div if="site-footer">
