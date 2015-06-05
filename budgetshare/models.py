@@ -22,5 +22,3 @@ class SalaryAssignment( models.Model ):
     percentage = models.IntegerField()
 
 
-class SalarySourceImport( models.Model):
-    pass

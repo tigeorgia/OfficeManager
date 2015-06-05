@@ -53,7 +53,7 @@ def list_requests_to_approve( request, employee ):
             leave.declined = True
             leave.save()
 
-            send_notification( request, 'APPROVED', leave )
+            send_notification( request, 'DECLINED', leave )
 
         if request.POST['button'] == "Approve Leave Request":
             leave = Leave.objects.get( id = request.POST['id'] )
