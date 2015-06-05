@@ -41,7 +41,7 @@ def manage_profile( request, employee ):
 
             if request.POST['button'].upper() == "UPDATE VIEW":
     
-                profile_data = update_profile_data( request.POST )
+                profile_data = update_profile_data( request, employee )
                 message = profile_data['message']
                 edited_employee = profile_data['user-profile']
     
@@ -187,8 +187,10 @@ def save_file( request, target_dir, in_file, profile ):
     
 
 
-def update_profile_data( post_data ):
+def update_profile_data( request, employee ):
 
+
+    post_data = request.POST
     # check if this user exists
     message = ''
 
@@ -200,7 +202,11 @@ def update_profile_data( post_data ):
     if not user_profile:
         user_profile = Profile( user = user_data )
         user_profile.supervisor = user_profile.user
-        message = 'New Profile'
+        
+        if employee.role == '2-OMAN': 
+            message = 'New Profile'
+        else:
+            message = 'Profile not yet created by HR'
     else:
         user_profile = user_profile[0]
 
