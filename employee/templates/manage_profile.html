@@ -159,16 +159,16 @@
 
 				<br>
 				
-				<input name="salary-gross" type="number" value="{{ editedemployee.salary_gross_usd }}" {% if not editable %} disabled {% endif %}></input>
+				<input name="salary-gross" type="number"  step="any" value="{{ editedemployee.salary_gross_usd }}" {% if not editable %} disabled {% endif %}></input>
 				
-				<input name="salary-net" type="number" value="{{ editedemployee.salary_net_usd }}" {% if not editable %} disabled {% endif %}></input>
+				<input name="salary-net" type="number"  step="any" value="{{ editedemployee.salary_net_usd }}" {% if not editable %} disabled {% endif %}></input>
 							
 				<select name="insurance" {% if not editable %} disabled {% endif %}>
 				<option value="True" {% if editedemployee.insurance  %} selected {% endif %}>Yes</option>
 				<option value="False" {% if not editedemployee.insurance %} selected {% endif %}>No</option>
 				</select>
 	
-				<input name="gsm-limit" type="number" value="{{ editedemployee.gsm_limit }}" {% if not editable %} disabled {% endif %}></input>
+				<input name="gsm-limit" type="number"  step="any" value="{{ editedemployee.gsm_limit }}" {% if not editable %} disabled {% endif %}></input>
 			
 			
 			</div>
@@ -273,9 +273,9 @@
 				
 				<br>
 				
-				<input name="leave-hols" type="number" value={% if editedemployee.leave_balance_HOLS %} "{{ editedemployee.leave_balance_HOLS }}" {% else %} "" {% endif %}></input>
+				<input name="leave-hols" type="number" type="number" step="any" value={% if editedemployee.leave_balance_HOLS %} "{{ editedemployee.leave_balance_HOLS }}" {% else %} "" {% endif %}></input>
 				
-				<input name="leave-sick" type="number" value={% if editedemployee.leave_balance_SICK %} "{{ editedemployee.leave_balance_SICK }}" {% else %} "" {% endif %}></input>
+				<input name="leave-sick" type="number" type="number" step="any" value={% if editedemployee.leave_balance_SICK %} "{{ editedemployee.leave_balance_SICK }}" {% else %} "" {% endif %}></input>
 
 				<input name="workday-start" type="text" value={% if editedemployee.workday_start %} "{{ editedemployee.workday_start|time:"H:i" }}" {% else %} "" {% endif %}></input>
 

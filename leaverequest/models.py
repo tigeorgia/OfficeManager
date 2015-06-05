@@ -12,15 +12,19 @@ class Leave( models.Model ):
              ( 'MATL', 'M(P)aternity' ),
              ( 'OTHR', 'Other' ),
              ( 'UNPD', 'Unpaid Leave' )}
-    
+
     type = models.CharField( max_length = 64,
                              choices = TYPES,
                              default = 'HOLS' )
-    
+
     comment = models.TextField( blank = True, null = True )
     submit_date = models.DateField()
     approve_date = models.DateField( null = True )
-    approved_by = models.CharField( max_length = 64)
+    approved_by = models.CharField( max_length = 64 )
+    workdays_requested = models.DecimalField( decimal_places = 2, max_digits = 5 )
+    sick_balance = models.DecimalField( decimal_places = 2, max_digits = 5 )
+    vacation_balance = models.DecimalField( decimal_places = 2, max_digits = 5 )
+    declined = models.BooleanField( default = False)
 
 # form to request a leave
 class LeaveForm( forms.ModelForm ):

@@ -44,8 +44,8 @@ def find_leave_requests( employee, dates ):
 def documents_to_approve( request ):
     supervised_employees = Profile.objects.filter( supervisor = request.user )
 
-    time_sheets = TimeSheet.objects.filter( employee = supervised_employees, approve_date = None )
-    leave_requets = Leave.objects.filter( employee = supervised_employees, approve_date = None )
+    time_sheets = TimeSheet.objects.filter( employee = supervised_employees, approve_date = None)
+    leave_requets = Leave.objects.filter( employee = supervised_employees, approve_date = None, declined = False )
 
     return { 'time_sheets': time_sheets, 'leave_requests' : leave_requets }
 

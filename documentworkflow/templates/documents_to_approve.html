@@ -20,6 +20,7 @@
 				<td>Start date</td>
 				<td>End date</td>
 				<td></td>
+				<td></td>
 				<td></td>		
 			</thead>
 			{% for leave_request in documents.leave_requests %}
@@ -32,6 +33,7 @@
 					<td>{{ leave_request.end_date }}</td>
 					<td><input type="submit" value="View Leave Request" name="button"></input></td>
 					<td><input type="submit" value="Approve Leave Request" name="button"></input></td>
+					<td><input type="submit" value="Decline Leave Request" name="button"></input></td>
 				</tr>
 							
 			</form>

@@ -31,6 +31,24 @@
 	
 	<table class="time-sheet-table report-table">
 		<tr>
+			<td class="gray-cell">Vacation Balance</td>		
+			<td>{{ viewdocument.data.vacation_balance }}</td>
+		</tr>
+
+		<tr>
+			<td class="gray-cell">Sick days balance</td>		
+			<td>{{ viewdocument.data.sick_balance }}</td>
+		</tr>
+
+		<tr>
+			<td class="gray-cell">Working days requested:</td>		
+			<td>{{ viewdocument.data.workdays_requested }}</td>
+		</tr>
+	</table>
+
+
+	<table class="time-sheet-table report-table">
+		<tr>
 			<td class="gray-cell">Approving Supervisor</td>
 			<td>
 			{% if viewdocument.data.approved_by %}
@@ -42,6 +60,7 @@
 			</td>
 		</tr>
 		
+
 		<tr>
 			<td class="gray-cell">Approval Date</td>
 			<td>
@@ -55,4 +74,6 @@
 		</tr>
 		
 	</table>
+	
+	
 </div>

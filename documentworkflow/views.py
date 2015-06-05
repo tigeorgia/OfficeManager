@@ -46,11 +46,29 @@ def list_requests_to_approve( request, employee ):
             send_notification( request, 'APPROVED', time_sheet )
 
 
+        if request.POST['button'] == "Decline Leave Request":
+            leave = Leave.objects.get( id = request.POST['id'] )
+            leave.approve_date = datetime.date.today()
+            leave.approved_by = request.user.first_name + ' ' + request.user.last_name
+            leave.declined = True
+            leave.save()
+
+            send_notification( request, 'APPROVED', leave )
+
         if request.POST['button'] == "Approve Leave Request":
             leave = Leave.objects.get( id = request.POST['id'] )
             leave.approve_date = datetime.date.today()
             leave.approved_by = request.user.first_name + ' ' + request.user.last_name
             leave.save()
+            
+            if leave.type == "HOLS":
+                leave.employee.leave_balance_HOLS -= leave.workdays_requested
+                
+            if leave.type == "SICK":
+                leave.employee.leave_balance_SICK -= leave.workdays_requested
+            
+            leave.employee.save()
+            
 
             send_notification( request, 'APPROVED', leave )
 
