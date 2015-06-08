@@ -86,6 +86,8 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
     working_time = end_hour * 60 + end_minute - start_hour * 60 - start_minute
 
     day_working_time = working_time / 60.  # - employee.break_hours
+    
+    
     working_time = "%.2f" % day_working_time
 
 
@@ -117,6 +119,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
     leave_used = {'HOLS':0, 'SICK':0}
     month_working_time = 0.
     while True:
+        not_working_time = 0
         weekday = current_day.weekday()
         if weekday > 4:
             calendar.append( ( current_day.day, weekdays[ weekday], '', '', '', '', weekday ) )
@@ -131,15 +134,19 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                     ) )
             elif current_day.day in leave_requests['days'].keys():
 
+                # update balances
+                if leave_used.has_key(leave_requests['days'][current_day.day][1]):
+                    leave_used[leave_requests['days'][current_day.day][1]] += 1
+                else:
+                    not_working_time = day_working_time
+
                 calendar.append( ( current_day.day,
                                    weekdays[ weekday],
                                    leave_requests['days'][current_day.day][0] ,
                                    leave_requests['days'][current_day.day][0] ,
-                                   working_time,
+                                   float( working_time) - not_working_time,
                                    weekday
                                     ) )
-                # update balances
-                leave_used[leave_requests['days'][current_day.day][1]] += 1
 
 
             else:
@@ -151,7 +158,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                    weekday
                                     ) )
 
-            month_working_time += day_working_time
+            month_working_time += day_working_time - not_working_time
 
         if current_day == last_day:
             break
