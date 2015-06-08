@@ -4,6 +4,9 @@ from timesheet import tshelpers
 from models import TimeSheet
 import datetime
 
+
+
+
 @checkuserloggedin
 def submit_time_sheet( request, employee ):
 
@@ -78,9 +81,10 @@ def submit_time_sheet( request, employee ):
 
                     message = 'Your time sheet for %s has been submitted for approval' % timesheet_data['period']
 
-        
-        
-        
+
+
+
+
 
     return render( request, "time_sheet_submit.html", {'employee': employee,
                                                        'period' : period,
