@@ -138,14 +138,20 @@
 	background: white;
 	margin: auto;
 	margin-bottom:1em;
+
+	border: 1px dashed black;
+}
+
+.timesheet-view {
+
 	position: relative;
 	
-	left: 20em;
+	left: 15em;
 	
-	border: 1px dashed red;
 	
 	font-size: 8pt;
 
+	
 }
 
 /* salary assignment table */

@@ -69,6 +69,7 @@ form.submit-button {
 .floating-form {
 	float:left;
 	margin: 1em 0 0 1em;
+	width: 20%;
 }
 
 
