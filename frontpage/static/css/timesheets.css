@@ -143,15 +143,12 @@
 }
 
 .timesheet-view {
-
+	padding-top: 5em;
 	position: relative;
 	
 	left: 15em;
 	
-	
 	font-size: 8pt;
-
-	
 }
 
 /* salary assignment table */

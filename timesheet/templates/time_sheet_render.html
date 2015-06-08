@@ -76,7 +76,7 @@ LOCATION -
 	
 	<tbody>
 		{% for key,value in viewdata.salary_sources.items %}
-		<tr><td>{{ key }}</td><td>{{ value }} &#37;</td></tr>
+		<tr><td>{{ key }}</td><td>{{ value.0 }} &#37;</td></tr>
 		{% endfor %}
 	</tbody>
 

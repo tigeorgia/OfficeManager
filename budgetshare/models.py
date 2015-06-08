@@ -21,4 +21,5 @@ class SalaryAssignment( models.Model ):
     period = models.CharField( max_length = 64)
     percentage = models.IntegerField()
 
+    submitted_by = models.ForeignKey( Profile, related_name = "submitted_id")
 

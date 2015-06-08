@@ -73,7 +73,7 @@ def timesheet_salary_sources( employee, period ):
         if s_assign.percentage == 0:
             continue
 
-        output[ s_assign.source.code] = s_assign.percentage
+        output[ s_assign.source.code] = ( s_assign.percentage, s_assign.submitted_by)
 
     return output
 

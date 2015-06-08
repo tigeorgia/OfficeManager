@@ -53,7 +53,6 @@
 			<td>Date/Day</td>
 			<td>Start<br>Time</td>
 			<td>Finish<br>Time</td>
-			<td>Break<br>Hours</td>
 			<td>Hours<br>Worked</td>
 		</thead>
 		<tbody>
@@ -69,12 +68,11 @@
 					<td>{{ day.3 }}</td>
 				{% endif %}
 				<td>{{ day.4 }}</td>
-				<td>{{ day.5 }}</td>
 			</tr>
 		{% endfor %}
 		</tbody>
 		<tfoot class="table-footer">
-			<td colspan="5"></td>
+			<td colspan="4"></td>
 			<td>{{ viewdata.working_time }}</td>
 		</tfoot>
 	</table>
@@ -90,7 +88,7 @@
 		
 		<tbody>
 			{% for key,value in viewdata.salary_sources.items %}
-			<tr><td>{{ key }}</td><td>{{ value }} &#37;</td></tr>
+			<tr><td>{{ key }}</td><td>{{ value.0 }} &#37;</td></tr>
 			{% endfor %}
 		</tbody>
 	
