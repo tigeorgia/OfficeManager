@@ -144,7 +144,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                    weekdays[ weekday],
                                    leave_requests['days'][current_day.day][0] ,
                                    leave_requests['days'][current_day.day][0] ,
-                                   float( working_time) - not_working_time,
+                                   "%.2f" % (float( working_time) - not_working_time),
                                    weekday
                                     ) )
 
