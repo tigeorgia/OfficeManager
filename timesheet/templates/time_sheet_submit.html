@@ -7,13 +7,30 @@
 
 {% block content %}
 
-<form class="submit-button" action="{% url "submit-time-sheet" %}" method="POST">
-{% csrf_token %}
-<input type="submit" value="Submit"></input>
+<form  class="floating-form" action="{% url "submit-time-sheet" %}" method="POST">
+
+	{% csrf_token %}
+	<select name="period">
+		{% for avperiod in availableperiods %}
+		<option value="{{ avperiod }}"{% if avperiod == period %} selected {% endif %}>{{ avperiod }}</option>
+		{% endfor %}
+	</select>
+	
+	<input name="button" type="submit" value="Generate"</input>
+	<input name="button" type="submit" value="Submit"></input>
+
 </form>
+
+<div class="document-view">
+
+{% if timesheetdata %}
 
 {% include "time_sheet_render.html" %}
 
+
+{% endif %}
+
+</div>
 
 
 {% endblock content %}

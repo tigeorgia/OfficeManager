@@ -141,7 +141,8 @@ def save_profile_to_database( request ):
                 attachment = ProfileAttachment( 
                                                profile = profile,
                                                name = attachment_name,
-                                               url = attachment_url)
+                                               url = attachment_url,
+                                               created = datetime.today())
                 
                 attachment.save()
     
@@ -158,7 +159,8 @@ def save_profile_to_database( request ):
             attachment = ProfileAttachment( 
                                            profile = profile,
                                            name = attachment_name,
-                                           url = attachment_link)
+                                           url = attachment_link,
+                                           created = datetime.today())
             attachment.save()
                 
     

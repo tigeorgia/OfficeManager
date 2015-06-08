@@ -9,5 +9,6 @@ class ProfileAttachment( models.Model):
     profile = ForeignKey( Profile)
     name = models.TextField( max_length = 512)
     url = models.TextField( max_length = 1024)
+    created = models.DateField( null = True)
 
     

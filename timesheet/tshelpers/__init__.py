@@ -9,6 +9,7 @@ from timesheet.models import TimeSheet
 from leaverequest.models import Leave, LeaveForm
 from employee.models import Profile
 from budgetshare.models import SalaryAssignment
+from publicholidays.models import PublicHoliday
 
 
 weekdays = ( _( 'Monday' ), _( 'Tuesday' ), _( 'Wednesday' ), _( 'Thursday' ), _( 'Friday' ), _( 'Saturday' ), _( 'Sunday' ) )
@@ -41,10 +42,22 @@ def find_leave_requests( employee, dates ):
     return {'requests':leave_requests, 'days': leave_days}
 
 
+def find_public_holidays( dates ):
+
+    public_holidays = PublicHoliday.objects.filter( date__lte = dates[1] ).filter( date__gte = dates[0] )
+    leave_days = {}
+
+    for holiday in public_holidays:
+        if holiday.type.lower() == 'public holiday':
+            leave_days[ holiday.date.day] = holiday.name
+
+    return {'holidays': public_holidays, 'days': leave_days}
+
+
 def documents_to_approve( request ):
     supervised_employees = Profile.objects.filter( supervisor = request.user )
 
-    time_sheets = TimeSheet.objects.filter( employee = supervised_employees, approve_date = None)
+    time_sheets = TimeSheet.objects.filter( employee = supervised_employees, approve_date = None )
     leave_requets = Leave.objects.filter( employee = supervised_employees, approve_date = None, declined = False )
 
     return { 'time_sheets': time_sheets, 'leave_requests' : leave_requets }
@@ -65,24 +78,27 @@ def timesheet_salary_sources( employee, period ):
     return output
 
 
-def generate_timesheet_data( employee, time_sheet = None, recalc_balances = False ):
+def generate_timesheet_data( employee, period, time_sheet = None, recalc_balances = False ):
 
     start_hour, start_minute = employee.workday_start.hour, employee.workday_start.minute
     end_hour, end_minute = employee.workday_end.hour, employee.workday_end.minute
 
     working_time = end_hour * 60 + end_minute - start_hour * 60 - start_minute
 
-    day_working_time = working_time / 60.# - employee.break_hours
+    day_working_time = working_time / 60.  # - employee.break_hours
     working_time = "%.2f" % day_working_time
 
 
 
     # define dates
     if time_sheet is None:
-        today = datetime.date.today()
-        last_day = datetime.date( day = 1, month = today.month, year = today.year )
+        period_first_day = datetime.datetime.strptime( period, '%B %Y' )
+        first_day = datetime.date( day = 1, month = period_first_day.month, year = period_first_day.year )
+
+        last_day = first_day + datetime.timedelta( days = 32 )
+        last_day = datetime.date( day = 1, month = last_day.month, year = last_day.year )
+
         last_day = last_day - datetime.timedelta( days = 1 )
-        first_day = datetime.date( day = 1, month = last_day.month, year = last_day.year )
     else:
         first_day, last_day = time_sheet.start_date, time_sheet.end_date
 
@@ -92,6 +108,7 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
     # calculate leave days and mark the in the list during generation
     # then we have to generate the leave form
 
+    public_holidays = find_public_holidays( ( first_day, last_day ) )
 
     calendar = []
 
@@ -104,13 +121,20 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
         if weekday > 4:
             calendar.append( ( current_day.day, weekdays[ weekday], '', '', '', '', weekday ) )
         else:
-            if current_day.day in leave_requests['days'].keys():
-                # I need to know what heppens when other types of leaves are used
+            if current_day.day in public_holidays['days'].keys():
+                calendar.append( ( current_day.day,
+                                   weekdays[ weekday],
+                                   public_holidays['days'][current_day.day] ,
+                                   public_holidays['days'][current_day.day] ,
+                                   working_time,
+                                   weekday
+                                    ) )
+            elif current_day.day in leave_requests['days'].keys():
+
                 calendar.append( ( current_day.day,
                                    weekdays[ weekday],
                                    leave_requests['days'][current_day.day][0] ,
                                    leave_requests['days'][current_day.day][0] ,
-                                   employee.break_hours,
                                    working_time,
                                    weekday
                                     ) )
@@ -134,39 +158,50 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
         current_day = current_day + datetime.timedelta( days = 1 )
 
 
-    report_period = months[last_day.month - 1] + ' ' + str( last_day.year )
+    report_period = period
 
 
-    # leave balances
-    balance_HOLS = employee.leave_balance_HOLS
-    balance_SICK = employee.leave_balance_SICK
-    earn_HOLS = employee.leave_earn_HOLS
-    earn_SICK = employee.leave_earn_SICK
+    if time_sheet:
+        leave_data = ( 
+                      time_sheet.leave_balance_before_HOLS,
+                      time_sheet.leave_balance_before_SICK,
+                      time_sheet.leave_earn_HOLS,
+                      time_sheet.leave_earn_SICK,
+                      time_sheet.leave_used_HOLS,
+                      time_sheet.leave_used_SICK,
+                      time_sheet.leave_balance_HOLS,
+                      time_sheet.leave_balance_SICK,
+                      )
+    else:
+        # leave balances
 
-    if recalc_balances:
-        balance_HOLS = time_sheet.leave_balance_HOLS - time_sheet.leave_earn_HOLS + time_sheet.leave_used_HOLS
-        balance_SICK = time_sheet.leave_balance_SICK - time_sheet.leave_earn_SICK + time_sheet.leave_used_SICK
+        balance_HOLS = employee.leave_balance_HOLS + leave_used['HOLS']
 
-        earn_HOLS = time_sheet.leave_earn_HOLS
-        earn_SICK = time_sheet.leave_earn_SICK
-        leave_used['HOLS'] = time_sheet.leave_used_HOLS
-        leave_used['SICK'] = time_sheet.leave_used_SICK
+        balance_SICK = employee.leave_balance_SICK + leave_used['SICK']
+
+        earn_HOLS = employee.leave_earn_HOLS
+        earn_SICK = employee.leave_earn_SICK
+        used_HOLS = leave_used['HOLS']
+        used_SICK = leave_used['SICK']
+
+        end_HOLS = balance_HOLS - leave_used['HOLS'] + employee.leave_earn_HOLS
+        end_SICK = balance_SICK - leave_used['SICK'] + employee.leave_earn_SICK
 
 
-    end_HOLS = balance_HOLS + earn_HOLS - leave_used['HOLS']
-    end_SICK = balance_SICK + earn_SICK - leave_used['SICK']
+        leave_data = ( 
+                      balance_HOLS,
+                      balance_SICK,
+                      earn_HOLS,
+                      earn_SICK,
+                      used_HOLS,
+                      used_SICK,
+                      end_HOLS,
+                      end_SICK
+                      )
 
-
-    leave_data = ( balance_HOLS, balance_SICK, earn_HOLS, earn_SICK, leave_used['HOLS'], leave_used['SICK'], end_HOLS, end_SICK )
-    leave_data_str = ( 
-                      "%.2f" % balance_HOLS,
-                      "%.2f" % balance_SICK,
-                      "%.2f" % earn_HOLS,
-                      "%.2f" % earn_SICK,
-                      "%.2f" % leave_used['HOLS'],
-                      "%.2f" % leave_used['SICK'],
-                      "%.2f" % end_HOLS,
-                      "%.2f" % end_SICK )
+    leave_data_str = []
+    for idx in range( len( leave_data ) ):
+        leave_data_str.append( "%.2f" % leave_data[idx] )
 
 
     if time_sheet:
@@ -194,7 +229,7 @@ def generate_timesheet_data( employee, time_sheet = None, recalc_balances = Fals
 
 
 def send_notification( request, notify_type, email_data ):
-    ## OFF for development
+    # # OFF for development
     return
 
     # recipient - SUPERVISOR, MANAGER(s), EMPLOYEE
@@ -266,10 +301,10 @@ def send_notification( request, notify_type, email_data ):
         manager_content += "Please go to:\n\n%s\n\nto view approved documents." % site_address
 
         recipient = email_list
-        
-        
-        thread.start_new( send_mail, (manager_subject, manager_content, sender, email_list, True))
-        
+
+
+        thread.start_new( send_mail, ( manager_subject, manager_content, sender, email_list, True ) )
+
         # send_mail( subject, content, sender, email_list, fail_silently = True )
 
 
@@ -288,7 +323,7 @@ def send_notification( request, notify_type, email_data ):
 
         subject = "Submit your time sheet"
 
-    thread.start_new( send_mail, (subject, content, sender, recipient, True))
+    thread.start_new( send_mail, ( subject, content, sender, recipient, True ) )
 
     # send_mail( subject, content, sender, recipient, fail_silently = True )
 

@@ -24,7 +24,7 @@ def list_requests_to_approve( request, employee ):
 
             # update employee balances
             time_sheet_employee = Profile.objects.get( id = time_sheet.employee.id )
-            time_sheet_data = tshelpers.generate_timesheet_data( time_sheet_employee, time_sheet )
+            time_sheet_data = tshelpers.generate_timesheet_data( time_sheet_employee, time_sheet.period, time_sheet )
             time_sheet_employee.leave_balance_HOLS = time_sheet_data['leave_data'][6]
             time_sheet_employee.leave_balance_SICK = time_sheet_data['leave_data'][7]
             time_sheet_employee.save()
@@ -81,7 +81,7 @@ def list_requests_to_approve( request, employee ):
             time_sheet = TimeSheet.objects.get( id = request.POST['id'] )
             time_sheet_employee = Profile.objects.get( id = time_sheet.employee.id )
             view_document = {'type' : "TIME_SHEET", 'data' : time_sheet}
-            view_data = tshelpers.generate_timesheet_data( time_sheet_employee, time_sheet )
+            view_data = tshelpers.generate_timesheet_data( time_sheet_employee, time_sheet.period, time_sheet )
 
 
     documents = tshelpers.documents_to_approve( request )

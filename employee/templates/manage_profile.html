@@ -217,7 +217,7 @@
 					<ul>
 					{% for attach in attachments %}
 					<li>
-						<a href="{{ attach.url }}"  target="_blank">{{ attach.name }}</a>
+						<a href="{{ attach.url }}"  target="_blank">{{ attach.name }}<br>{{ attach.created|date:"Y-m-d" }}</a>
 						
 						{% if employee.role == '2-OMAN' %}
 							<button name="delete-attachment" type="submit" value="{{ attach.id }}">Remove</button>

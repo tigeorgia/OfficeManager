@@ -4,7 +4,12 @@
 
 Time Sheet Effort Reporting<br>
 Transparency International Georgia<br>
-LOCATION - {{ employee.location }}
+LOCATION - 
+{% for LOC, loc in employee.LOCATIONS %}
+{% if LOC == employee.location %}
+{{ loc }}
+{% endif %}
+{% endfor %}
 
 </div>
 
@@ -43,7 +48,9 @@ LOCATION - {{ employee.location }}
 			<td>{{ day.0 }}</td>
 			<td>{{ day.1 }}</td>
 			{% if day.2 == day.3 %}
+				{% autoescape off %}
 				<td colspan="2">{{ day.2 }}</td>
+				{% endautoescape %}
 			{% else %}
 				<td>{{ day.2 }}</td>
 				<td>{{ day.3 }}</td>

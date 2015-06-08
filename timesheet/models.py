@@ -21,6 +21,10 @@ class TimeSheet( models.Model ):
     
     # need to add the copy of these from employee to be able to report correctly
     # these here are final,after time sheet approval
+    leave_balance_before_HOLS = models.DecimalField( decimal_places = 2, max_digits = 4, null = True  )
+    leave_balance_before_SICK = models.DecimalField( decimal_places = 2, max_digits = 4, null = True  )
+
+    
     leave_balance_HOLS = models.DecimalField( decimal_places = 2, max_digits = 4, null = True  )
     leave_balance_SICK = models.DecimalField( decimal_places = 2, max_digits = 4, null = True  )
     leave_earn_HOLS = models.DecimalField( decimal_places = 2, max_digits = 4, null = True  )
