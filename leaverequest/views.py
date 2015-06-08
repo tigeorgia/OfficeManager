@@ -36,10 +36,17 @@ def request_leave( request, employee ):
             working_days = count_working_days( leave_request )
             leave_request.workdays_requested = working_days
 
-            message = "%s Leave request for %d working days has been submitted for approval." % ( 
-                                                                                               dict( leave_request.TYPES )[ leave_request.type],
-                                                                                               working_days,
-                                                                                               )
+
+            if request.POST['button'] == "Submit":
+                message = "%s Leave request for %d working days has been submitted for approval." %( 
+                                                                                                    dict( leave_request.TYPES )[ leave_request.type],
+                                                                                                    working_days,
+                                                                                                    ) 
+            else:
+                message = '%s Leave request for %d working days' % ( 
+                                                                    dict( leave_request.TYPES )[ leave_request.type],
+                                                                    working_days,
+                                                                    )
 
 
             hols_result = employee.leave_balance_HOLS
@@ -53,13 +60,16 @@ def request_leave( request, employee ):
 
 
 
-            message += '\nYour resulting balance will be Vacation: %d, Sick %.2f' % ( hols_result, sick_result )
+            message += '\nFollowing approval your resulting balance will be\nVacation: %d, Sick %.2f' % ( hols_result, sick_result )
 
-            leave_request.save()
-
-            send_notification( request, "SUBMITTED", leave_request )
-            
-            leave_form = LeaveForm()
+            if request.POST['button'] == "Submit":
+                leave_request.save()
+    
+                send_notification( request, "SUBMITTED", leave_request )
+                
+                leave_form = LeaveForm()
+            else:
+                leave_form = LeaveForm( request.POST)
 
     else:
         leave_form = LeaveForm()
