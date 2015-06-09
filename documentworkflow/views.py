@@ -106,8 +106,8 @@ def list_requests_to_approve( request, employee ):
 def approved_documents( request, employee ):
 
 
-    if employee.role != '2-OMAN':
-        return not_allowed( request )
+    #     if employee.role != '2-OMAN':
+    #         return not_allowed( request )
 
     message = None
     
@@ -142,7 +142,8 @@ def approved_documents( request, employee ):
                       "SALARYASSIGNMENT": "Salary assignment"}
 
 
-    viewdata = {"periods": periods,
+    viewdata = {
+                "periods": periods,
                 "employees": employees,
                 "documenttypes" : document_types,
                 }
@@ -154,7 +155,7 @@ def approved_documents( request, employee ):
         report_period = 'ALL'
         
     reportdata = {"report_period": report_period,
-                  "report_employee": "All",
+                  "report_employee": employee.user.username,
                   "report_document": "ALL"}
         
 
@@ -163,7 +164,10 @@ def approved_documents( request, employee ):
     if request.method == "POST":
         reportdata["report_period"] = report_period = request.POST['data-period']
         reportdata["report_document"] = report_document = request.POST['document-type']
-        reportdata["report_employee"] = report_employee = request.POST['employee']
+        if request.POST.has_key("report-employee"):
+            reportdata["report_employee"] = report_employee = request.POST['report-employee']
+        else:
+            reportdata["report_employee"] = report_employee = employee.user.username
 
         if period_list:
             # pylint: disable=no-member
@@ -204,7 +208,7 @@ def approved_documents( request, employee ):
                 for time_sheet in time_sheets:
                     document = {}
                     document['timesheet'] = time_sheet
-                    document['viewdata'] = tshelpers.generate_timesheet_data( time_sheet.employee, time_sheet, True )
+                    document['viewdata'] = tshelpers.generate_timesheet_data( time_sheet.employee, time_sheet.period, time_sheet, True )
     
     
                     documents['timesheets'].append( document )

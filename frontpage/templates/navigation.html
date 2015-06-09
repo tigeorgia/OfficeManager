@@ -32,10 +32,10 @@
 	
 			{% if employee.role == "2-OMAN" %}		
 			<li><a href="{% url "employee-profile" %}">Employees</a></li>	
-			<li><a href="{% url "approved-documents" %}">Approved Documents</a></li>
 			<li><a href="{% url "import-public-holidays" %}">Import Holidays</a></li>
 			
 			{% endif %}
+			<li><a href="{% url "approved-documents" %}">Approved Documents</a></li>
 		</ul>
 
 		{% endif %}

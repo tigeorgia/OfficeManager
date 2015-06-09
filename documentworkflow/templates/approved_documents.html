@@ -14,6 +14,7 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 {% endblock scripts %}
 
 {% block content %}
+
 <div class="report-form-container">
 	<form method="post" action="{% url "approved-documents" %}">
 	{% csrf_token %}
@@ -27,11 +28,18 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 		</select>
 
 		<label>Employee</label>
-		<select name="employee">
+		
+		
+		
+		<select name="report-employee" 
+		{% if employee.seniority != "0-SEN" and  eployee.role != "2-OMAN" %}
+		 disabled
+		{% endif %}		
+		>
 			<option>All</option>
-			{% for employee in viewdata.employees %}
-			<option {% if employee.user.username == reportdata.report_employee %} selected {% endif %}, value="{{ employee.user.username }}">
-				{{ employee.user.last_name }}&nbsp{{ employee.user.first_name }}
+			{% for profile in viewdata.employees %}
+			<option {% if profile.user.username == reportdata.report_employee %} selected {% endif %}, value="{{ profile.user.username }}">
+				{{ profile.user.last_name }}&nbsp{{ profile.user.first_name }}
 			</option>
 			{% endfor %}
 		</select>
@@ -56,7 +64,9 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 	{% with viewdata=viewdata.viewdata %}
 	
 	<h3>Time Sheet - {{ timesheetemployee.user.first_name }} {{ timesheetemployee.user.last_name }} - {{ viewdata.period }}</h3>	
-	{% include "report_time_sheet.html" %}
+	<div class="document-view timesheet-view centered-view">
+	{% include "time_sheet_render.html" %}
+	</div>
 	
 	{% endwith %}
 	{% endwith %}
@@ -69,8 +79,9 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 	{% with viewdocument=leave %}
 	
 	<h3>Leave Request - {{ leave.data.employee.user.first_name }} {{ leave.data.employee.user.last_name }}</h3>
+	<div class="document-view timesheet-view centered-view">
 	{% include "report_leave_request.html" %}
-
+	</div>
 	{% endwith %}
 	
 {% endfor %}
