@@ -60,7 +60,7 @@ form.submit-button {
 }
 
 .manager-reports {
-	float: right;
+	float: left;
 	margin-right: 3em;
 	width: 220mm;
 }

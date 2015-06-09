@@ -1,5 +1,9 @@
 @charset "utf-8";
 
+#profile-view {
+	width: auto;
+}
+
 .profile-form {
 	width: 20%;
 	position: relative;
