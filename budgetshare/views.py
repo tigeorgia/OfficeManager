@@ -8,6 +8,8 @@ from timesheet import tshelpers
 from openpyxl.reader.excel import load_workbook
 from budgetshare.models import SalarySource, SalaryAssignment
 from django.contrib.auth.models import User
+from OfficeManager import settings
+import os
 
 
 
@@ -31,7 +33,7 @@ def import_salary_assignments( request, employee):
         if request.FILES:
             
             if request.FILES['sheet']:
-                sheet_data = read_excel_sheet( request.FILES['sheet'] )
+                sheet_data = read_excel_sheet( request.FILES['sheet'], request.POST['data-period'] )
     
     
     
@@ -47,7 +49,7 @@ def import_salary_assignments( request, employee):
     
                     budget_period = request.POST['data-period']
     
-                    import_to_database( budget_percentage, budget_period )
+                    import_to_database( employee, budget_percentage, budget_period )
     
     
                     message = "Data has been imported"
@@ -70,16 +72,24 @@ def import_salary_assignments( request, employee):
 
 
 
-def read_excel_sheet( inFile ):
+def read_excel_sheet( inFile, data_period ):
 
     # saving it to temp first
-    outFile = "/tmp/outsheet.xlsx"
-    with open( outFile, 'wb+' ) as destination:
+    
+    target_dir = settings.MEDIA_ROOT + '/budget'
+    out_file = 'Salary_assignments_%s.xlsx'% data_period.replace(' ', '_') 
+    
+    if not os.path.isdir( target_dir):
+        os.makedirs( target_dir)
+    
+    out_file = target_dir + '/' + out_file
+    
+    with open( out_file, 'wb+' ) as destination:
         for chunk in inFile.chunks():
             destination.write( chunk )
 
 
-    sheet_data = load_workbook( filename = outFile )
+    sheet_data = load_workbook( filename = out_file )
 
     sheet = sheet_data.active
     data_row = 0
@@ -169,7 +179,7 @@ def verify_excel_data( budget_data ):
 
     return verified
 
-def import_to_database( budget_percentage, budget_period ):
+def import_to_database( employee, budget_percentage, budget_period ):
 
 
     for budget_code in budget_percentage[0].keys():
@@ -195,8 +205,8 @@ def import_to_database( budget_percentage, budget_period ):
             if not user:
                 continue
             
-            employee = Profile.objects.filter( user = user )
-            if not employee:
+            profile = Profile.objects.filter( user = user )
+            if not profile:
                 continue
             
             source = SalarySource.objects.get( code = code )
@@ -204,10 +214,11 @@ def import_to_database( budget_percentage, budget_period ):
             if entry[code] <= 0:
                 continue
             
-            SalaryAssignment.objects.get_or_create( employee = employee[0], 
+            SalaryAssignment.objects.get_or_create( employee = profile[0], 
                                                     source = source,
                                                     period = budget_period,
-                                                    percentage = entry[code])[0].save()
+                                                    percentage = entry[code],
+                                                    submitted_by = employee)[0].save()
             
 
 
