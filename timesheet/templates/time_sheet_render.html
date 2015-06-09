@@ -15,16 +15,36 @@ LOCATION -
 
 <!-- employee information -->
 
-<table  class="time-sheet-table" id="time-sheet-employee-info">
+<table  class="time-sheet-table floating-table" id="time-sheet-employee-info">
 	<tr>
-		<td>Report period:</td><td>{{ viewdata.period }}</td>
+		<td>Report period:</td><td class="td-data">{{ viewdata.period }}</td>
 	</tr>
 	<tr>
-		<td>Name:</td><td>{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
+		<td >Name:</td><td class="td-data">{{ employee.user.first_name }} {{ employee.user.last_name }}</td>
 	</tr>
 	<tr>
-		<td>Position:</td><td>{{ employee.position }}</td>
+		<td >Position:</td><td class="td-data">{{ employee.position }}</td>
 	</tr>
+	
+	<tr><td class="td-spacer" colspan="2"></td></tr>
+</table>
+
+
+<table  class="time-sheet-table floating-table time-sheet-notice">
+	<tr>
+		<td>
+		The signature on this time sheet attests to
+		the fact that the percentage allocation to
+		grant agreements is a reasonable and true
+		estimation of the time and effort dedicated
+		to each project for the period being reported 
+		
+		</td>
+	</tr>
+	<tr>
+		<td class="td-signature">__________________________________</td>
+	</tr>
+	
 </table>
 
 
@@ -32,7 +52,7 @@ LOCATION -
 
 
 <!-- time sheet -->
-<table class="time-sheet-table">
+<table class="time-sheet-table floating-table" id="time-sheet">
 	<thead class="table-header">
 		<td>Pay Period: Day</td>
 		<td>Date/Day</td>
@@ -68,54 +88,77 @@ LOCATION -
 
 
 <!-- slary assignment -->
-<table class="time-sheet-table" id="salary-assignment-table">
+<table class="time-sheet-table floating-table" id="salary-assignment-table">
 
 	<thead>
-		<td>{% trans "Grant code" %}</td><td>% {% trans "to charge" %}</td>
+		<td>{% trans "Grant code" %}</td><td class="td-data">% {% trans "to charge" %}</td>
 	</thead>
 	
 	<tbody>
 		{% for key,value in viewdata.salary_sources.items %}
-		<tr><td>{{ key }}</td><td>{{ value.0 }} &#37;</td></tr>
+		<tr><td>{{ key }}</td><td class="td-data">{{ value.0 }} &#37;</td></tr>
 		{% endfor %}
 	</tbody>
 
 </table>
 
 
+<!-- anothernotice -->
+<table class="time-sheet-table floating-table time-sheet-notice">
+	<tr>
+		<td>
+		The percentages allocated to grants represent the &#37; of the time for the full period that was dedicated to each grant.
+		</td>
+	</tr>
+</table>
+
 <!-- leave balance -->
-<table class="time-sheet-table" id="leave-balance-table">
+<table class="time-sheet-table floating-table" id="leave-balance-table">
 	<thead>
-		<td></td><td>Vacation</td><td>Sick</td><td></td>
+		<td></td><td class="td-data">Vacation</td><td class="td-data">Sick</td><td></td>
 	</thead>
 	<tbody>
 		<tr>
 			<td>Beginning balance</td>
-			<td class="gray-cell">{{ viewdata.leave.0 }}</td>
-			<td class="gray-cell">{{ viewdata.leave.1 }}</td>
+			<td class="gray-cell td-data">{{ viewdata.leave.0 }}</td>
+			<td class="gray-cell td-data">{{ viewdata.leave.1 }}</td>
 			<td></td>
 		</tr>
 
 		<tr>
 			<td>Earn (+)</td>
-			<td class="gray-cell">{{ viewdata.leave.2 }}</td>
-			<td class="gray-cell">{{ viewdata.leave.3 }}</td>
+			<td class="gray-cell td-data">{{ viewdata.leave.2 }}</td>
+			<td class="gray-cell td-data">{{ viewdata.leave.3 }}</td>
 			<td></td>
 		</tr>
 
 		<tr>
 			<td>Used (-)</td>
-			<td class="gray-cell">{{ viewdata.leave.4 }}</td>
+			<td class="gray-cell td-data">{{ viewdata.leave.4 }}</td>
 			<td class="gray-cell">{{ viewdata.leave.5 }}</td>
 			<td></td>
 		</tr>
 
 		<tr>
 			<td>End balance (=)</td>
-			<td class="gray-cell">{{ viewdata.leave.6 }}</td>
-			<td class="gray-cell">{{ viewdata.leave.7 }}</td>
+			<td class="gray-cell td-data">{{ viewdata.leave.6 }}</td>
+			<td class="gray-cell td-data">{{ viewdata.leave.7 }}</td>
 			<td></td>
 		</tr>
 
 	</tbody>
 </table>
+
+<!-- signatures -->
+<table class="time-sheet-table floating-table" id="signatures-table">
+	<tr><td colspan="2" class="td-signature-header"><br></td></tr>
+	<tr>
+		<td>Employee Signature:</td><td class="td-signature">____________________________________</td>
+	</tr>
+	<tr>
+		<td>Supervisor Signature:</td><td class="td-signature">____________________________________</td>
+	</tr>
+</table>
+
+
+

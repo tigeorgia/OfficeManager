@@ -26,13 +26,14 @@
 /* Sumbit a time sheet */
 .time-sheet-table {
 	background-color: white;
-	padding: 1em;
+/* 	padding: 1em; */
 	border-radius: 2pt;
-	/* 	border-collapse: collapse; */
 	border-spacing: 0;
-	position: absolute;
-	left: 1em;
-	top: 25em;
+	margin: 2em 0 0 2em;
+
+	border: 1px solid black;
+	border-radius: 2pt;
+/* 	margin-top: 1em; */
 }
 
 .time-sheet-table td {
@@ -55,19 +56,7 @@
 	background-color: #eee;
 }
 
-#time-sheet-employee-info {
-	
-	margin-bottom: 1em;
-	margin: auto;
-	position: absolute;
-	top: 15em;
-	left: 1em;
-}
 
-#time-sheet-employee-info td {
-	text-align: left;
-	padding-right: 5em;
-}
 
 #time-sheet-title {
 	text-align: center;
@@ -76,21 +65,7 @@
 	padding-top: 0em;
 }
 
-#leave-balance-table {
-	position: absolute;
-	left: 52em;
-	top: 50em;
-}
 
-#leave-balance-table td {	
-	padding: .3em 1em;
-}
-
-#salary-assignment-table {
-	position: absolute;
-	left: 52em;
-	top: 25em;
-}
 
 .hidden {
 	display: none;
@@ -98,11 +73,11 @@
 
 /* documents to approve list and reports*/
 .approve-table, .report-table, .report-table-small {
-	position: relative;
-	top: 0;
-	left: 0;
+/* 	position: relative; */
+/* 	top: 0; */
+/* 	left: 0; */
 	margin: auto;
-	margin-bottom: 0em;
+	margin-bottom: 1em;
 }
 
 .report-table-small {
@@ -145,10 +120,12 @@
 .timesheet-view {
 	padding-top: 5em;
 	position: relative;
-	
 	left: 15em;
-	
 	font-size: 8pt;
+}
+
+.centered-view {
+	left: 0;	
 }
 
 /* salary assignment table */
@@ -177,4 +154,124 @@
 .ui-accordion .ui-accordion-content {
 	padding: 0;
 }
+
+/* Employee info */
+
+.floating-table {
+	float: left;
+}
+
+#time-sheet-employee-info {
+	
+/* 	margin-top: 1em; */
+	border: 1px solid black;
+	clear:both;
+}
+
+#time-sheet-employee-info td {
+	text-align: left;
+	padding-right: 5em;
+}
+
+#time-sheet-employee-info td {
+	display: inline-block;
+	padding-top: 1em;
+	border: none;
+	width: 10em;
+}
+
+#time-sheet-employee-info td.td-data {
+	border-bottom: 1px solid black;
+	width: 16em;
+}
+
+.time-sheet-notice{
+	border: 1px solid black;
+	border-radius: 2pt;
+/* 	margin-top: 1em; */
+/* 	margin-left: 1em; */
+}
+
+.time-sheet-notice td {
+	width: 25em;
+	padding: 1em 1em;
+	text-align: justify;
+	border: none;
+	
+}
+
+td.td-signature {
+	text-align: right;
+	padding: 1.5em 1em .5em 1em;
+}
+
+#time-sheet {
+	clear: both;
+}
+
+#time-sheet, #salary-assignment-table {
+	margin: 2em 0 0 2em;
+	padding: 0;
+	border-radius: 2pt;
+	border: 1px solid black;
+}
+
+
+#salary-assignment-table td {
+	width: 14em;
+}
+
+#salary-assignment-table .td-data {
+	width: 9em;
+}
+
+#signatures-table {
+	clear: both;
+
+	margin: 2em 0 0 2em;
+	padding: 0;
+}
+
+#signatures-table td {
+	width: 10em;
+	border: none;
+	text-align: left;
+}
+
+#signatures-table td.td-signature {
+	text-align: left;
+	width: 24em;
+}
+
+#leave-balance-table td {	
+	padding: .3em 1em;
+}
+
+#leave-balance-table .td-data {
+	width: 5em;
+	padding-top: 1em;
+}
+
+
+
+.td-spacer {
+	height: 2em;
+}
+
+.centered-view {
+	margin: auto;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 

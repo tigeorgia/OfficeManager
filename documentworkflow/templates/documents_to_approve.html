@@ -74,14 +74,14 @@
 </div>
 
 {% if viewdocument %}
-<div class="document-view">
+<div class="document-view timesheet-view centered-view">
 
 	{% if viewdocument.type == "LEAVE_REQUEST" %}
 		{% include "report_leave_request.html" %}
 	{% endif %}
 
 	{% if viewdocument.type == "TIME_SHEET" %}
-		{% include "report_time_sheet.html" %}
+		{% include "time_sheet_render.html" %}
 	{% endif %}
 
 </div>
