@@ -6,7 +6,7 @@ body {
 }
 
 * {
-	visibility: collapse;
+	visibility: hidden;
 }
 
 
