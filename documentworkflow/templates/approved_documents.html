@@ -3,17 +3,34 @@
 {% load i18n %} 
 {% load staticfiles %}
 
+{% block stylesheets %}
+
+<link href="{% static "css/docprint.css" %}" rel="stylesheet" type="text/css"/ media="print">
+{% endblock stylesheets %}
 
 {% block scripts %}
 <!-- minimal jquery ui to fold the generated documents -->
 <script>
 $(function() {
-$( ".manager-reports" ).accordion({collapsible: true, active: false});
+	$( ".manager-reports" ).accordion({collapsible: true, active: false});
+	
+	$( "#print-button" ).click(function() {
+		window.print();
+	});
 });
+
+
+
+
+
+
 </script>
 {% endblock scripts %}
 
 {% block content %}
+
+
+<div id="print-button" title="Lalala" style="width:50px; height: 50px; background-color:black;"></div>
 
 <div class="report-form-container">
 	<form method="post" action="{% url "approved-documents" %}">

@@ -1,0 +1,35 @@
+@charset "utf-8";
+
+
+body {
+	background-color: white;
+}
+
+* {
+	visibility: collapse;
+}
+
+
+.document-view, .document-view * {
+	visibility: visible;
+}
+
+.document-view, .timesheet-view, .centered-view {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 210mm;
+	height: 297mm;
+	
+	transform-origin: 0 0;
+	transform: scale( .8);
+	border: none;
+	padding: 0 !important;
+	overflow: visible !important;
+}
+
+
+.floating-table {
+	page-break-inside: avoid;
+}
+

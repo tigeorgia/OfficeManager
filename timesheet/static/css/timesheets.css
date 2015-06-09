@@ -109,7 +109,9 @@
 
 .document-view {
 	width: 210mm;
-	min-height: 297mm;
+	height: 297mm;
+/* 	width: 180mm; */
+/* 	height: 267mm; */
 	background: white;
 	margin: auto;
 	margin-bottom:1em;
@@ -226,7 +228,7 @@ td.td-signature {
 }
 
 #signatures-table {
-	clear: both;
+/* 	clear: both; */
 
 	margin: 2em 0 0 2em;
 	padding: 0;
