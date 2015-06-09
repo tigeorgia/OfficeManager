@@ -78,7 +78,10 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 	
 	{% with viewdocument=leave %}
 	
-	<h3>Leave Request - {{ leave.data.employee.user.first_name }} {{ leave.data.employee.user.last_name }}</h3>
+	<h3>Leave Request - {{ leave.data.employee.user.first_name }} {{ leave.data.employee.user.last_name }} - 
+	{{ leave.data.type }}:  
+	{{ leave.data.start_date|date:"Y-m-d" }} - {{ leave.data.end_date|date:"Y-m-d" }}
+	</h3>
 	<div class="document-view timesheet-view centered-view">
 	{% include "report_leave_request.html" %}
 	</div>
@@ -87,21 +90,21 @@ $( ".manager-reports" ).accordion({collapsible: true, active: false});
 {% endfor %}
 
 
-
-{% for period in reportdata.documents.periodlist %}
-
-	{% with salary_sources=reportdata.documents.salarysources %}
-	{% with assignments=reportdata.documents.salaryassignments %}
-	{% with employee_list=reportdata.documents.employeelist %}
-	<h3>Salary Assignments - {{ period }}</h3>
-	{% include "report_salary_assignments.html" %}
+{% comment %}
+	{% for period in reportdata.documents.periodlist %}
 	
-	{% endwith %}
-	{% endwith %}
-	{% endwith %}
-	
-{% endfor %}
-
+		{% with salary_sources=reportdata.documents.salarysources %}
+		{% with assignments=reportdata.documents.salaryassignments %}
+		{% with employee_list=reportdata.documents.employeelist %}
+		<h3>Salary Assignments - {{ period }}</h3>
+		{% include "report_salary_assignments.html" %}
+		
+		{% endwith %}
+		{% endwith %}
+		{% endwith %}
+		
+	{% endfor %}
+{% endcomment %}
 
 </div>
 {% endblock content %}

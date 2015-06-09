@@ -118,7 +118,7 @@
 }
 
 .timesheet-view {
-	padding-top: 5em;
+	padding-top: 5em !important;
 	position: relative;
 	left: 15em;
 	font-size: 8pt;
@@ -152,7 +152,7 @@
 
 /* improvement to the default accordion */
 .ui-accordion .ui-accordion-content {
-	padding: 0;
+/* 	padding: 0; */
 }
 
 /* Employee info */
@@ -232,7 +232,12 @@ td.td-signature {
 	padding: 0;
 }
 
-#signatures-table td {
+#leave-signatures-table {
+	margin: auto;
+}
+
+#signatures-table td,
+#leave-signatures-table td {
 	width: 10em;
 	border: none;
 	text-align: left;
@@ -241,6 +246,10 @@ td.td-signature {
 #signatures-table td.td-signature {
 	text-align: left;
 	width: 24em;
+}
+
+#leave-signatures-table td.td-signature {
+	width: 30em;
 }
 
 #leave-balance-table td {	
