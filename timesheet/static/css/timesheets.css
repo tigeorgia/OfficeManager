@@ -161,6 +161,7 @@
 
 .floating-table {
 	float: left;
+/* 	display: inline-block; */
 }
 
 #time-sheet-employee-info {

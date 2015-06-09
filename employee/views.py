@@ -59,7 +59,7 @@ def manage_profile( request, employee ):
             
 
 
-    attachments = ProfileAttachment.objects.filter( profile = edited_employee)
+    attachments = ProfileAttachment.objects.filter( profile = edited_employee).order_by('-created')
 
     return render( request,
                    "manage_profile.html",
