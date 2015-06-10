@@ -1,11 +1,26 @@
 @charset "utf-8";
 
+html {
+
+	transform-origin: 0 0;
+	transform: scale( .8);
+	
+}
 
 body {
 	background-color: white;
+
+	width: 210mm;
+	height: 297mm;
+
+	position: absolute;
+	left: 0;
+	top: 0;
+	
+
 }
 
-* {
+body * {
 	visibility: hidden;
 }
 
@@ -18,11 +33,7 @@ body {
 	position: absolute;
 	left: 0;
 	top: 0;
-	width: 210mm;
-	height: 297mm;
 	
-	transform-origin: 0 0;
-	transform: scale( .8);
 	border: none;
 	padding: 0 !important;
 	overflow: visible !important;
@@ -32,5 +43,15 @@ body {
 .floating-table {
 	page-break-inside: avoid;
 	page-break-before: avoid; 
+/* 	display: inline-block; */
+/* 	float: none; */
+}
+
+/* #time-sheet { */
+/* 	clear: none; */
+/* } */
+
+.print-button {
+	visibility: hidden;
 }
 

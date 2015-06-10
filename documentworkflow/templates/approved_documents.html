@@ -14,7 +14,7 @@
 $(function() {
 	$( ".manager-reports" ).accordion({collapsible: true, active: false});
 	
-	$( "#print-button" ).click(function() {
+	$( ".print-button" ).click(function() {
 		window.print();
 	});
 });
@@ -82,7 +82,7 @@ $(function() {
 	<h3>Time Sheet - {{ timesheetemployee.user.first_name }} {{ timesheetemployee.user.last_name }} - {{ viewdata.period }}</h3>	
 	<div class="document-view timesheet-view centered-view">
 	
-	<button id="print-button">Print Time Sheet</button>
+	<button class="print-button">Print Time Sheet</button>
 	
 	{% include "time_sheet_render.html" %}
 	</div>
@@ -103,7 +103,7 @@ $(function() {
 	</h3>
 	<div class="document-view timesheet-view centered-view">
 	
-	<button id="print-button">Print Leave Request</button>
+	<button class="print-button">Print Leave Request</button>
 	
 	
 	{% include "report_leave_request.html" %}

@@ -73,7 +73,7 @@ def timesheet_salary_sources( employee, period ):
         if s_assign.percentage == 0:
             continue
 
-        output[ s_assign.source.code] = ( s_assign.percentage, s_assign.submitted_by)
+        output[ s_assign.source.code.upper()] = ( s_assign.percentage, s_assign.submitted_by)
 
     return output
 
@@ -167,8 +167,6 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
 
             month_working_time += max( 0.0, float( actual_working_time) - not_working_time)
             
-#             day_working_time - not_working_time
-
         if current_day == last_day:
             break
         current_day = current_day + datetime.timedelta( days = 1 )

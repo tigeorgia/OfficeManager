@@ -248,7 +248,7 @@ td.td-signature {
 
 #signatures-table td.td-signature {
 	text-align: left;
-	width: 24em;
+	width: 13em;
 }
 
 #leave-signatures-table td.td-signature {
@@ -275,7 +275,9 @@ td.td-signature {
 }
 
 
-
+.print-button {
+	height: 2.5em;
+}
 
 
 
