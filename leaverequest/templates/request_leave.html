@@ -16,6 +16,21 @@ Current leave balance<br>
 </table>
 </div>
 
+<div id="leave-request-help">
+
+<h3>Instructions</h3>
+
+<p>
+When requesting multiple days, fill in the <strong>Start Date</strong> and <strong>End Date</strong> fields only
+</p>
+
+<p>
+When requesting a few hours leave, fill in the <strong>Start Date</strong>, 
+<strong>Start Hour</strong> and <strong>End Hour</strong> fields only
+</p>
+
+</div>
+
 <div class="form-container">
 	<form action="{% url "request-leave" %}" method="POST">
 	    {% csrf_token %}

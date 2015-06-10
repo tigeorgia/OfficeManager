@@ -18,12 +18,23 @@
 	
 		<tr>
 			<td class="gray-cell">From</td>
-			<td>{{ viewdocument.data.start_date }}</td>
+			<td>
+			{{ viewdocument.data.start_date|date:"Y-m-d" }} 
+			{% if viewdocument.data.start_date == viewdocument.data.end_date %}
+			{{ viewdocument.data.start_hour|time:"H:i"}}
+			{% endif %}
+			</td>
 		</tr>
 	
 		<tr>
 			<td class="gray-cell">To</td>
-			<td>{{ viewdocument.data.end_date }}</td>
+			<td>
+			{% if viewdocument.data.start_date == viewdocument.data.end_date %}
+			{{ viewdocument.data.start_date|date:"Y-m-d" }} {{ viewdocument.data.end_hour|time:"H:i"}}
+			{% else %}
+			{{ viewdocument.data.end_date }}
+			{% endif %}			
+			</td>
 		</tr>
 	
 	</table>

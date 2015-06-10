@@ -74,5 +74,12 @@ form.submit-button {
 }
 
 
-
+#leave-request-help {
+	float: left;
+	
+	border: 1px dashed gray;
+	padding: 2em;
+	margin: 1em 0 0 1em;
+	max-width: 25em;
+}
 

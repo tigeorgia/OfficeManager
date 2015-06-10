@@ -5,6 +5,8 @@ from django.utils.datetime_safe import datetime
 from publicholidays.models import PublicHoliday
 from datetime import timedelta
 from timesheet.tshelpers import send_notification
+from decimal import Decimal
+
 
 
 @checkuserloggedin
@@ -18,11 +20,30 @@ def request_leave( request, employee ):
 
         if leave_form.is_valid():
 
+            start_date = datetime.strptime( request.POST["start_date"], '%Y-%m-%d' )
+
+            end_date = None
+            if request.POST["end_date"] != '':
+                end_date = datetime.strptime( request.POST["end_date"], '%Y-%m-%d' )
+
+            start_hour = None
+            if request.POST["start_hour"] != '':
+                start_hour = datetime.strptime( request.POST["start_hour"], '%H:%M' )
+
+            end_hour = None
+            if request.POST["end_hour"] != '':
+                end_hour = datetime.strptime( request.POST["end_hour"], '%H:%M' )
+
+
+            if start_hour is not None and end_hour is not None:
+                end_date = start_date
 
 
             leave_request = Leave( 
-                                  start_date = datetime.strptime( request.POST["start_date"], '%Y-%m-%d' ),
-                                  end_date = datetime.strptime( request.POST["end_date"], '%Y-%m-%d' ),
+                                  start_date = start_date,
+                                  end_date = end_date,
+                                  start_hour = start_hour,
+                                  end_hour = end_hour,
                                   employee = employee,
                                   type = request.POST["type"],
                                   comment = request.POST["comment"],
@@ -38,12 +59,12 @@ def request_leave( request, employee ):
 
 
             if request.POST['button'] == "Submit":
-                message = "%s Leave request for %d working days has been submitted for approval." %( 
+                message = "%s Leave request for %.2f working days has been submitted for approval." % ( 
                                                                                                     dict( leave_request.TYPES )[ leave_request.type],
                                                                                                     working_days,
-                                                                                                    ) 
+                                                                                                    )
             else:
-                message = '%s Leave request for %d working days' % ( 
+                message = '%s Leave request for %.2f working days.' % ( 
                                                                     dict( leave_request.TYPES )[ leave_request.type],
                                                                     working_days,
                                                                     )
@@ -52,7 +73,7 @@ def request_leave( request, employee ):
             hols_result = employee.leave_balance_HOLS
             if leave_request.type == 'HOLS':
                 hols_result -= working_days
-                
+
 
             sick_result = employee.leave_balance_SICK
             if leave_request.type == 'SICK':
@@ -60,16 +81,16 @@ def request_leave( request, employee ):
 
 
 
-            message += '\nFollowing approval your resulting balance will be\nVacation: %d, Sick %.2f' % ( hols_result, sick_result )
+            message += '\nFollowing approval your resulting balance will be\nVacation: %.2f, Sick %.2f' % ( hols_result, sick_result )
 
             if request.POST['button'] == "Submit":
                 leave_request.save()
-    
+
                 send_notification( request, "SUBMITTED", leave_request )
-                
+
                 leave_form = LeaveForm()
             else:
-                leave_form = LeaveForm( request.POST)
+                leave_form = LeaveForm( request.POST )
 
     else:
         leave_form = LeaveForm()
@@ -98,18 +119,43 @@ def count_working_days( leave_request ):
 
     current_date = start_date
 
-    workday_count = 0
-    while True:
-        if current_date.weekday() < 5:
-            workday_count += 1
+    if leave_request.start_date != leave_request.end_date:
+        workday_count = 0
+        while True:
+            if current_date.weekday() < 5:
+                workday_count += 1
 
-        if current_date == end_date:
-            break
+            if current_date == end_date:
+                break
 
-        current_date += timedelta( days = 1 )
+            current_date += timedelta( days = 1 )
 
 
-    workday_count -= holiday_count
+        workday_count -= holiday_count
 
-    return workday_count
+    else:
+        start_hour = datetime( 
+                              leave_request.start_date.year,
+                              leave_request.start_date.month,
+                              leave_request.start_date.day,
+                              leave_request.start_hour.hour,
+                              leave_request.start_hour.minute,
+                              )
+
+        end_hour = datetime( 
+                              leave_request.start_date.year,
+                              leave_request.start_date.month,
+                              leave_request.start_date.day,
+                              leave_request.end_hour.hour,
+                              leave_request.end_hour.minute,
+                              )
+
+
+        diff = end_hour - start_hour
+
+        days = ( float( diff.seconds ) / 3600.) / 8.
+        workday_count = days
+
+
+    return Decimal( workday_count)
 

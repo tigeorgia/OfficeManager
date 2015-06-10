@@ -27,6 +27,9 @@ def find_leave_requests( employee, dates ):
                                                                  ).exclude( approve_date = None )
     leave_days = {}
     for l_request in leave_requests:
+        if l_request.start_date == l_request.end_date:
+            continue
+        
         current_day = l_request.start_date
         while True:
 
@@ -73,7 +76,7 @@ def timesheet_salary_sources( employee, period ):
         if s_assign.percentage == 0:
             continue
 
-        output[ s_assign.source.code.upper()] = ( s_assign.percentage, s_assign.submitted_by)
+        output[ s_assign.source.code.upper()] = ( s_assign.percentage, s_assign.submitted_by )
 
     return output
 
@@ -86,8 +89,8 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
     working_time = end_hour * 60 + end_minute - start_hour * 60 - start_minute
 
     day_working_time = working_time / 60.  # - employee.break_hours
-    
-    
+
+
     working_time = "%.2f" % day_working_time
 
 
@@ -120,12 +123,12 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
     month_working_time = 0.
     while True:
         actual_working_time = working_time
-        
+
         if current_day < employee.contract_start or current_day > employee.contract_end:
             actual_working_time = '0.00'
-             
-        
-        
+
+
+
         not_working_time = 0
         weekday = current_day.weekday()
         if weekday > 4:
@@ -142,7 +145,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
             elif current_day.day in leave_requests['days'].keys():
 
                 # update balances
-                if leave_used.has_key(leave_requests['days'][current_day.day][1]):
+                if leave_used.has_key( leave_requests['days'][current_day.day][1] ):
                     leave_used[leave_requests['days'][current_day.day][1]] += 1
                 else:
                     not_working_time = day_working_time
@@ -151,7 +154,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                    weekdays[ weekday],
                                    leave_requests['days'][current_day.day][0] ,
                                    leave_requests['days'][current_day.day][0] ,
-                                   "%.2f" % (max( float( actual_working_time) - not_working_time, 0)),
+                                   "%.2f" % ( max( float( actual_working_time ) - not_working_time, 0 ) ),
                                    weekday
                                     ) )
 
@@ -165,8 +168,8 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                    weekday
                                     ) )
 
-            month_working_time += max( 0.0, float( actual_working_time) - not_working_time)
-            
+            month_working_time += max( 0.0, float( actual_working_time ) - not_working_time )
+
         if current_day == last_day:
             break
         current_day = current_day + datetime.timedelta( days = 1 )
