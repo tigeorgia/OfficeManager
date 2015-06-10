@@ -47,9 +47,9 @@ body * {
 /* 	float: none; */
 }
 
-/* #time-sheet { */
-/* 	clear: none; */
-/* } */
+#time-sheet {
+	clear: none;
+}
 
 .print-button {
 	visibility: hidden;
