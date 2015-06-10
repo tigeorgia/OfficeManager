@@ -30,7 +30,6 @@ $(function() {
 {% block content %}
 
 
-<div id="print-button" title="Lalala" style="width:50px; height: 50px; background-color:black;"></div>
 
 <div class="report-form-container">
 	<form method="post" action="{% url "approved-documents" %}">
@@ -82,6 +81,9 @@ $(function() {
 	
 	<h3>Time Sheet - {{ timesheetemployee.user.first_name }} {{ timesheetemployee.user.last_name }} - {{ viewdata.period }}</h3>	
 	<div class="document-view timesheet-view centered-view">
+	
+	<button id="print-button">Print Time Sheet</button>
+	
 	{% include "time_sheet_render.html" %}
 	</div>
 	
@@ -100,6 +102,10 @@ $(function() {
 	{{ leave.data.start_date|date:"Y-m-d" }} - {{ leave.data.end_date|date:"Y-m-d" }}
 	</h3>
 	<div class="document-view timesheet-view centered-view">
+	
+	<button id="print-button">Print Leave Request</button>
+	
+	
 	{% include "report_leave_request.html" %}
 	</div>
 	{% endwith %}

@@ -119,6 +119,13 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
     leave_used = {'HOLS':0, 'SICK':0}
     month_working_time = 0.
     while True:
+        actual_working_time = working_time
+        
+        if current_day < employee.contract_start or current_day > employee.contract_end:
+            actual_working_time = '0.00'
+             
+        
+        
         not_working_time = 0
         weekday = current_day.weekday()
         if weekday > 4:
@@ -129,7 +136,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                    weekdays[ weekday],
                                    public_holidays['days'][current_day.day] ,
                                    public_holidays['days'][current_day.day] ,
-                                   working_time,
+                                   actual_working_time,
                                    weekday
                                     ) )
             elif current_day.day in leave_requests['days'].keys():
@@ -144,7 +151,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                    weekdays[ weekday],
                                    leave_requests['days'][current_day.day][0] ,
                                    leave_requests['days'][current_day.day][0] ,
-                                   "%.2f" % (float( working_time) - not_working_time),
+                                   "%.2f" % (max( float( actual_working_time) - not_working_time, 0)),
                                    weekday
                                     ) )
 
@@ -154,11 +161,13 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
                                    weekdays[ weekday],
                                    "%02d:%02d" % ( employee.workday_start.hour, employee.workday_start.minute ) ,
                                    "%02d:%02d" % ( employee.workday_end.hour, employee.workday_end.minute ) ,
-                                   working_time,
+                                   actual_working_time,
                                    weekday
                                     ) )
 
-            month_working_time += day_working_time - not_working_time
+            month_working_time += max( 0.0, float( actual_working_time) - not_working_time)
+            
+#             day_working_time - not_working_time
 
         if current_day == last_day:
             break
