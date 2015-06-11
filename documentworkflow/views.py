@@ -129,7 +129,7 @@ def define_period_list( employee ):
 
     if time_sheets:
         ts_start_date = time_sheets[0].start_date
-        ts_end_date = time_sheets[-1].end_date
+        ts_end_date = time_sheets.reverse()[0].end_date
     else:
         ts_start_date = ts_end_date = datetime.date.today()
 
