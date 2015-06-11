@@ -150,6 +150,29 @@ LOCATION -
 </table>
 
 <!-- signatures -->
+<table class="time-sheet-table floating-table" id="approval-table">
+	<tr>
+		<td class="gray-cell">Approving Supervisor:</td><td class="td-signature">
+		{% if viewdata.supervisor %}
+		{{ viewdata.supervisor }}
+		{% else %}
+		{{ employee.supervisor.first_name }} {{ employee.supervisor.last_name }}
+		{% endif %}
+		</td>
+	</tr>
+	<tr>
+		<td class="gray-cell">Approval Date:</td><td class="td-signature">
+		{% if viewdata.approve_date %}
+		{{ viewdata.approve_date|date:"Y-m-d" }}
+		{% else %}
+		Pending
+		{% endif %}
+		</td>
+	</tr>
+</table>
+
+
+<!-- signatures -->
 <table class="time-sheet-table floating-table" id="signatures-table">
 	<tr><td colspan="2" class="td-signature-header"><br></td></tr>
 	<tr>

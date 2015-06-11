@@ -246,12 +246,14 @@ td.td-signature {
 	text-align: left;
 }
 
-#signatures-table td.td-signature {
+#signatures-table td.td-signature,
+#approval-table  td.td-signature  {
 	text-align: left;
 	width: 13em;
 }
 
 #leave-signatures-table td.td-signature {
+	
 	width: 30em;
 }
 
@@ -280,8 +282,14 @@ td.td-signature {
 }
 
 
+#approval-table td {
+	vertical-align: center;
+}
 
-
+#approval-table  td.td-signature {
+	padding-top: 1em;
+	text-align: center;
+}
 
 
 
