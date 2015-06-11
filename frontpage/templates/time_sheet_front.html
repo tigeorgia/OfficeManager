@@ -46,6 +46,12 @@ For O Manager:
 	<a href="{% url "documents-to-approve" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Documents to Approve" %}</div> 
 	</a>
+	
+	<a href="{% url "approved-documents" %}">
+ 	<div type="button" class="front-page-button time-sheets-button">{% trans "Approved Documents" %}</div> 
+	</a>
+	
+	
 </div>
 
 	
@@ -72,17 +78,9 @@ For O Manager:
 {% endif %}
 
 <!-- Employee + Financial Manager + Office Manager -->
-{% if employee.role == '2-OMAN' %}
+{% if employee.role == '2-OMAN' or employee.seniority == '0-SEN'%}
 
 <div class="front-page-buttons timesheet-actions" id="offman-actions">
-	<a href="{% url "approved-documents" %}">
- 	<div type="button" class="front-page-button time-sheets-button">{% trans "Approved Documents" %}</div> 
-	</a>
-	<!--
-		<a href=''>
-	 	<div type="button" class="front-page-button time-sheets-button">{% trans "Bulk Reporting" %}</div> 
-		</a>
-	-->
 
 	<a href="{% url "employee-profile" %}">
  	<div type="button" class="front-page-button time-sheets-button">{% trans "Employees" %}</div> 

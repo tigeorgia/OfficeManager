@@ -30,8 +30,11 @@
 			
 			{% endif %}
 	
-			{% if employee.role == "2-OMAN" %}		
+			{% if employee.role == "2-OMAN" or employee.seniority == "0-SEN" %}		
 			<li><a href="{% url "employee-profile" %}">Employees</a></li>	
+			{% endif %}
+			
+			{% if employee.role == "2-OMAN" %}	
 			<li><a href="{% url "import-public-holidays" %}">Import Holidays</a></li>
 			
 			{% endif %}

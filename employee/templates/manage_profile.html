@@ -273,13 +273,13 @@
 				
 				<br>
 				
-				<input name="leave-hols" type="number" type="number" step="any" value={% if editedemployee.leave_balance_HOLS %} "{{ editedemployee.leave_balance_HOLS }}" {% else %} "" {% endif %}></input>
+				<input {% if not editable %} disabled {% endif %} name="leave-hols" type="number" type="number" step="any" value={% if editedemployee.leave_balance_HOLS %} "{{ editedemployee.leave_balance_HOLS }}" {% else %} "" {% endif %}></input>
 				
-				<input name="leave-sick" type="number" type="number" step="any" value={% if editedemployee.leave_balance_SICK %} "{{ editedemployee.leave_balance_SICK }}" {% else %} "" {% endif %}></input>
+				<input {% if not editable %} disabled {% endif %} name="leave-sick" type="number" type="number" step="any" value={% if editedemployee.leave_balance_SICK %} "{{ editedemployee.leave_balance_SICK }}" {% else %} "" {% endif %}></input>
 
-				<input name="workday-start" type="text" value={% if editedemployee.workday_start %} "{{ editedemployee.workday_start|time:"H:i" }}" {% else %} "" {% endif %}></input>
+				<input {% if not editable %} disabled {% endif %} name="workday-start" type="text" value={% if editedemployee.workday_start %} "{{ editedemployee.workday_start|time:"H:i" }}" {% else %} "" {% endif %}></input>
 
-				<input name="workday-end" type="text" value={% if editedemployee.workday_end %} "{{ editedemployee.workday_end|time:"H:i" }}" {% else %} "" {% endif %}></input>
+				<input {% if not editable %} disabled {% endif %} name="workday-end" type="text" value={% if editedemployee.workday_end %} "{{ editedemployee.workday_end|time:"H:i" }}" {% else %} "" {% endif %}></input>
 
 			</div>
 
