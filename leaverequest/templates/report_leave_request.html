@@ -32,7 +32,7 @@
 			{% if viewdocument.data.start_date == viewdocument.data.end_date %}
 			{{ viewdocument.data.start_date|date:"Y-m-d" }} {{ viewdocument.data.end_hour|time:"H:i"}}
 			{% else %}
-			{{ viewdocument.data.end_date }}
+			{{ viewdocument.data.end_date|date:"Y-m-d" }}
 			{% endif %}			
 			</td>
 		</tr>
@@ -75,7 +75,7 @@
 			<td class="gray-cell">Approval Date</td>
 			<td>
 			{% if viewdocument.data.approve_date %}
-			{{ viewdocument.data.approve_date }}
+			{{ viewdocument.data.approve_date|date:"Y-m-d" }}
 			{% else %}
 			Pending
 			{% endif %}
