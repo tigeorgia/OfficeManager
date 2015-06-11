@@ -247,7 +247,6 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
 
 def send_notification( request, notify_type, email_data ):
     # # OFF for development
-    return
 
     # recipient - SUPERVISOR, MANAGER(s), EMPLOYEE
     # notify_type - SUBMITTED, APPROVED, SALARY_ASSIGNED
@@ -285,42 +284,48 @@ def send_notification( request, notify_type, email_data ):
         recipient = [email_data.employee.user.email]
         sender = "%s %s" % ( request.user.first_name, request.user.last_name )
 
+        site_address = request.build_absolute_uri().split( '/' )
+        site_address[-1] = 'approveddocuments'
+        site_address = '/'.join( site_address )
+        
         if type( email_data ) == Leave:
 
             subject = "Leave request approved"
-            content = "Your leave request for dates %s - %s has been approved" % ( email_data.start_date, email_data.end_date )
-            document = "leave request"
+            content = "Your leave request for dates %s - %s has been approved.\n\n" % ( email_data.start_date, email_data.end_date )
+            content += "To print your document go to %s ." % site_address
+            #             document = "leave request"
 
         if type( email_data ) == TimeSheet:
 
             subject = "Time sheet approved"
-            content = "Your time sheet for %s has been approved" % ( email_data.period )
-            document = "time sheet"
+            content = "Your time sheet for %s has been approved.\n" % ( email_data.period )
+            content += "To print your document go to:\n %s ." % site_address
+            #             document = "time sheet"
 
 
         # notify managers about complete document
 
         # collect office manager emails
-        managers = Profile.objects.filter( role = "OMAN" )
-        email_list = []
-        for manager in managers:
-            email_list.append( manager.user.email )
-
-        manager_subject = "New approved document"
-
-        site_address = request.build_absolute_uri().split( '/' )
-        site_address[-1] = 'approveddocuments'
-        site_address = '/'.join( site_address )
-
-        document_employee = "%s %s" % ( email_data.employee.user.first_name, email_data.employee.user.last_name )
-
-        manager_content = "%s has approved a %s for %s \n\n" % ( sender, document, document_employee )
-        manager_content += "Please go to:\n\n%s\n\nto view approved documents." % site_address
-
-        recipient = email_list
-
-
-        thread.start_new( send_mail, ( manager_subject, manager_content, sender, email_list, True ) )
+        #         managers = Profile.objects.filter( role = "OMAN" )
+        #         email_list = []
+        #         for manager in managers:
+        #             email_list.append( manager.user.email )
+        # 
+        #         manager_subject = "New approved document"
+        # 
+        #         site_address = request.build_absolute_uri().split( '/' )
+        #         site_address[-1] = 'approveddocuments'
+        #         site_address = '/'.join( site_address )
+        # 
+        #         document_employee = "%s %s" % ( email_data.employee.user.first_name, email_data.employee.user.last_name )
+        # 
+        #         manager_content = "%s has approved a %s for %s \n\n" % ( sender, document, document_employee )
+        #         manager_content += "Please go to:\n\n%s\n\nto view approved documents." % site_address
+        # 
+        #         recipient = email_list
+        # 
+        # 
+        #         thread.start_new( send_mail, ( manager_subject, manager_content, sender, email_list, True ) )
 
         # send_mail( subject, content, sender, email_list, fail_silently = True )
 
