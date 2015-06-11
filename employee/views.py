@@ -282,7 +282,7 @@ def employee_login( request, callback_view ):
     elif login_status == 1:
         return render( request, "frontpage.html", {"message": "You have successfully authenticated but " +
                                                   "your time sheet account has not been created by " +
-                                                  "the Office Manager. Please, request the account " +
+                                                  "the HR Manager. Please, request the account " +
                                                   "creation and log in again. Thank you."} )
 
     # this, if login_status == 2
