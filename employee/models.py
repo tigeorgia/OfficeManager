@@ -84,9 +84,9 @@ class Profile( models.Model ):
 
     leave_balance_HOLS = models.DecimalField( decimal_places = 2, max_digits = 4 )
     leave_balance_SICK = models.DecimalField( decimal_places = 2, max_digits = 4 )
-    leave_balance_MATL = models.DecimalField( decimal_places = 2, max_digits = 4 )
-    leave_balance_PATL = models.DecimalField( decimal_places = 2, max_digits = 4 )
-    leave_balance_UNPD = models.DecimalField( decimal_places = 2, max_digits = 4 )
+    leave_balance_MATL = models.DecimalField( decimal_places = 2, max_digits = 4, default = 0 )
+    leave_balance_PATL = models.DecimalField( decimal_places = 2, max_digits = 4, default = 0 )
+    leave_balance_UNPD = models.DecimalField( decimal_places = 2, max_digits = 4, default = 0 )
 
     leave_earn_HOLS = models.DecimalField( default = 2.0, decimal_places = 2, max_digits = 4 )
     leave_earn_SICK = models.DecimalField( default = 1.08, decimal_places = 2, max_digits = 4 )

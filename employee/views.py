@@ -80,41 +80,52 @@ def save_profile_to_database( request ):
 
     post_data = request.POST
     # profile modeldata
-    profile = Profile.objects.get_or_create( user__id = post_data["user-id"] )
-    profile = profile[0]
+    user = User( id = post_data["user-id"])
+    
+    profile = Profile.objects.filter( user = user)
+    if profile:
+        profile = profile[0]
+    else:
+        profile = Profile( user = user )
 
-    profile.position = post_data["position"]
-    profile.location = post_data["location"]
-    profile.seniority = post_data["seniority"]
 
-    supervisor = LDAPBackend().populate_user( post_data['supervisor'] )
-    profile.supervisor = supervisor
-
-    profile.employment_status = post_data["empl-status"]
-    profile.contract_start = datetime.strptime( post_data["contract-start"], '%Y-%m-%d') 
-    profile.contract_end = datetime.strptime( post_data["contract-end"], '%Y-%m-%d') 
-    profile.salary_gross_usd = post_data["salary-gross"]
-    profile.salary_net_usd = post_data["salary-net"]
-
-    profile.insurance = False
-    if post_data["insurance"] == "True":
-        profile.insurance = True
-
-    profile.gsm_limit = post_data["gsm-limit"]
-    profile.role = post_data["system-role"]
-
-    profile.mobile_num = post_data["mobile-num"]
-    profile.personal_num = post_data["personal-num"]
-    profile.date_of_birth = datetime.strptime( post_data["date-of-birth"], '%Y-%m-%d') 
-    profile.address = post_data["address"]
-
-    profile.leave_balance_HOLS = post_data["leave-hols"]
-    profile.leave_balance_SICK = post_data["leave-sick"]
-
-    profile.workday_start = datetime.strptime( post_data["workday-start"], '%H:%M') 
-    profile.workday_end = datetime.strptime( post_data["workday-end"], '%H:%M') 
-
+#     profile = profile[0]
     try:
+        profile.position = post_data["position"]
+        profile.location = post_data["location"]
+        profile.seniority = post_data["seniority"]
+    
+        supervisor = LDAPBackend().populate_user( post_data['supervisor'] )
+        profile.supervisor = supervisor
+    
+        profile.employment_status = post_data["empl-status"]
+        profile.contract_start = datetime.strptime( post_data["contract-start"], '%Y-%m-%d') 
+        profile.contract_end = datetime.strptime( post_data["contract-end"], '%Y-%m-%d') 
+        profile.salary_gross_usd = post_data["salary-gross"]
+        profile.salary_net_usd = post_data["salary-net"]
+    
+        profile.insurance = False
+        if post_data["insurance"] == "True":
+            profile.insurance = True
+    
+        profile.gsm_limit = post_data["gsm-limit"]
+        profile.role = post_data["system-role"]
+    
+        profile.mobile_num = post_data["mobile-num"]
+        profile.personal_num = post_data["personal-num"]
+        profile.date_of_birth = datetime.strptime( post_data["date-of-birth"], '%Y-%m-%d') 
+        profile.address = post_data["address"]
+    
+        profile.leave_balance_HOLS = post_data["leave-hols"]
+        profile.leave_balance_SICK = post_data["leave-sick"]
+    
+        if post_data["workday-start"] != '':
+            profile.workday_start = datetime.strptime( post_data["workday-start"], '%H:%M') 
+        
+        if post_data["workday-end"] != '':
+            profile.workday_end = datetime.strptime( post_data["workday-end"], '%H:%M') 
+
+        
         profile.save()
         
         message = "Profile data has been saved"
@@ -164,8 +175,9 @@ def save_profile_to_database( request ):
             attachment.save()
                 
     
-    except:
-        message = "Error saving profile"
+    except Exception as details:
+        message = "Error saving profile \n ", details
+#         message = "Error saving profile"
         
         
 
