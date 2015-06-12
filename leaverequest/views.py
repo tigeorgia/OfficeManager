@@ -4,8 +4,9 @@ from leaverequest.models import LeaveForm, Leave
 from django.utils.datetime_safe import datetime
 from publicholidays.models import PublicHoliday
 from datetime import timedelta
-from timesheet.tshelpers import send_notification
+from timesheet.tshelpers import send_notification, months
 from decimal import Decimal
+from timesheet.models import TimeSheet
 
 
 
@@ -54,43 +55,50 @@ def request_leave( request, employee ):
                                   vacation_balance = employee.leave_balance_HOLS
                                   )
 
-            working_days = count_working_days( leave_request )
-            leave_request.workdays_requested = working_days
+            request_status = check_if_can_be_submitted( leave_request)
+            if request_status[0] == True:
 
 
-            if request.POST['button'] == "Submit":
-                message = "%s Leave request for %.2f working days has been submitted for approval." % ( 
-                                                                                                    dict( leave_request.TYPES )[ leave_request.type],
-                                                                                                    working_days,
-                                                                                                    )
+                working_days = count_working_days( leave_request )
+                leave_request.workdays_requested = working_days
+
+
+                if request.POST['button'] == "Submit":
+                    message = "%s Leave request for %.2f working days has been submitted for approval." % ( 
+                                                                                                        dict( leave_request.TYPES )[ leave_request.type],
+                                                                                                        working_days,
+                                                                                                        )
+                else:
+                    message = '%s Leave request for %.2f working days.' % ( 
+                                                                        dict( leave_request.TYPES )[ leave_request.type],
+                                                                        working_days,
+                                                                        )
+
+
+                hols_result = employee.leave_balance_HOLS
+                if leave_request.type == 'HOLS':
+                    hols_result -= working_days
+
+
+                sick_result = employee.leave_balance_SICK
+                if leave_request.type == 'SICK':
+                    sick_result -= working_days
+
+
+
+                message += '\nFollowing approval your resulting balance will be\nVacation: %.2f, Sick %.2f' % ( hols_result, sick_result )
+
+                if request.POST['button'] == "Submit":
+                    leave_request.save()
+
+                    send_notification( request, "SUBMITTED", leave_request )
+
+                    leave_form = LeaveForm()
+                else:
+                    leave_form = LeaveForm( request.POST )
+
             else:
-                message = '%s Leave request for %.2f working days.' % ( 
-                                                                    dict( leave_request.TYPES )[ leave_request.type],
-                                                                    working_days,
-                                                                    )
-
-
-            hols_result = employee.leave_balance_HOLS
-            if leave_request.type == 'HOLS':
-                hols_result -= working_days
-
-
-            sick_result = employee.leave_balance_SICK
-            if leave_request.type == 'SICK':
-                sick_result -= working_days
-
-
-
-            message += '\nFollowing approval your resulting balance will be\nVacation: %.2f, Sick %.2f' % ( hols_result, sick_result )
-
-            if request.POST['button'] == "Submit":
-                leave_request.save()
-
-                send_notification( request, "SUBMITTED", leave_request )
-
-                leave_form = LeaveForm()
-            else:
-                leave_form = LeaveForm( request.POST )
+                message = "This request can't be submitted because\nyour time sheet for %s\nalready exists in the system" % request_status[1]
 
     else:
         leave_form = LeaveForm()
@@ -101,6 +109,29 @@ def request_leave( request, employee ):
                                                    "form": leave_form,
                                                    "message": message,
                                                    } )
+
+# will say false if it spans already submitted timesheet
+def check_if_can_be_submitted( leave_request):
+    
+    start_date = leave_request.start_date
+    start_period = "%s %d" % ( months[ start_date.month - 1], start_date.year)
+    
+    time_sheet = TimeSheet.objects.filter( employee = leave_request.employee, period = start_period)
+    
+    if time_sheet:
+        return ( False, start_period) 
+    
+    end_date = leave_request.end_date
+    end_period = "%s %d" % ( months[ start_date.month - 1], end_date.year)
+    
+    time_sheet = TimeSheet.objects.filter( employee = leave_request.employee, period = end_period)
+    
+    if time_sheet:
+        return ( False, end_period) 
+
+    
+    return ( True, [] )
+
 
 
 def count_working_days( leave_request ):
@@ -153,9 +184,9 @@ def count_working_days( leave_request ):
 
         diff = end_hour - start_hour
 
-        days = ( float( diff.seconds ) / 3600.) / 8.
+        days = ( float( diff.seconds ) / 3600. ) / 8.
         workday_count = days
 
 
-    return Decimal( workday_count)
+    return Decimal( workday_count )
 
