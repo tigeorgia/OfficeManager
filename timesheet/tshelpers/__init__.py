@@ -258,7 +258,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
 
 def send_notification( request, notify_type, email_data ):
     # # OFF for development
-    return
+    #     return
 
     # recipient - SUPERVISOR, MANAGER(s), EMPLOYEE
     # notify_type - SUBMITTED, APPROVED, SALARY_ASSIGNED
