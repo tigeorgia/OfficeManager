@@ -10,6 +10,7 @@ from leaverequest.models import Leave, LeaveForm
 from employee.models import Profile
 from budgetshare.models import SalaryAssignment
 from publicholidays.models import PublicHoliday
+from decimal import Decimal
 
 
 weekdays = ( _( 'Monday' ), _( 'Tuesday' ), _( 'Wednesday' ), _( 'Thursday' ), _( 'Friday' ), _( 'Saturday' ), _( 'Sunday' ) )
@@ -27,14 +28,24 @@ def find_leave_requests( employee, dates ):
                                                                  ).exclude( approve_date = None )
     leave_days = {}
     for l_request in leave_requests:
-        if l_request.start_date == l_request.end_date:
-            continue
+
         
         current_day = l_request.start_date
         while True:
 
             if current_day.month == dates[0].month:
-                leave_days[current_day.day] = ( dict( l_request.TYPES )[l_request.type], l_request.type )
+                leave_days[current_day.day] = {}
+                leave_days[current_day.day]['type'] = ( dict( l_request.TYPES )[l_request.type], l_request.type )
+                if l_request.start_date == l_request.end_date:
+                    start_dtime = datetime.datetime.combine(l_request.start_date, l_request.start_hour)
+                    end_dtime = datetime.datetime.combine(l_request.start_date, l_request.end_hour)
+                    
+                    amount = end_dtime - start_dtime
+                    
+                    amount = amount.seconds / (8. * 3600) 
+                    leave_days[current_day.day]['amount'] = amount
+                else:
+                    leave_days[current_day.day]['amount'] = 1
 
             if current_day == l_request.end_date:
                 break
@@ -145,15 +156,15 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
             elif current_day.day in leave_requests['days'].keys():
 
                 # update balances
-                if leave_used.has_key( leave_requests['days'][current_day.day][1] ):
-                    leave_used[leave_requests['days'][current_day.day][1]] += 1
+                if leave_used.has_key( leave_requests['days'][current_day.day]['type'][1] ):
+                    leave_used[leave_requests['days'][current_day.day]['type'][1]] += leave_requests['days'][current_day.day]['amount']
                 else:
                     not_working_time = day_working_time
 
                 calendar.append( ( current_day.day,
                                    weekdays[ weekday],
-                                   leave_requests['days'][current_day.day][0] ,
-                                   leave_requests['days'][current_day.day][0] ,
+                                   leave_requests['days'][current_day.day]['type'][0] ,
+                                   leave_requests['days'][current_day.day]['type'][0] ,
                                    "%.2f" % ( max( float( actual_working_time ) - not_working_time, 0 ) ),
                                    weekday
                                     ) )
@@ -192,17 +203,17 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
     else:
         # leave balances
 
-        balance_HOLS = employee.leave_balance_HOLS + leave_used['HOLS']
+        balance_HOLS = employee.leave_balance_HOLS# + Decimal( leave_used['HOLS'])
 
-        balance_SICK = employee.leave_balance_SICK + leave_used['SICK']
+        balance_SICK = employee.leave_balance_SICK# + Decimal( leave_used['SICK'])
 
         earn_HOLS = employee.leave_earn_HOLS
         earn_SICK = employee.leave_earn_SICK
         used_HOLS = leave_used['HOLS']
         used_SICK = leave_used['SICK']
 
-        end_HOLS = balance_HOLS - leave_used['HOLS'] + employee.leave_earn_HOLS
-        end_SICK = balance_SICK - leave_used['SICK'] + employee.leave_earn_SICK
+        end_HOLS = balance_HOLS - Decimal( leave_used['HOLS']) + employee.leave_earn_HOLS
+        end_SICK = balance_SICK - Decimal( leave_used['SICK']) + employee.leave_earn_SICK
 
 
         leave_data = ( 
@@ -247,6 +258,7 @@ def generate_timesheet_data( employee, period, time_sheet = None, recalc_balance
 
 def send_notification( request, notify_type, email_data ):
     # # OFF for development
+    return
 
     # recipient - SUPERVISOR, MANAGER(s), EMPLOYEE
     # notify_type - SUBMITTED, APPROVED, SALARY_ASSIGNED

@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from employee.views import not_allowed, checkuserloggedin
+from employee.views import checkuserloggedin
 from employee.models import Profile
 from timesheet.models import TimeSheet
 from timesheet import tshelpers
@@ -62,11 +62,16 @@ def list_requests_to_approve( request, employee ):
             leave.approved_by = request.user.first_name + ' ' + request.user.last_name
             leave.save()
 
-            if leave.type == "HOLS":
-                leave.employee.leave_balance_HOLS -= leave.workdays_requested
 
-            if leave.type == "SICK":
-                leave.employee.leave_balance_SICK -= leave.workdays_requested
+            # we are not updating the profile at this moment
+            # it should be modified at the moment of timesheet approval
+            #             if leave.type == "HOLS":
+            #                 leave.employee.leave_balance_HOLS -= leave.workdays_requested
+            # 
+            #             if leave.type == "SICK":
+            #                 leave.employee.leave_balance_SICK -= leave.workdays_requested
+            
+            
 
             leave.employee.save()
 

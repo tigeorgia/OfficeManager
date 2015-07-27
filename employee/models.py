@@ -88,6 +88,11 @@ class Profile( models.Model ):
     leave_balance_PATL = models.DecimalField( decimal_places = 2, max_digits = 4, default = 0 )
     leave_balance_UNPD = models.DecimalField( decimal_places = 2, max_digits = 4, default = 0 )
 
+    #     # when a leave request is submitted these values will be held to updte balances correctly at the
+    #     # time of timesheet submission
+    #     leave_balance_HOLS_to_account_for = models.DecimalField( decimal_places = 2, max_digits = 4, default = 0 )
+    #     leave_balance_SICK_to_account_for = models.DecimalField( decimal_places = 2, max_digits = 4, default = 0 )
+
     leave_earn_HOLS = models.DecimalField( default = 2.0, decimal_places = 2, max_digits = 4 )
     leave_earn_SICK = models.DecimalField( default = 1.08, decimal_places = 2, max_digits = 4 )
 
