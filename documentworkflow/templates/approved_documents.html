@@ -46,9 +46,8 @@ $(function() {
 		<label>Employee</label>
 		
 		
-		
-		<select name="report-employee" 
-		{% if employee.seniority != "0-SEN" and  eployee.role != "2-OMAN" %}
+		<select name="report-employee"
+		{% if employee.seniority != "0-SEN" and  employee.role != "2-OMAN" %}
 		 disabled
 		{% endif %}		
 		>
