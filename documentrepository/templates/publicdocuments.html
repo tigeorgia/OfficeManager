@@ -1,0 +1,52 @@
+{% extends "managerbase.html" %}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link href={% static "css/publicdocuments.css" %} rel="stylesheet" type="text/css"/>
+{% endblock stylesheets %}
+
+{% block content %}
+
+
+<!-- Document list, order random -->
+<div class="container-pane-left">
+
+	{% for document in  documents %}
+	
+	
+	
+	<form action="{% url "public-documents" %}" method="POST" >
+	    {% csrf_token %}
+		
+		<a href = "{{ document.url }}" target="_" >{{ document.name }}</a>	
+		<input class="hidden" value="{{document.id}}" name="id"></input>
+	    
+	    {% if employee.role == "2-OMAN" %}
+	    <input name="button" type="submit" value="Delete" />
+		{% endif %}
+	
+	</form>
+	
+	
+	
+	
+	{% endfor %}
+
+</div>
+
+
+{% if employee.role == "2-OMAN" %}
+
+<div class="container-pane-right">
+	<form action="{% url "public-documents" %}" method="POST" enctype="multipart/form-data">
+	    {% csrf_token %}
+	    {{ form }}
+	    <input name="button" type="submit" value="Upload" />
+	</form>
+</div>
+
+{% endif %}
+
+{% endblock content %}
