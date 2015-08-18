@@ -33,6 +33,8 @@ body {
 
 #site-header #site-logo {
 	height: 100%;
+	margin-top: 1em;
+	margin-left: 1em;
 }
 
 #site-header #user-info {
@@ -53,7 +55,8 @@ body {
 }
 
 #navigation-menu * a {
-	margin-left: 1em;
+	margin-left: 0em;
+	margin-right: 1em;
 	border: 1px gray ridge;
 
 }
