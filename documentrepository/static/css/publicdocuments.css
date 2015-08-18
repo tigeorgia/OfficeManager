@@ -38,3 +38,26 @@
 .container-pane-left form input[type="submit"] {
 	margin-bottom: 2em;
 }
+
+
+.container-pane-left tr.head td {
+	background-color: #ddd;
+}
+
+.container-pane-left table {
+	border-collapse: collapse;
+}
+
+.container-pane-left table * td {
+	border: 1px solid gray;
+/* 	padding: 2em 0em; */
+	text-align: center;
+	width: 10em;
+}
+
+.container-pane-left table * td.title {
+	width: 40em;
+	padding: 0.2em 2em;
+	text-align: left;
+	
+}

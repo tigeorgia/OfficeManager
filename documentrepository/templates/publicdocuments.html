@@ -13,27 +13,34 @@
 <!-- Document list, order random -->
 <div class="container-pane-left">
 
-	{% for document in  documents %}
-	
-	
-	
-	<form action="{% url "public-documents" %}" method="POST" >
-	    {% csrf_token %}
-		
-		<a href = "{{ document.url }}" target="_" >{{ document.name }}</a>	
-		<input class="hidden" value="{{document.id}}" name="id"></input>
-	    
+	<table>
+		<tr class="head">
+		<td class="title">Document Title ( click to see content )</td>
 	    {% if employee.role == "2-OMAN" %}
-	    <input name="button" type="submit" value="Delete" />
+	    <td>
+		</td>
 		{% endif %}
+		</tr>
 	
-	</form>
-	
-	
-	
-	
-	{% endfor %}
-
+		{% for document in  documents %}
+		
+		<tr>
+		<form action="{% url "public-documents" %}" method="POST" >
+		    {% csrf_token %}
+			<td class="title">			
+			<a href = "{{ document.url }}" target="_" >{{ document.name }}</a>	
+			<input class="hidden" value="{{document.id}}" name="id"></input>
+		    </td>
+		    {% if employee.role == "2-OMAN" %}
+		    <td>
+		    <input name="button" type="submit" value="Delete" />
+			</td>
+			{% endif %}
+		
+		</form>
+		</tr>
+		{% endfor %}
+	</table>
 </div>
 
 

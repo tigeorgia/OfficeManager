@@ -19,7 +19,10 @@
 		<tr class="head">
 		<td>Date</td>
 		<td>Name</td>
-		<td></td>
+	    {% if employee.role == "2-OMAN" %}
+		<td>
+		</td>	
+		{% endif %}
 		</tr>
 
 		{% for holiday in  holidays %}
@@ -31,11 +34,11 @@
 			
 					<td>{{ holiday.date|date:"Y-m-d" }}</td>
 					<td>{{ holiday.name }}</td> 
-					<td>
 				    {% if employee.role == "2-OMAN" %}
+					<td>
 				    <input name="button" type="submit" value="Delete" />
-					{% endif %}
 					</td>	
+					{% endif %}
 		</form>
 		</tr>
 		{% endfor %}
