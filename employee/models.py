@@ -1,6 +1,7 @@
 from django.db import models
 from django.db.models.fields.related import OneToOneField
 from django.contrib.auth.models import User
+import datetime
 
 
 # a profile of an Employee that HR holds
@@ -77,8 +78,8 @@ class Profile( models.Model ):
 
 
     # this will be moved to another model, somewhere in the timesheet application
-    workday_start = models.TimeField( default = "10:00" )
-    workday_end = models.TimeField( default = "18:00" )
+    workday_start = models.TimeField( default = datetime.datetime.strptime("10:00", "%H:%M" ).time())
+    workday_end = models.TimeField( default = datetime.datetime.strptime("18:00", "%H:%M" ).time() )
 
 
 
