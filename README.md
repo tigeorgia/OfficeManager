@@ -1,17 +1,24 @@
-## Usability note
-
-Due to reporting requirements applicable to TI Georgia, the development of this project has been stopped.
-Its use makes sense in an environment where digital document approval is considered a valid path for reporting workflow. 
 
 ## Office Manager
 
-The application close follows the work flow of work time reporting currently used at Transparency International Georgia.
+The application closely follows the work flow of work time reporting currently used at Transparency International Georgia.
 It allows to:
 - request a leave 
 - submit the monthly time sheet
 - approve a leave or a time sheet (by a designated supervisor)
 - allows to configure salary sources and monthly percentage assignments to employees
 - lets office managers generate bulk reports of all the documents handled in the system ( time sheets, leave requests, salary assignments)
+- allows for collection and exposure of organisation-wide public documents
+
+
+
+## Installation note
+
+The application communicates with an AD server on an unencrypted channel and only AD users can access it.
+The configuration allows for the selection of user group who can access the functionality.
+
+Once deployed, a super user account needs to be created and that superuser needs to build the firt employee profile, who receives the role of an HR manager (profile setting). This setting allows this employee to have unrestricted access to data, namely - pubic document repository and profile creation and modification.
+
 
 ## License
 
