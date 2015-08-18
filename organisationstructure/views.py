@@ -8,7 +8,7 @@ def organisationstructure( request, employee ):
 
     structure = []
 
-    profiles = Profile.objects.filter( supervisor = F( 'user' ) )
+    profiles = Profile.objects.filter( supervisor = F( 'user' ) ).order_by( "position")
 
     for profile in profiles:
         structure.append( underlings( profile ) )
