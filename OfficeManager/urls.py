@@ -12,6 +12,7 @@ from OfficeManager import settings
 from django.views.generic.base import RedirectView
 from django.core.urlresolvers import reverse_lazy
 from documentrepository.views import publicdocuments
+from organisationstructure.views import organisationstructure
 
 urlpatterns = patterns( '',
     url( r'^admin/', include( admin.site.urls ) ),
@@ -38,6 +39,8 @@ urlpatterns = patterns( '',
     url( r'^employeeprofile$', manage_profile, name = "employee-profile" ),
     
     url( r'^publicdocuments$', publicdocuments, name = "public-documents" ),
+    
+    url( r'^organisationstructure$', organisationstructure, name = "organisation-structure" ),
     
 
     # this is necessary for Django server to serve mediafiles, should be disabled when deployed to Apache

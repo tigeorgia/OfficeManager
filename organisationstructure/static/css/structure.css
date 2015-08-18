@@ -1,0 +1,31 @@
+@charset "utf-8";
+
+
+.org-struct-pane img {
+	width: 1em;
+	height: 1em;
+	
+}
+
+.spaces {
+	width: 1em;
+	display: inline-block;
+}
+
+.org-struct-pane .empl-item {
+	line-height: 2em;
+}
+
+
+.org-struct-pane {
+	padding-left: 10em;
+	padding-top: 2em;
+}
+
+.org-struct-pane .empl-list {
+/* 	list-style-image: url('../images/arrow.png'); */
+/* 	list-style-position: inside; */
+	list-style-type: none;
+	list-style-image: none;
+	list-style-position: inside;
+}

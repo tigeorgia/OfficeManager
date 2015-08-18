@@ -1,0 +1,17 @@
+{% extends "managerbase.html"%}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link href={% static "css/structure.css" %} rel="stylesheet" type="text/css"/>
+{% endblock stylesheets %}
+
+
+{% block content %}
+
+<div class="org-struct-pane">
+	{{ htmlstruct|safe}}
+</div>
+
+{% endblock content %}
