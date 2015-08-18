@@ -1,0 +1,61 @@
+{% extends "managerbase.html" %}
+
+{% load i18n %} 
+{% load staticfiles %}
+
+{% block stylesheets %}
+<link href={% static "css/customholidays.css" %} rel="stylesheet" type="text/css"/>
+{% endblock stylesheets %}
+
+{% block content %}
+
+
+<!-- Document list, order random -->
+<div class="container-pane-left">
+
+	
+	
+	<table>
+		<tr class="head">
+		<td>Date</td>
+		<td>Name</td>
+		<td></td>
+		</tr>
+
+		{% for holiday in  holidays %}
+		<tr>
+	
+		<form action="{% url "manage-custom-holidays" %}" method="POST" >
+		    {% csrf_token %}
+			<input class="hidden" value="{{holiday.id}}" name="id"></input>
+			
+					<td>{{ holiday.date|date:"Y-m-d" }}</td>
+					<td>{{ holiday.name }}</td> 
+					<td>
+				    {% if employee.role == "2-OMAN" %}
+				    <input name="button" type="submit" value="Delete" />
+					{% endif %}
+					</td>	
+		</form>
+		</tr>
+		{% endfor %}
+	</table>
+
+</div>
+
+
+{% if employee.role == "2-OMAN" %}
+
+<div class="container-pane-right">
+	<form action="{% url "manage-custom-holidays" %}" method="POST" enctype="multipart/form-data">
+	    {% csrf_token %}
+	    {{ form }}
+	    <input name="button" type="submit" value="Save" />
+	</form>
+</div>
+
+{% endif %}
+
+
+
+{% endblock content %}

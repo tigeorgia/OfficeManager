@@ -3,7 +3,7 @@ from django.contrib import admin
 from frontpage.views import  sitelogout, front_page
 
 from budgetshare.views import import_salary_assignments
-from publicholidays.views import import_public_holidays
+from publicholidays.views import import_public_holidays, manage_custom_holidays
 from timesheet.views import submit_time_sheet
 from leaverequest.views import request_leave
 from documentworkflow.views import list_requests_to_approve, approved_documents
@@ -23,6 +23,7 @@ urlpatterns = patterns( '',
     # url( r'^timesheet/', include( 'TimeSheetManager.urls') ),
     url( r'^budgetshare/$', import_salary_assignments, name = "import-salary-assignments" ),
     url( r'^publicholidays/$', import_public_holidays, name = "import-public-holidays" ),
+    url( r'^customholidays/$', manage_custom_holidays, name = "manage-custom-holidays" ),
 
 
     url( r'^operations$', front_page, name = "time-sheet-front" ),
